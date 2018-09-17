@@ -1,0 +1,33 @@
+{
+  "name": "catalyst-app-core",
+  "version": "0.0.1",
+  "description": "Core Catalyst app libraries.",
+  "scripts": {
+    "build": "babel --source-maps inline src -d dist",
+    "start": "babel --watch --source-maps inline src -d dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Liquid-Labs/catalyst-app-core.git"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Liquid-Labs/catalyst-app-core/issues"
+  },
+  "homepage": "https://github.com/Liquid-Labs/catalyst-app-core#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.1",
+    "@babel/preset-env": "^7.0.0"
+  },
+  "dependencies": {
+    "lodash.omit": "^4.5.0",
+    "lodash.reduce": "^4.6.0",
+    "moment-timezone": "^0.5.21"
+  }
+}
