@@ -1,6 +1,6 @@
 import * as resourceActions from '../actions/resourceActions'
 import * as appActions from '../actions/appActions'
-import { uuidRe } from 'regex-repo'
+import { uuidRe } from '@liquid-labs/regex-repo'
 // import { extractResource } from '../app/routes'
 // import { resources } from '../app/config'
 
