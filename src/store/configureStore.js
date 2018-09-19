@@ -1,5 +1,5 @@
 import {createStore, compose, applyMiddleware} from 'redux'
-import followupActionMiddleware from 'redux-followup'
+import followupActionMiddleware from '@liquid-labs/redux-followup'
 import thunk from 'redux-thunk'
 
 import rootReducer from '../reducers'

@@ -1,4 +1,4 @@
-import * as store from 'catalyst-app-core/store'
+import * as store from '../store'
 import FetchBuilder from './FetchBuilder'
 
 // 1) Define the action types. These are exported for use in the reducer.
