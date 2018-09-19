@@ -2,6 +2,8 @@ import configureStore from './configureStore'
 
 import moment from 'moment-timezone'
 
+// Amount of time in seconds for which a fetched result (list or item) is
+// considered fresh.
 const refreshDelay = 5 * 60
 
 export const store = configureStore()
