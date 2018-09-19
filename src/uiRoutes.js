@@ -6,7 +6,12 @@ import { uuidRe } from '@liquid-labs/regex-repo'
 /**
  * Given a resource name, returns the UI path to the global list.
  */
-export const getGlobalListRoute = (resource) => `/${resource}`
+export const getGlobalListRoute = (resource) => {
+  if (!config.resources[resource]) {
+    throw new Error(`Unknown resource '${resource}'. (Check that resource name is plural.)`)
+  }
+  return `/${resource}`
+}
 /**
  * Given a context resource, final (displayed) resource, and optional context ID
  * returns UI path to the context-specific list. If the context ID is not
