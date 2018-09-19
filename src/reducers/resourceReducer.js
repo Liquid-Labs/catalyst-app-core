@@ -1,44 +1,13 @@
 import * as resourceActions from '../actions/resourceActions'
 import * as appActions from '../actions/appActions'
-import { uuidRe } from 'regex-repo'
-// import { extractResource } from '../app/routes'
-// import { resources } from '../app/config'
+import * as uiRoutes from '../uiRoutes'
+
+import { config } from '../config'
 
 import moment from 'moment-timezone'
 import omit from 'lodash.omit'
 import reduce from 'lodash.reduce'
-
-// TODO: pull from import
-const splitPath = (path) => {
-  const [pathName, query] = path.split('?')
-  const bits = pathName.split('/')
-  // Canonical path names work start with '/'
-  if (bits[0] === '') {
-    bits.splice(0, 1)
-  }
-  else {
-    throw new Error(`Cannot extract resource from a non-canonical path: '${path}''.`)
-  }
-
-  return { bits, query }
-}
-
-const extractResource = (path) => {
-  const { bits } = splitPath(path)
-
-  if (bits.length === 1 // global list
-      || (bits.length === 2
-          && (bits[1] === 'create' || uuidRe.test(bits[1]))) // create  or veiew item
-      || (bits.length === 3 && bits[2] === 'edit')) { // edit item
-    return bits[0]
-  }
-  else if (bits.length === 3 // context access
-    // valid entity IDs
-    && (uuidRe.test(bits[1]) || (bits[0] === 'users' && bits[1] === 'self'))) {
-    return bits[2]
-  }
-  else return null
-}
+import { uuidRe } from '@liquid-labs/regex-repo'
 
 const INITIAL_STATE = {
   // general database
@@ -61,8 +30,6 @@ const INITIAL_STATE = {
   inFlightSources: {}, // { [source]: true }
   refreshItemListsBefore: 0
 }
-
-export const config = {}
 
 const modelItem = (item, resourceName) =>
   new config.resources[resourceName].model(item)
@@ -115,10 +82,10 @@ const processFetchData = (action, currentState) => {
   let itemList
   if (Array.isArray(action.data)) {
     itemList =
-      action.data.map((item) => modelItem(item, extractResource(action.source)))
+      action.data.map((item) => modelItem(item, uiRoutes.extractResource(action.source)))
   }
   else {
-    itemList = [modelItem(action.data, extractResource(action.source))]
+    itemList = [modelItem(action.data, uiRoutes.extractResource(action.source))]
     if (!itemList[0].isComplete()) {
       // TODO: give user visible feedback!
       console.warn(`Retrieved item is missing: '${itemList[0]._missing.join("', '")}'.`)
@@ -172,7 +139,7 @@ const processFetchData = (action, currentState) => {
 }
 
 const processUpdatedData = (action, currentState) => {
-  const itemList = [modelItem(action.data, extractResource(action.source))]
+  const itemList = [modelItem(action.data, uiRoutes.extractResource(action.source))]
   action.followupAction(appActions.releaseUx(action.source))
 
   const props = {

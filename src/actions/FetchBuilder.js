@@ -1,7 +1,7 @@
 import * as appActions from './appActions'
 import * as store from '../store'
 
-export const config = {}
+import { config } from '../config'
 
 class FetchBuilder {
   constructor(source) {
