@@ -4,6 +4,6 @@ module.exports = function (api) {
   const presets = [ "@babel/preset-env" ];
 
   return {
-    presets,
+    presets
   };
 }

@@ -9,7 +9,7 @@ const defineConst = (obj, name, value) =>
     configurable: false
   })
 
-export default class CommonResourceConf {
+export class CommonResourceConf {
   static listToMap(resourceList) {
     return resourceList.reduce((acc, resourceConf) => {
         acc[resourceConf.resourceName] = resourceConf
