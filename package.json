@@ -2,11 +2,16 @@
   "name": "catalyst-app-core",
   "version": "0.0.1",
   "description": "Core Catalyst app libraries.",
+  "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "babel --source-maps inline src -d dist",
     "start": "babel --watch --source-maps inline src -d dist",
     "pretest": "babel --source-maps inline src -d dist",
-    "test": "jest --coverage dist"
+    "test": "jest --coverage dist",
+    "prepare": "rm -rf dist && babel src -d dist && find dist -name '*.test.js' | xargs rm"
   },
   "repository": {
     "type": "git",
@@ -25,6 +30,7 @@
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.1",
     "@babel/preset-env": "^7.0.0",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
     "jest": "^23.6.0"
   },
   "dependencies": {

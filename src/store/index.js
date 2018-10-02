@@ -6,9 +6,9 @@ import moment from 'moment-timezone'
 // considered fresh.
 const refreshDelay = 5 * 60
 
-export const store = configureStore()
+export const reduxStore = configureStore()
 
-export const getState = () => store.getState()
+export const getState = () => reduxStore.getState()
 
 const getResourceState = () => getState()['resourceState']
 
@@ -106,5 +106,3 @@ export const getFreshSourceData = (source) => {
 // Note that events should generally be fetched first and then retreived via
 // this method on success fetch (rather than going directly here).
 export const getItemEventList = (pubId) => getResourceState().events[pubId]
-
-export default store
