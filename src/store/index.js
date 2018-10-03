@@ -1,4 +1,4 @@
-import configureStore from './configureStore'
+import { config } from '../config'
 
 import moment from 'moment-timezone'
 
@@ -6,9 +6,9 @@ import moment from 'moment-timezone'
 // considered fresh.
 const refreshDelay = 5 * 60
 
-export const reduxStore = configureStore()
+export const reduxStore = () => config.reduxStore
 
-export const getState = () => reduxStore.getState()
+export const getState = () => reduxStore().getState()
 
 const getResourceState = () => getState()['resourceState']
 
