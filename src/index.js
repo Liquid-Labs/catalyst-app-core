@@ -17,3 +17,5 @@ import * as sessionActions from './actions/sessionActions'
 export { appActions, contextActions, resourceActions, sessionActions }
 
 export * from './CommonResourceConf'
+
+export * from './reducers'
