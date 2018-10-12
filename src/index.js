@@ -13,8 +13,7 @@ export { uiRoutes }
 import * as appActions from './actions/appActions'
 import * as contextActions from './actions/contextActions'
 import * as resourceActions from './actions/resourceActions'
-import * as sessionActions from './actions/sessionActions'
-export { appActions, contextActions, resourceActions, sessionActions }
+export { appActions, contextActions, resourceActions }
 
 export * from './CommonResourceConf'
 
