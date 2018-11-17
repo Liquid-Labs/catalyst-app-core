@@ -15,12 +15,15 @@ export function configureStore(rootReducer, initialState) {
       applyMiddleware(...middlewares),
       window.devToolsExtension ? window.devToolsExtension() : f => f // add support for Redux dev tools
     ))
+  /* TODO: Now that we've library-ized this, can we still support this? It
+  worked fine when we distributed babel-compiled files, but using rollup, this
+  breaks.
   if (module.hot) {
-      // Enable Webpack hot module replacement for reducers
-      module.hot.accept('../reducers', () => {
-        const nextReducer = require('../reducers').default // eslint-disable-line global-require
-        store.replaceReducer(nextReducer)
-      })
-    }
+    // Enable Webpack hot module replacement for reducers
+    module.hot.accept('../reducers', () => {
+      const nextReducer = require('../reducers').default // eslint-disable-line global-require
+      store.replaceReducer(nextReducer)
+    })
+  }*/
   return store
 }
