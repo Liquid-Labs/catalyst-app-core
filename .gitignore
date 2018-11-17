@@ -2,3 +2,4 @@ node_modules/
 dist/
 .catalyst
 coverage/
+/test-staging/

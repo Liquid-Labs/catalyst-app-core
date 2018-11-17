@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-app-core",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Core Catalyst app libraries.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -10,9 +10,9 @@
   "scripts": {
     "build": "catalyst-scripts \"$PWD\" build",
     "start": "catalyst-scripts \"$PWD\" start",
-    "pretest": "babel --source-maps inline src -d dist",
+    "pretest": "babel --source-maps src -d dist",
     "test": "jest --coverage dist",
-    "prepare": "rm -rf dist && npm run build && find dist -name '*.test.js' | xargs rm"
+    "prepare": "rm -rf dist && npm run build"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,12 @@
   },
   "homepage": "https://github.com/Liquid-Labs/catalyst-app-core#readme",
   "devDependencies": {
-    "@liquid-labs/catalyst-scripts": "0.0.7",
-    "jest": "^23.6.0"
+    "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.6",
+    "@liquid-labs/regex-repo": "^1.0.0-alpha.2",
+    "jest": "^23.6.0",
+    "lodash.omit": "^4.5.0",
+    "lodash.reduce": "^4.6.0",
+    "moment-timezone": "^0.5.23"
   },
   "dependencies": {
     "@liquid-labs/redux-followup": "0.0.2",
@@ -38,7 +42,7 @@
     "redux-thunk": "^2.3.0"
   },
   "peerDependencies": {
-    "@liquid-labs/regex-repo": "0.0.5",
+    "@liquid-labs/regex-repo": "1.0.0-alpha.2",
     "lodash.camelcase": "^4.3.0",
     "lodash.omit": "^4.5.0",
     "lodash.reduce": "^4.6.0",
