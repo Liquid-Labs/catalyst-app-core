@@ -7,7 +7,6 @@ import { config } from '../config'
 import moment from 'moment-timezone'
 import omit from 'lodash.omit'
 import reduce from 'lodash.reduce'
-import { uuidRe } from '@liquid-labs/regex-repo'
 
 const INITIAL_STATE = {
   // general database
