@@ -1,4 +1,4 @@
-import CommonResourceConf from './CommonResourceConf'
+import { CommonResourceConf } from './CommonResourceConf'
 import * as uiRoutes from './uiRoutes'
 import * as config from './config'
 
