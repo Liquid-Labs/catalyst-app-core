@@ -1,6 +1,6 @@
 {
-  "name": "@liquid-labs/catalyst-app-core",
-  "version": "0.0.4",
+  "name": "@liquid-labs/catalyst-core",
+  "version": "0.0.5",
   "description": "Core Catalyst app libraries.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Liquid-Labs/catalyst-app-core.git"
+    "url": "git+https://github.com/Liquid-Labs/catalyst-core.git"
   },
   "keywords": [
     "react"
@@ -24,9 +24,9 @@
   "author": "Zane Rockenbaugh <zane@liquid-labs.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Liquid-Labs/catalyst-app-core/issues"
+    "url": "https://github.com/Liquid-Labs/catalyst-core/issues"
   },
-  "homepage": "https://github.com/Liquid-Labs/catalyst-app-core#readme",
+  "homepage": "https://github.com/Liquid-Labs/catalyst-core#readme",
   "devDependencies": {
     "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.6",
     "@liquid-labs/regex-repo": "^1.0.0-alpha.2",
