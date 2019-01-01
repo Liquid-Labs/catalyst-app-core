@@ -25,6 +25,10 @@ const styles = (theme) => ({
  * is rendered as part of the AppSwitch result is not idea... but it's how we
  * get the top toolbar to match up with the main content. The techinque is
  * based off this: https://codepen.io/anthonyLukes/pen/DLBeE by Anthony Lukes
+ *
+ * Any child components will be rendered beneath the BottomNavigation component.
+ * In practice, this is primarily intended for dialog components that are
+ * are either hidden or rendered absolutely.
  */
 
 class AppFrameBase extends React.Component {
@@ -43,6 +47,7 @@ class AppFrameBase extends React.Component {
           <BottomNavigation />
         </div>
       </div>
+      {this.props.children}
     </Typography>
   </Router>
 )}}
