@@ -20,4 +20,5 @@ export * from './CommonResourceConf'
 export * from './reducers'
 
 export * from './components/containers/AppFrame'
+export C from './components/hocs/withAwait'
 export * from './components/ui/Feedback'
