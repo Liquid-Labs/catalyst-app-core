@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-core-ui",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Core Catalyst app libraries.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -36,7 +36,6 @@
     "moment-timezone": "^0.5.23"
   },
   "dependencies": {
-    "@liquid-labs/mui-extensions": "0.0.7",
     "@liquid-labs/redux-followup": "0.0.2",
     "@material-ui/icons": "^3.0.1",
     "mdi-material-ui": "^5.7.0",
