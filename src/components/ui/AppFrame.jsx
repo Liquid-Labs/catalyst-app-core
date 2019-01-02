@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import {
   BrowserRouter as Router,
 } from 'react-router-dom';
@@ -10,11 +11,11 @@ import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = (theme) => ({
-  root: {
-    height: '100vh',
-    minWidth: '100%',
-    '@media print': {
-      display: 'none',
+  root : {
+    height         : '100vh',
+    minWidth       : '100%',
+    '@media print' : {
+      display : 'none',
     }
   }
 })
@@ -35,22 +36,32 @@ class AppFrameBase extends React.Component {
   render() {
     const {ContentSwitch, BottomNavigation, classes} = this.props;
     return (
-  <Router>
-    <Typography component="div" className={classes.root}>
-      <CssBaseline />
-      <Feedback />
-      <div style={{display: 'flex', flexDirection: 'column', height: '100%'}}>
-        <div style={{flex: '1 1 auto', display: 'flex', flexDirection: 'column'}}>
-          <ContentSwitch />
-        </div>
-        <div style={{flex: '0 0 auto'}}>
-          <BottomNavigation />
-        </div>
-      </div>
-      {this.props.children}
-    </Typography>
-  </Router>
-)}}
+      <Router>
+        <Typography component="div" className={classes.root}>
+          <CssBaseline />
+          <Feedback />
+          <div style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
+            <div style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
+              <ContentSwitch />
+            </div>
+            <div style={{flex : '0 0 auto'}}>
+              <BottomNavigation />
+            </div>
+          </div>
+          {this.props.children}
+        </Typography>
+      </Router>
+    )
+  }
+}
+
+AppFrameBase.propTypes = {
+  ContentSwitch    : PropTypes.element.isRequired,
+  BottomNavigation : PropTypes.element.isRequired,
+  children         : PropTypes.oneOfType([PropTypes.element,
+    PropTypes.arrayOf(PropTypes.element)]),
+  classes : PropTypes.object.isRequired,
+}
 
 const AppFrame = withStyles(styles)(AppFrameBase)
 

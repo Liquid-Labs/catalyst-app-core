@@ -94,9 +94,9 @@ class FetchBuilder {
 
       // 2) Prepare to issue the async call.
       // 2a) Prepare the auth header.
-      let headers = {};
+      const headers = {};
       if (this.withToken) {
-        let token = getState().sessionState.authToken;
+        const token = getState().sessionState.authToken;
         if (!token) {
           const msg = `Request to '${this.url}' requires authentication.`;
           dispatch(appActions.setErrorMessage(msg));
@@ -105,9 +105,9 @@ class FetchBuilder {
         headers['Authorization'] = `Bearer ${token}`;
       }
       // 2b) Set the basic options.
-      let fetchOptions = {
-        method: this.method,
-        headers: headers
+      const fetchOptions = {
+        method  : this.method,
+        headers : headers
       };
       // 2c) Setup the cors policy based on production or dev context.
       //     Note: 'production' here just means "in the cloud".
@@ -124,38 +124,40 @@ class FetchBuilder {
       }
 
       // 3) Do the fetch and return the Promise.
-      return fetch(this.url, fetchOptions)
+      return fetch(this.url, fetchOptions) // eslint-disable-line no-undef
         .then(response => {
           if(response.ok){
             return response.json().then(data => {
               let error;
-              if (!this.validator || !(error = this.validator(data)))
-                return dispatch(this.successAction.call(null, data, this.source))
-              else
+              if (!this.validator || !(error = this.validator(data))) {return dispatch(this.successAction.call(null, data, this.source))}
+              else {
                 return dispatch(this.failureAction.call(null,
                   error,
                   response.status,
                   this.source));
+              }
             })
           }
           else{
             // TODO: support JSON errors with fallback
             return response.text().then(errorText => {
-              if (this.failureAction)
+              if (this.failureAction) {
                 return dispatch(this.failureAction.call(null,
                   errorText,
                   response.status,
-                  this.source));
+                  this.source))
+              }
             })
           }
         })
         .catch((error) => {
-          console.warn(error);
-          if (this.failureAction)
+          console.warn(error) // eslint-disable-line no-console
+          if (this.failureAction) {
             return dispatch(this.failureAction.call(null,
               error + "",
               500,
-              this.source));
+              this.source))
+          }
         })
     }
   }

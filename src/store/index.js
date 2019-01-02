@@ -22,12 +22,12 @@ export const sourcePermanentError = (source) => {
 
 // TODO: store this in the resourceReducer?
 const emptySourceData = {
-  source: null,
-  lastChecked: null,
-  permanentError: null,
-  refList: null,
-  itemList: null,
-  itemListSeq: null
+  source         : null,
+  lastChecked    : null,
+  permanentError : null,
+  refList        : null,
+  itemList       : null,
+  itemListSeq    : null
 }
 
 export const getCompleteItem = (itemId) => {
@@ -66,15 +66,15 @@ export const getSourceData = (source) => {
     //    reference means the current data is out of date and we can say nothing
     //    about the state of the source at the moment.
     else if (sourceData.refList.some((ref) => {
-          const item = rs.items[ref]
-          if (!item) {
-            return true
-          }
-          else {
-            itemList.push(item)
-            return false
-          }
-        })) {
+      const item = rs.items[ref]
+      if (!item) {
+        return true
+      }
+      else {
+        itemList.push(item)
+        return false
+      }
+    })) {
       return emptySourceData
     }
     // 3) If we don't bail out of building the itemList, then cache it and return
@@ -82,8 +82,8 @@ export const getSourceData = (source) => {
     else {
       return {
         ...sourceData,
-        itemList: itemList,
-        itemListSeq: rs.refreshItemListsBefore
+        itemList    : itemList,
+        itemListSeq : rs.refreshItemListsBefore
       }
     }
   }

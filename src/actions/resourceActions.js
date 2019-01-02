@@ -39,36 +39,37 @@ export const UPDATE_LOCAL_ITEM = 'UPDATE_LOCAL_ITEM'
 
 // Synchrounous action builders.
 const buildFetchRequestAction = (type) => (source, searchParams) => ({
-  type: type,
-  source: source
+  type   : type,
+  source : source
 })
 
 const buildFetchSuccessAction = (type, extractor, list) => (responseData, source, timestamp) => ({
-  type: type,
-  data: extractor(responseData.data),
-  searchParams: responseData.searchParams,
-  message: responseData.message,
-  source: source,
-  receivedAt: timestamp || Date.now()
+  type         : type,
+  data         : extractor(responseData.data),
+  searchParams : responseData.searchParams,
+  message      : responseData.message,
+  source       : source,
+  receivedAt   : timestamp || Date.now()
 })
 
-const buildUpdateRequest = (type) => () => ({type: type});
+const buildUpdateRequest = (type) => () => ({type : type});
 
 const buildUpdateSuccessAction = (type) => (responseData, source) => {
   return {
-  type: type,
-  data: responseData.data,
-  message: responseData.message,
-  source: source,
-  receivedAt: Date.now()
-}}
+    type       : type,
+    data       : responseData.data,
+    message    : responseData.message,
+    source     : source,
+    receivedAt : Date.now()
+  }
+}
 
 const buildErrorAction = (type) => (message, code, source) => ({
-  type: type,
-  errorMessage: message,
-  code: code,
-  source: source,
-  receivedAt: Date.now()
+  type         : type,
+  errorMessage : message,
+  code         : code,
+  source       : source,
+  receivedAt   : Date.now()
 })
 
 const fetchListRequest = buildFetchRequestAction(FETCH_LIST_REQUEST)
@@ -231,6 +232,6 @@ export const addItemEvent = (resourceName, ev) => new FetchBuilder(`/${resourceN
 
 // Sometimes the app needs update the redux item.
 export const updateLocalItem = (item) => ({
-  type: UPDATE_LOCAL_ITEM,
-  item: item
+  type : UPDATE_LOCAL_ITEM,
+  item : item
 })

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 
@@ -11,14 +12,14 @@ import { withStyles } from '@material-ui/core/styles'
 import * as appActions from '../../actions/appActions'
 
 const styles = theme => ({
-  close: {
-    width: theme.spacing.unit * 4,
-    height: theme.spacing.unit * 4,
+  close : {
+    width  : theme.spacing.unit * 4,
+    height : theme.spacing.unit * 4,
   },
-  errorSnack: {
-    background: theme.palette.error.light,
-    color: theme.palette.error.contrast,
-    border: `2px solid ${theme.palette.error.dark}`
+  errorSnack : {
+    background : theme.palette.error.light,
+    color      : theme.palette.error.contrast,
+    border     : `2px solid ${theme.palette.error.dark}`
   }
 })
 
@@ -38,47 +39,57 @@ const FeedbackBase = ({infoMessages, errorMessages, sticky, clearAppMessages, cl
   // TODO: using 'i' as the key isn't great, but OK givin current uses. The problem is there's nothing in the message, other than the full message itself, which isn't a great key either.
   return (
     <Snackbar
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'center',
-      }}
-      open={open}
-      autoHideDuration={type === 'info' && !sticky ? 2000 : null}
-      onClose={clearAppMessages}
-      ContentProps={{
-        'aria-describedby': 'message-id',
-        className: (type === 'error' && classes.errorSnack) || null
-      }}
-      message={<span id="message-id">{message}</span>}
-      action={
-        <IconButton
-          aria-label="Close"
-          color="inherit"
-          className={classes.close}
-          onClick={clearAppMessages}
+        anchorOrigin={{
+          vertical   : 'top',
+          horizontal : 'center',
+        }}
+        open={open}
+        autoHideDuration={type === 'info' && !sticky ? 2000 : null}
+        onClose={clearAppMessages}
+        ContentProps={{
+          'aria-describedby' : 'message-id',
+          className          : (type === 'error' && classes.errorSnack) || null
+        }}
+        message={<span id="message-id">{message}</span>}
+        action={
+          <IconButton
+              aria-label="Close"
+              color="inherit"
+              className={classes.close}
+              onClick={clearAppMessages}
         >
-          <CloseIcon />
-        </IconButton>
+            <CloseIcon />
+          </IconButton>
       }
     />
   )
+}
+
+FeedbackBase.propTypes = {
+  infoMessages     : PropTypes.arrayOf(PropTypes.string),
+  errorMessages    : PropTypes.arrayOf(PropTypes.string),
+  sticky           : PropTypes.boolean,
+  clearAppMessages : PropTypes.func.isRequired,
+  classes          : PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => {
   const { errorMessages, infoMessages, sticky } = state.appState;
 
   return {
-    errorMessages: errorMessages,
-    infoMessages: infoMessages,
-    sticky: sticky
+    errorMessages : errorMessages,
+    infoMessages  : infoMessages,
+    sticky        : sticky
   }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  clearAppMessages: () => dispatch(appActions.clearAppMessages())
+  clearAppMessages : () => dispatch(appActions.clearAppMessages())
 })
 
-export const Feedback = compose(
+const Feedback = compose(
   withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps),
 )(FeedbackBase)
+
+export { Feedback }

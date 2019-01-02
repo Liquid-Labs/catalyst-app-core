@@ -3,18 +3,18 @@ import followupActionMiddleware from '@liquid-labs/redux-followup'
 import thunk from 'redux-thunk'
 
 export function configureStore(rootReducer, initialState) {
-  let middlewares = [
+  const middlewares = [
     thunk, // TODO: do we use thunk?
     followupActionMiddleware
   ]
   if (process.env.NODE_ENV !== 'production') {
-      // const { logger } = require('redux-logger')
-      // middlewares = [ ...middlewares, logger ]
+    // const { logger } = require('redux-logger')
+    // middlewares = [ ...middlewares, logger ]
   }
   const store = createStore(rootReducer, initialState, compose(
-      applyMiddleware(...middlewares),
-      window.devToolsExtension ? window.devToolsExtension() : f => f // add support for Redux dev tools
-    ))
+    applyMiddleware(...middlewares),
+    window.devToolsExtension ? window.devToolsExtension() : f => f // add support for Redux dev tools
+  ))
   /* TODO: Now that we've library-ized this, can we still support this? It
   worked fine when we distributed babel-compiled files, but using rollup, this
   breaks.

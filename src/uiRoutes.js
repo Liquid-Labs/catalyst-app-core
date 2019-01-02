@@ -26,8 +26,8 @@ const getContextListRoute = (contextResource, resource, generic=true) => {
   }
   else if (config.contexts.info[contextResource]) {
     const contextId = generic
-    ? ':contextId'
-    : store.getState()['contextState'][config.contexts.info[contextResource].itemName].pubId
+      ? ':contextId'
+      : store.getState()['contextState'][config.contexts.info[contextResource].itemName].pubId
     return `/${contextResource}/${contextId}/${resource}`
   }
   else throw new Error(`Unmapple context list context '${contextResource}' and resource '${resource}'.`)
@@ -63,13 +63,15 @@ export const getDefaultListRoute = (resource, context) => {
     const contextInfo =
       config.contexts.ordering.find(contextInfo => {
         contextItem = context[config.contexts.info[contextInfo[0]].itemName]
-        return Boolean(contextItem) })
+        return Boolean(contextItem)
+      })
     if (contextInfo) {
       // TODO: if this returns null, try the next available context until all config.contexts have been checked, then throw error.
       return getContextListRoute(contextInfo[0], resource, false)
     }
   }
   else {
+    // eslint-disable-next-line no-console
     console.warn("Generating default list route without setting context or in the presence of a context error will fallback to the globar resource list. This may not be the intent.")
   }
   // if we get to this point, just fallback to global
