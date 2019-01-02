@@ -3,18 +3,18 @@ import { schema } from 'normalizr'
 
 const defineConst = (obj, name, value) =>
   Object.defineProperty(obj, name, {
-    value: value,
-    writable: false,
-    enumerable: true,
-    configurable: false
+    value        : value,
+    writable     : false,
+    enumerable   : true,
+    configurable : false
   })
 
 export class CommonResourceConf {
   static listToMap(resourceList) {
     return resourceList.reduce((acc, resourceConf) => {
-        acc[resourceConf.resourceName] = resourceConf
-        return acc
-      }, {})
+      acc[resourceConf.resourceName] = resourceConf
+      return acc
+    }, {})
   }
 
   constructor(itemName, apiConfig) {
@@ -31,7 +31,7 @@ export class CommonResourceConf {
       itemName.replace('-', '_').toUpperCase());
 
     defineConst(this, 'itemSchema',
-      new schema.Entity('items', {}, { idAttribute: 'pubId' }))
+      new schema.Entity('items', {}, { idAttribute : 'pubId' }))
     defineConst(this, 'listSchema', new schema.Array(this.itemSchema))
 
     // Resources that can be created define the following
