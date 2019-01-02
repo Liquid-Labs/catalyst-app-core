@@ -68,7 +68,7 @@ const FeedbackBase = ({infoMessages, errorMessages, sticky, clearAppMessages, cl
 FeedbackBase.propTypes = {
   infoMessages     : PropTypes.arrayOf(PropTypes.string),
   errorMessages    : PropTypes.arrayOf(PropTypes.string),
-  sticky           : PropTypes.boolean,
+  sticky           : PropTypes.bool,
   clearAppMessages : PropTypes.func.isRequired,
   classes          : PropTypes.object.isRequired
 }

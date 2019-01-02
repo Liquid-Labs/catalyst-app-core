@@ -67,8 +67,8 @@ const LogoAndContext = ({
   to,
   logoUrl, logoDescription,
   noContextLogoUrl, noContextLogoDescription,
-  contextStore, contextServiceLocation,
-  classes}) => {
+  contextStore, contextServiceLocation
+}) => {
   const justLogo = !contextStore && !contextServiceLocation
   const { url, description } =
     logoUrl && { logoUrl, logoDescription }
@@ -112,14 +112,13 @@ LogoAndContext.propTypes = {
   noContextLogoUrl         : PropTypes.string,
   noContextLogoDescription : PropTypes.string,
   contextStore             : PropTypes.object,
-  contextServiceLocation   : PropTypes.object,
-  classes                  : PropTypes.object.isRequired
+  contextServiceLocation   : PropTypes.object
 }
 
-const NavigationBar = ({ classes, children, rightChildren, ...remainder }) =>
+const NavigationBar = ({ classes, children, rightChildren, logoTo, ...remainder }) =>
   <Grid container>
     <Grid item xs={2}>
-      <LogoAndContext {...remainder} />
+      <LogoAndContext to={logoTo} {...remainder} />
     </Grid>
     <Grid item xs={8}>
       { children }
