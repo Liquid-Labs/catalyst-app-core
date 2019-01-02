@@ -63,13 +63,15 @@ const withContext = (Component) => {
       context      : Object.assign({}, contextState),
       contextSet   : contextState.contextSet,
       contextError : contextState.contextError,
-    };
-    config.contexts.ordering.forEach(contextInfo => {
-      const itemName = camelCase(contextInfo[1]);
-      props[`context${upperFirst(itemName)}`] = contextState[itemName];
-    })
+    }
+    config.contexts
+      && config.contexts.ordering
+      && config.contexts.ordering.forEach(contextInfo => {
+        const itemName = camelCase(contextInfo[1]);
+        props[`context${upperFirst(itemName)}`] = contextState[itemName];
+      })
 
-    return props;
+    return props
   }
 
   const mapDispatchToProps = (dispatch) => ({
