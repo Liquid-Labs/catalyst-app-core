@@ -56,10 +56,9 @@ class AppFrameBase extends React.Component {
 }
 
 AppFrameBase.propTypes = {
-  ContentSwitch    : PropTypes.element.isRequired,
-  BottomNavigation : PropTypes.element.isRequired,
-  children         : PropTypes.oneOfType([PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element)]),
+  ContentSwitch    : PropTypes.func.isRequired,
+  BottomNavigation : PropTypes.func.isRequired,
+  children         : PropTypes.node,
   classes : PropTypes.object.isRequired,
 }
 
