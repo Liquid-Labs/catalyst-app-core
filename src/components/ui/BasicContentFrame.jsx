@@ -3,11 +3,12 @@ import React from 'react'
 import { AppMain } from './AppMain'
 import { AppNavigation } from './AppNavigation'
 
-const BasicContentFrame = ({logoTo, navChildren, children}) => [
-  <AppNavigation logoTo={logoTo} key="appNavigation">
-    {navChildren}
+// TODO: put navChildren, rightNav, and logoTo on 'AppNavigationProps'
+const BasicContentFrame = ({children, navChildren, AppNavigationProps, ...remainder}) => [
+  <AppNavigation key="appNavigation" {...AppNavigationProps}>
+    {navChildren || AppNavigationProps.children}
   </AppNavigation>,
-  <AppMain key="appMain">
+  <AppMain key="appMain" {...remainder}>
     {children}
   </AppMain>
 ]
