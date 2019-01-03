@@ -27,7 +27,8 @@ const styles = (theme) => ({
   },
   lightNavbar : {
     backgroundColor : 'white',
-    border          : '2px solid ' + theme.palette.primary.main
+    border          : '2px solid ' + theme.palette.primary.main,
+    color           : theme.palette.primary.main
   },
   right : {
     textAlign : 'right'
@@ -121,7 +122,7 @@ const NavigationBar = ({ classes, children, rightChildren, logoTo, ...remainder 
       <LogoAndContext to={logoTo} {...remainder} />
     </Grid>
     <Grid item xs={8}>
-      { children }
+      {children}
     </Grid>
     <Grid item xs={2} className={classes.right}>
       {rightChildren}
