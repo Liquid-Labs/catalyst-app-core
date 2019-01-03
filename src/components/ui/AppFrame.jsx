@@ -59,7 +59,7 @@ AppFrameBase.propTypes = {
   ContentSwitch    : PropTypes.func.isRequired,
   BottomNavigation : PropTypes.func.isRequired,
   children         : PropTypes.node,
-  classes : PropTypes.object.isRequired,
+  classes          : PropTypes.object.isRequired,
 }
 
 const AppFrame = withStyles(styles)(AppFrameBase)
