@@ -8,6 +8,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { Feedback } from '../ui/Feedback'
 import Typography from '@material-ui/core/Typography'
 
+import { withContext } from '../hocs/withContext'
 import { withStyles } from '@material-ui/core/styles'
 
 const styles = (theme) => ({
@@ -32,34 +33,36 @@ const styles = (theme) => ({
  * are either hidden or rendered absolutely.
  */
 
-class AppFrameBase extends React.Component {
-  render() {
-    const {ContentSwitch, BottomNavigation, classes} = this.props;
-    return (
-      <Router>
-        <Typography component="div" className={classes.root}>
-          <CssBaseline />
-          <Feedback />
-          <div style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
-            <div style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
-              <ContentSwitch />
-            </div>
-            <div style={{flex : '0 0 auto'}}>
-              <BottomNavigation />
-            </div>
-          </div>
-          {this.props.children}
-        </Typography>
-      </Router>
-    )
-  }
-}
+const AppParticulars = ({ContentSwitch, BottomNavigation}) => (
+  <div style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
+    <div style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
+      <ContentSwitch />
+    </div>
+    <div style={{flex : '0 0 auto'}}>
+      <BottomNavigation />
+    </div>
+  </div>
+)
 
-AppFrameBase.propTypes = {
+AppParticulars.propTypes = {
   ContentSwitch    : PropTypes.func.isRequired,
   BottomNavigation : PropTypes.func.isRequired,
-  children         : PropTypes.node,
-  classes          : PropTypes.object.isRequired,
+}
+
+const ContextualizedAppParticulars = withContext()(AppParticulars)
+
+const AppFrameBase = ({children, classes, ...AppParticularsProps}) => (
+  <Router>
+    <Typography component="div" className={classes.root}>
+      <CssBaseline />
+      <Feedback />
+      <ContextualizedAppParticulars {...AppParticularsProps} />
+    </Typography>
+  </Router>
+)
+
+AppFrameBase.propTypes = {
+  classes : PropTypes.object.isRequired,
 }
 
 const AppFrame = withStyles(styles)(AppFrameBase)

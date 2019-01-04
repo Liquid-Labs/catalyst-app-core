@@ -6,14 +6,11 @@ import { compose } from 'recompose'
 import classNames from 'classnames'
 
 import AppBar from '@material-ui/core/AppBar'
-import { CenteredProgress } from '@liquid-labs/mui-extensions'
 import { ContextReset } from './ContextReset'
 import Grid from '@material-ui/core/Grid'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
-
-import { withContext } from '../hocs/withContext'
 
 const styles = (theme) => ({
   root : {
@@ -46,10 +43,7 @@ const AppNavigationBase = ({contextSet, contextError, classes, children, ...rema
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
         position="static" style={{flex : '0 0 auto'}}>
       <Toolbar>
-        { !(contextSet || contextError)
-          ? <CenteredProgress />
-          : <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
-        }
+        <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
       </Toolbar>
     </AppBar>
   )
@@ -135,7 +129,6 @@ AppNavigationBase.propTypes = {
 
 const AppNavigation = compose(
   withStyles(styles),
-  withContext,
 )(AppNavigationBase)
 
 export { AppNavigation }
