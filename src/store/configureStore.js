@@ -7,10 +7,11 @@ export function configureStore(rootReducer, initialState) {
     thunk, // TODO: do we use thunk?
     followupActionMiddleware
   ]
-  if (process.env.NODE_ENV !== 'production') {
-    // const { logger } = require('redux-logger')
-    // middlewares = [ ...middlewares, logger ]
-  }
+  // TODO: Parameterize this...
+  /*if (process.env.NODE_ENV !== 'production') {
+    const { logger } = require('redux-logger')
+    middlewares = [ ...middlewares, logger ]
+  }*/
   const store = createStore(rootReducer, initialState, compose(
     applyMiddleware(...middlewares),
     window.devToolsExtension ? window.devToolsExtension() : f => f // add support for Redux dev tools
