@@ -39,8 +39,7 @@ const contextReducer = (currentState = INITIAL_STATE, action) => {
     };
   case ('RESET'): // full app reset
   case ('RESET_CONTEXT'): // TODO: this is used both on SignIn (which should completely) and ContextReset, which should reset back to base state; can optimize for second
-  // TODO: are these necessary? They should fire RESET?
-  case ('SIGN_IN'): // Actions from the session state; a change in auth status necessrily resets the context
+  case ('SIGN_IN'): // Actions from the session state; a change in auth status necessrily resets the context TODO: are these necessary? They should fire RESET?
   case ('SIGN_OUT'):
     return INITIAL_STATE;
   default:
