@@ -1,8 +1,5 @@
-import React from 'react';
+import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  BrowserRouter as Router,
-} from 'react-router-dom';
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { Feedback } from '../ui/Feedback'
@@ -52,13 +49,11 @@ AppParticulars.propTypes = {
 const ContextualizedAppParticulars = withContext()(AppParticulars)
 
 const AppFrameBase = ({children, classes, ...AppParticularsProps}) => (
-  <Router>
-    <Typography component="div" className={classes.root}>
-      <CssBaseline />
-      <Feedback />
-      <ContextualizedAppParticulars {...AppParticularsProps} />
-    </Typography>
-  </Router>
+  <Typography component="div" className={classes.root}>
+    <CssBaseline />
+    <Feedback />
+    <ContextualizedAppParticulars {...AppParticularsProps} />
+  </Typography>
 )
 
 AppFrameBase.propTypes = {
