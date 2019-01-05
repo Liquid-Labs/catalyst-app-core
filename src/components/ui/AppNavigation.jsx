@@ -6,14 +6,11 @@ import { compose } from 'recompose'
 import classNames from 'classnames'
 
 import AppBar from '@material-ui/core/AppBar'
-import { CenteredProgress } from '@liquid-labs/mui-extensions'
 import { ContextReset } from './ContextReset'
 import Grid from '@material-ui/core/Grid'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
-
-import { withContext } from '../hocs/withContext'
 
 const styles = (theme) => ({
   root : {
@@ -27,7 +24,8 @@ const styles = (theme) => ({
   },
   lightNavbar : {
     backgroundColor : 'white',
-    border          : '2px solid ' + theme.palette.primary.main
+    border          : '2px solid ' + theme.palette.primary.main,
+    color           : theme.palette.primary.main
   },
   right : {
     textAlign : 'right'
@@ -45,10 +43,7 @@ const AppNavigationBase = ({contextSet, contextError, classes, children, ...rema
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
         position="static" style={{flex : '0 0 auto'}}>
       <Toolbar>
-        { !(contextSet || contextError)
-          ? <CenteredProgress />
-          : <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
-        }
+        <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
       </Toolbar>
     </AppBar>
   )
@@ -67,8 +62,8 @@ const LogoAndContext = ({
   to,
   logoUrl, logoDescription,
   noContextLogoUrl, noContextLogoDescription,
-  contextStore, contextServiceLocation,
-  classes}) => {
+  contextStore, contextServiceLocation
+}) => {
   const justLogo = !contextStore && !contextServiceLocation
   const { url, description } =
     logoUrl && { logoUrl, logoDescription }
@@ -112,17 +107,16 @@ LogoAndContext.propTypes = {
   noContextLogoUrl         : PropTypes.string,
   noContextLogoDescription : PropTypes.string,
   contextStore             : PropTypes.object,
-  contextServiceLocation   : PropTypes.object,
-  classes                  : PropTypes.object.isRequired
+  contextServiceLocation   : PropTypes.object
 }
 
-const NavigationBar = ({ classes, children, rightChildren, ...remainder }) =>
+const NavigationBar = ({ classes, children, rightChildren, logoTo, ...remainder }) =>
   <Grid container>
     <Grid item xs={2}>
-      <LogoAndContext {...remainder} />
+      <LogoAndContext to={logoTo} {...remainder} />
     </Grid>
     <Grid item xs={8}>
-      { children }
+      {children}
     </Grid>
     <Grid item xs={2} className={classes.right}>
       {rightChildren}
@@ -135,7 +129,6 @@ AppNavigationBase.propTypes = {
 
 const AppNavigation = compose(
   withStyles(styles),
-  withContext,
 )(AppNavigationBase)
 
 export { AppNavigation }

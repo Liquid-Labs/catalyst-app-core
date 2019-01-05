@@ -14,7 +14,7 @@ import { CenteredProgress } from '@liquid-labs/mui-extensions'
 import camelCase from 'lodash.camelcase'
 import upperFirst from 'lodash.upperfirst'
 
-const withContext = (Component) => {
+const withContext = (appAdminClaim) => (Component) => {
   function determineContext() {
     // Since the App does not render this until authentication is settled, we
     // don't have to wait on authentication to settle here.
@@ -30,15 +30,18 @@ const withContext = (Component) => {
     const processResult = (successDispatch) => (resAction) => {
       if (resAction === null) {return;} // Fetch not executed for whatever reason, e.g., already fetching.
       else if (resAction.type.endsWith('SUCCESS')) {successDispatch(resAction.data[0]);}
-      else setContextError();
+      else {
+        setErrorMessage("Error determining application context.") // TODO: be more helpful
+        setContextError()
+      }
     }
 
     if (!contextError && !contextSet) {
       if (!authUser) {
         setNoContext()
       }
-      else if (claims.admin) {
-        setGlobalContext();
+      else if (claims[appAdminClaim]) {
+        setGlobalContext()
       }
       else if (claims.coordinator) {
         fetchSingleServiceLocation(
@@ -51,25 +54,28 @@ const withContext = (Component) => {
           .then(processResult(setStoreContext));
       }
       else {
-        setErrorMessage("Authenticated user has no authorized 'role'. Contact support.");
-        setContextError();
+        /*setErrorMessage("Authenticated user has no authorized 'role'. Contact support.");
+        setContextError();*/
+        setNoContext() // TODO: set self-context
       }
     }
   }
 
   const mapStateToProps = (state, ownProps) => {
-    const { contextState } = state;
+    const { contextState } = state
     const props = {
       context      : Object.assign({}, contextState),
       contextSet   : contextState.contextSet,
       contextError : contextState.contextError,
-    };
-    config.contexts.ordering.forEach(contextInfo => {
-      const itemName = camelCase(contextInfo[1]);
-      props[`context${upperFirst(itemName)}`] = contextState[itemName];
-    })
+    }
+    config.contexts
+      && config.contexts.ordering
+      && config.contexts.ordering.forEach(contextInfo => {
+        const itemName = camelCase(contextInfo[1]);
+        props[`context${upperFirst(itemName)}`] = contextState[itemName];
+      })
 
-    return props;
+    return props
   }
 
   const mapDispatchToProps = (dispatch) => ({
@@ -87,7 +93,9 @@ const withContext = (Component) => {
     // expects auth to be resolved and to receive auth props, as from
     // withAuthInfo; wrapped from App, so no need to wrap here
     connect(mapStateToProps, mapDispatchToProps),
-    lifecycle({componentDidMount : determineContext}),
+    lifecycle({
+      componentDidMount  : determineContext,
+      componentDidUpdate : determineContext}),
     branch(({contextError}) => Boolean(contextError),
       renderNothing),
     branch(({contextSet}) => !contextSet,
