@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  contextSet      : false,
+  contextResolved : false,
   serviceLocation : null,
   store           : null,
   contextError    : false
@@ -10,7 +10,7 @@ const contextReducer = (currentState = INITIAL_STATE, action) => {
   case ('SET_SERVICE_LOCATION_CONTEXT'):
     return {
       ...currentState,
-      contextSet      : true,
+      contextResolved : true,
       serviceLocation : action.serviceLocation,
       store           : null,
       contextError    : false
@@ -18,7 +18,7 @@ const contextReducer = (currentState = INITIAL_STATE, action) => {
   case ('SET_STORE_CONTEXT'):
     return {
       ...currentState,
-      contextSet      : true,
+      contextResolved : true,
       serviceLocation : null,
       store           : action.store,
       contextError    : false
@@ -27,7 +27,7 @@ const contextReducer = (currentState = INITIAL_STATE, action) => {
   case ('SET_NO_CONTEXT'):
     return {
       ...currentState,
-      contextSet      : true,
+      contextResolved : true,
       serviceLocation : null,
       store           : null,
       contextError    : false

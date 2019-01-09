@@ -38,7 +38,7 @@ const logoStyle = {
   }
 }
 
-const AppNavigationBase = ({contextSet, contextError, classes, children, ...remainder}) => {
+const AppNavigationBase = ({contextResolved, contextError, classes, children, ...remainder}) => {
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
         position="static" style={{flex : '0 0 auto'}}>

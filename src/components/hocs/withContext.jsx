@@ -19,7 +19,7 @@ const withContext = (appAdminClaim) => (Component) => {
     // Since the App does not render this until authentication is settled, we
     // don't have to wait on authentication to settle here.
     const { authUser, claims, // auth props
-      contextSet, contextError, // context
+      contextResolved, contextError, // context
       // context setting dispatches
       setNoContext, setContextError, setGlobalContext,
       setServiceLocationContext, setStoreContext,
@@ -36,7 +36,7 @@ const withContext = (appAdminClaim) => (Component) => {
       }
     }
 
-    if (!contextError && !contextSet) {
+    if (!contextError && !contextResolved) {
       if (!authUser) {
         setNoContext()
       }
@@ -64,9 +64,9 @@ const withContext = (appAdminClaim) => (Component) => {
   const mapStateToProps = (state, ownProps) => {
     const { contextState } = state
     const props = {
-      context      : Object.assign({}, contextState),
-      contextSet   : contextState.contextSet,
-      contextError : contextState.contextError,
+      context         : Object.assign({}, contextState),
+      contextResolved : contextState.contextResolved,
+      contextError    : contextState.contextError,
     }
     config.contexts
       && config.contexts.ordering
@@ -98,7 +98,7 @@ const withContext = (appAdminClaim) => (Component) => {
       componentDidUpdate : determineContext}),
     branch(({contextError}) => Boolean(contextError),
       renderNothing),
-    branch(({contextSet}) => !contextSet,
+    branch(({contextResolved}) => !contextResolved,
       renderComponent(() => <CenteredProgress />))
   )(Component);
 }
