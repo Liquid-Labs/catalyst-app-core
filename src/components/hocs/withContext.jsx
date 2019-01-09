@@ -21,7 +21,7 @@ const withContext = (appAdminClaim) => (Component) => {
     const { authUser, claims, // auth props
       contextResolved, contextError, // context
       // context setting dispatches
-      setNoContext, setContextError, setGlobalContext,
+      setNoContext, setContextError, setAdminContext,
       setServiceLocationContext, setStoreContext,
       fetchSingleServiceLocation, fetchSingleStore, // single-list fetch dispatches
       setErrorMessage
@@ -41,7 +41,7 @@ const withContext = (appAdminClaim) => (Component) => {
         setNoContext()
       }
       else if (claims[appAdminClaim]) {
-        setGlobalContext()
+        setAdminContext()
       }
       else if (claims.coordinator) {
         fetchSingleServiceLocation(
@@ -84,7 +84,7 @@ const withContext = (appAdminClaim) => (Component) => {
     setErrorMessage            : (errorMsg) => dispatch(appActions.setErrorMessage(errorMsg)),
     setStoreContext            : (store) => dispatch(contextActions.setStoreContext(store)),
     setServiceLocationContext  : (serviceLocation) => dispatch(contextActions.setServiceLocationContext(serviceLocation)),
-    setGlobalContext           : () => dispatch(contextActions.setGlobalContext()),
+    setAdminContext           : () => dispatch(contextActions.setAdminContext()),
     setNoContext               : () => dispatch(contextActions.setNoContext()),
     setContextError            : () => dispatch(contextActions.setContextError())
   })

@@ -8,7 +8,7 @@ export const setStoreContext = (store) => ({
   store : store
 })
 
-export const setGlobalContext = () => ({ type : 'SET_GLOBAL_CONTEXT' })
+export const setAdminContext = () => ({ type : 'SET_ADMIN_CONTEXT' })
 
 export const setNoContext = () => ({ type : 'SET_NO_CONTEXT' })
 

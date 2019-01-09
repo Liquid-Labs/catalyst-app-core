@@ -23,7 +23,7 @@ const contextReducer = (currentState = INITIAL_STATE, action) => {
       store           : action.store,
       contextError    : false
     };
-  case ('SET_GLOBAL_CONTEXT'):
+  case ('SET_ADMIN_CONTEXT'):
   case ('SET_NO_CONTEXT'):
     return {
       ...currentState,
