@@ -1,26 +1,16 @@
 const INITIAL_STATE = {
   contextResolved : false,
-  serviceLocation : null,
-  store           : null,
+  context         : null,
   contextError    : false
 }
 
 const contextReducer = (currentState = INITIAL_STATE, action) => {
   switch (action.type) {
-  case ('SET_SERVICE_LOCATION_CONTEXT'):
+  case ('SET_CONTEXT'):
     return {
       ...currentState,
       contextResolved : true,
-      serviceLocation : action.serviceLocation,
-      store           : null,
-      contextError    : false
-    };
-  case ('SET_STORE_CONTEXT'):
-    return {
-      ...currentState,
-      contextResolved : true,
-      serviceLocation : null,
-      store           : action.store,
+      context         : action.context,
       contextError    : false
     };
   case ('SET_ADMIN_CONTEXT'):
@@ -28,8 +18,7 @@ const contextReducer = (currentState = INITIAL_STATE, action) => {
     return {
       ...currentState,
       contextResolved : true,
-      serviceLocation : null,
-      store           : null,
+      context         : null,
       contextError    : false
     }
   case ('SET_CONTEXT_ERROR'):
@@ -41,10 +30,10 @@ const contextReducer = (currentState = INITIAL_STATE, action) => {
   case ('RESET_CONTEXT'): // TODO: this is used both on SignIn (which should completely) and ContextReset, which should reset back to base state; can optimize for second
   case ('SIGN_IN'): // Actions from the session state; a change in auth status necessrily resets the context TODO: are these necessary? They should fire RESET?
   case ('SIGN_OUT'):
-    return INITIAL_STATE;
+    return INITIAL_STATE
   default:
-    return currentState;
+    return currentState
   }
 }
 
-export default contextReducer;
+export default contextReducer

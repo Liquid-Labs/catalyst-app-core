@@ -14,29 +14,37 @@ import { CenteredProgress } from '@liquid-labs/mui-extensions'
 import camelCase from 'lodash.camelcase'
 import upperFirst from 'lodash.upperfirst'
 
-const withContext = (appAdminClaim) => (Component) => {
+const withContext = (appAdminClaim, resolveDefaultContext) => (Component) => {
   function determineContext() {
     // Since the App does not render this until authentication is settled, we
     // don't have to wait on authentication to settle here.
     const { authUser, claims, // auth props
       contextResolved, contextError, // context
       // context setting dispatches
-      setNoContext, setContextError, setAdminContext,
-      setServiceLocationContext, setStoreContext,
+      setNoContext, setContextError, setAdminContext, setContext,
       fetchSingleServiceLocation, fetchSingleStore, // single-list fetch dispatches
       setErrorMessage
     } = this.props;
 
-    const processResult = (successDispatch) => (resAction) => {
-      if (resAction === null) {return;} // Fetch not executed for whatever reason, e.g., already fetching.
-      else if (resAction.type.endsWith('SUCCESS')) {successDispatch(resAction.data[0]);}
-      else {
-        setErrorMessage("Error determining application context.") // TODO: be more helpful
-        setContextError()
-      }
-    }
-
     if (!contextError && !contextResolved) {
+      const processResult = (resAction) => {
+        if (resAction === null) { return } // Fetch not executed for whatever reason, e.g., already fetching.
+        else if (resAction.type.endsWith('SUCCESS')) {
+          setContext(resAction.data[0])
+        }
+        else {
+          setErrorMessage("Error determining application context.") // TODO: be more helpful
+          setContextError()
+        }
+      }
+
+      if (!resolveDefaultContext) {
+        defaultDefaultContextResolver(authUser, claims[appAdminClaim])
+        if (authUser && claims[appAdminClaim]) {
+          setAdminContext()
+        }
+      }
+
       if (!authUser) {
         setNoContext()
       }
@@ -46,12 +54,12 @@ const withContext = (appAdminClaim) => (Component) => {
       else if (claims.coordinator) {
         fetchSingleServiceLocation(
           uiRoutes.getContextListRouteFor({type : 'users', id : 'self'}, 'service-locations'))
-          .then(processResult(setServiceLocationContext));
+          .then(processResult)
       }
       else if (claims.clerk) {
         fetchSingleStore(
           uiRoutes.getContextListRouteFor({type : 'users', id : 'self'}, 'stores'))
-          .then(processResult(setStoreContext));
+          .then(processResult)
       }
       else {
         /*setErrorMessage("Authenticated user has no authorized 'role'. Contact support.");
@@ -82,8 +90,7 @@ const withContext = (appAdminClaim) => (Component) => {
     fetchSingleServiceLocation : (source) => dispatch(resourceActions.fetchSingleFromList(source)),
     fetchSingleStore           : (source) => dispatch(resourceActions.fetchSingleFromList(source)),
     setErrorMessage            : (errorMsg) => dispatch(appActions.setErrorMessage(errorMsg)),
-    setStoreContext            : (store) => dispatch(contextActions.setStoreContext(store)),
-    setServiceLocationContext  : (serviceLocation) => dispatch(contextActions.setServiceLocationContext(serviceLocation)),
+    setContext                 : (context) => dispatch(contextActions.setStoreContext(context)),
     setAdminContext           : () => dispatch(contextActions.setAdminContext()),
     setNoContext               : () => dispatch(contextActions.setNoContext()),
     setContextError            : () => dispatch(contextActions.setContextError())
