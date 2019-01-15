@@ -22,13 +22,13 @@ case "$ACTION" in
     else
       echo "${green}running${reset}"
     fi;;
-  start
-    echo "WEB_APP_DIR: ${WEB_APP_DIR}"
-    exit
+  start)
     SERV_OUT_BASE="${_CATALYST_ENV_LOGS}/${SERV_IFACE}"
     SERV_LOG="${SERV_OUT_BASE}.log"
     SERV_ERR="${SERV_OUT_BASE}.err"
-    bash -c "cd ${WEB_APP_DIR}; npm start > "${SERV_LOG}" 2> "${SERV_ERR}" &";;
+    echo "BASE_DIR: $BASE_DIR"
+    echo "CSCUWAD: ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}"
+    bash -c "cd ${BASE_DIR}; cd ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}; npm start > "${SERV_LOG}" 2> "${SERV_ERR}" &";;
   stop)
     echo "TODO: stop";;
   restart)

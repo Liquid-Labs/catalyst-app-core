@@ -5,8 +5,13 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "files": [
-    "dist/"
+    "dist/",
+    "bin/",
+    ".catalyst"
   ],
+  "bin": {
+    "react-local-websvr.sh": "bin/react-local-websvr.sh"
+  },
   "scripts": {
     "build": "catalyst-scripts \"$PWD\" build",
     "start": "catalyst-scripts \"$PWD\" start",
@@ -64,5 +69,24 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
+  ],
+  "_catServices": [
+    {
+      "name": "catalyst-local-dev-http-html",
+      "interface-classes": [
+        "http-html"
+      ],
+      "platform-types": [
+        "local"
+      ],
+      "purposes": [
+        "dev"
+      ],
+      "ctrl-script": "react-local-websvr.sh",
+      "params-req": [
+        "CAT_SCRIPT_CORE_UI_WEB_APP_DIR"
+      ],
+      "params-opt": []
+    }
   ]
 }
