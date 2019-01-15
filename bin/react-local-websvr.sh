@@ -26,11 +26,9 @@ case "$ACTION" in
     SERV_OUT_BASE="${_CATALYST_ENV_LOGS}/${SERV_IFACE}"
     SERV_LOG="${SERV_OUT_BASE}.log"
     SERV_ERR="${SERV_OUT_BASE}.err"
-    echo "BASE_DIR: $BASE_DIR"
-    echo "CSCUWAD: ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}"
-    bash -c "cd ${BASE_DIR}; cd ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}; npm start > "${SERV_LOG}" 2> "${SERV_ERR}" &";;
+    bash -c "cd ${BASE_DIR}; cd ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}; npx react-scripts start > "${SERV_LOG}" 2> "${SERV_ERR}" &";;
   stop)
-    echo "TODO: stop";;
+    kill $(ps aux | grep react-scripts | grep node | awk '{print $2}');;
   restart)
     echo "TODO: restart";;
   *)
