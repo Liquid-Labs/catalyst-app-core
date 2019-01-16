@@ -13,6 +13,8 @@ reset=`tput sgr0`
 ACTION="${1-}"
 
 case "$ACTION" in
+  name)
+    echo "react-dev-server";;
   status)
     set +e # grep exits with error if no match
     PROC_COUNT=$(ps aux | grep react-scripts | grep node | wc -l)
@@ -23,9 +25,6 @@ case "$ACTION" in
       echo "${green}running${reset}"
     fi;;
   start)
-    SERV_OUT_BASE="${_CATALYST_ENV_LOGS}/${SERV_IFACE}"
-    SERV_LOG="${SERV_OUT_BASE}.log"
-    SERV_ERR="${SERV_OUT_BASE}.err"
     bash -c "cd ${BASE_DIR}; cd ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}; npx react-scripts start > "${SERV_LOG}" 2> "${SERV_ERR}" &";;
   stop)
     kill $(ps aux | grep react-scripts | grep node | awk '{print $2}');;
