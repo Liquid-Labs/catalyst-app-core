@@ -12,22 +12,41 @@ reset=`tput sgr0`
 
 ACTION="${1-}"
 
+# The server spawns new processes on re-compile, so we can't use a PID based approach.
+isRunning() {
+  set +e # grep exits with error if no match
+  local PROC_COUNT=$(ps aux | grep react-scripts | grep node | wc -l)
+  set -e
+  if (( $PROC_COUNT == 0 )); then
+    return 1
+  else
+    return 0
+  fi
+}
+
 case "$ACTION" in
   name)
     echo "react-dev-server";;
   status)
-    set +e # grep exits with error if no match
-    PROC_COUNT=$(ps aux | grep react-scripts | grep node | wc -l)
-    set -e
-    if (( $PROC_COUNT == 0 )); then
-      echo "${yellow}not running${reset}"
-    else
+    if isRunning; then
       echo "${green}running${reset}"
+    else
+      echo "${yellow}not running${reset}"
     fi;;
   start)
-    bash -c "cd ${BASE_DIR}; cd ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}; npx react-scripts start > "${SERV_LOG}" 2> "${SERV_ERR}" &";;
+    if ! isRunning; then
+      bash -c "cd ${BASE_DIR}; cd ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}; npx react-scripts start > '${SERV_LOG}' 2> '${SERV_ERR}' &"
+    else
+      # TODO: use echoerr
+      echo "${PROCESS_NAME} appears to already be running."
+    fi;;
   stop)
-    kill $(ps aux | grep react-scripts | grep node | awk '{print $2}');;
+    if isRunning; then
+      kill $(ps aux | grep react-scripts | grep node | awk '{print $2}')
+    else
+      # TODO: use echoerr
+      echo "${PROCESS_NAME} does not appear to be running."
+    fi;;
   restart)
     echo "TODO: restart";;
   *)
