@@ -24,6 +24,14 @@ isRunning() {
   fi
 }
 
+startDevServer() {
+  bash -c "cd ${BASE_DIR}; cd ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}; npx react-scripts start > '${SERV_LOG}' 2> '${SERV_ERR}' &"
+}
+
+stopDevServer() {
+  kill $(ps aux | grep react-scripts | grep node | awk '{print $2}')
+}
+
 case "$ACTION" in
   name)
     echo "react-dev-server";;
@@ -35,20 +43,22 @@ case "$ACTION" in
     fi;;
   start)
     if ! isRunning; then
-      bash -c "cd ${BASE_DIR}; cd ${CAT_SCRIPT_CORE_UI_WEB_APP_DIR}; npx react-scripts start > '${SERV_LOG}' 2> '${SERV_ERR}' &"
+      startDevServer
     else
       # TODO: use echoerr
       echo "${PROCESS_NAME} appears to already be running."
     fi;;
   stop)
     if isRunning; then
-      kill $(ps aux | grep react-scripts | grep node | awk '{print $2}')
+      stopDevServer
     else
       # TODO: use echoerr
       echo "${PROCESS_NAME} does not appear to be running."
     fi;;
   restart)
-    echo "TODO: restart";;
+    stopDevServer
+    sleep 1
+    startDevServer;;
   *)
     # TODO: library-ize and use 'echoerrandexit'
     echo "Unknown action '${ACTION}'." >&2
