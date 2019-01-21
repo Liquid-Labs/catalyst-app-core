@@ -5,8 +5,13 @@
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "files": [
-    "dist/"
+    "dist/",
+    "bin/",
+    ".catalyst"
   ],
+  "bin": {
+    "react-dev-server.sh": "bin/react-dev-server.sh"
+  },
   "scripts": {
     "build": "catalyst-scripts \"$PWD\" build",
     "start": "catalyst-scripts \"$PWD\" start",
@@ -64,5 +69,26 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
+  ],
+  "_catServices": [
+    {
+      "name": "react-dev-server",
+      "interface-classes": [
+        "http-html"
+      ],
+      "platform-types": [
+        "local"
+      ],
+      "purposes": [
+        "dev"
+      ],
+      "ctrl-scripts": [
+        "react-dev-server.sh"
+      ],
+      "params-req": [
+        "CAT_SCRIPT_CORE_UI_WEB_APP_DIR"
+      ],
+      "params-opt": []
+    }
   ]
 }
