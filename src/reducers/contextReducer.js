@@ -13,14 +13,7 @@ const contextReducer = (currentState = INITIAL_STATE, action) => {
       context         : action.context,
       contextError    : false
     };
-  case ('SET_ADMIN_CONTEXT'):
-  case ('SET_NO_CONTEXT'):
-    return {
-      ...currentState,
-      contextResolved : true,
-      context         : null,
-      contextError    : false
-    }
+    
   case ('SET_CONTEXT_ERROR'):
     return {
       ...INITIAL_STATE,

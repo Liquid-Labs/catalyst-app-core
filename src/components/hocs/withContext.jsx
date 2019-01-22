@@ -16,8 +16,8 @@ import upperFirst from 'lodash.upperfirst'
 
 const withContext = (appAdminClaim, resolveDefaultContext) => (Component) => {
   function determineContext() {
-    // Since the App does not render this until authentication is settled, we
-    // don't have to wait on authentication to settle here.
+    // Since we require authentication must settle before context is resolved
+    // it's not necessary to wait on authentication.
     const { authUser, claims, // auth props
       contextResolved, contextError, // context
       // context setting dispatches
@@ -38,33 +38,11 @@ const withContext = (appAdminClaim, resolveDefaultContext) => (Component) => {
         }
       }
 
-      if (!resolveDefaultContext) {
-        defaultDefaultContextResolver(authUser, claims[appAdminClaim])
-        if (authUser && claims[appAdminClaim]) {
-          setAdminContext()
-        }
-      }
-
-      if (!authUser) {
-        setNoContext()
-      }
-      else if (claims[appAdminClaim]) {
-        setAdminContext()
-      }
-      else if (claims.coordinator) {
-        fetchSingleServiceLocation(
-          uiRoutes.getContextListRouteFor({type : 'users', id : 'self'}, 'service-locations'))
-          .then(processResult)
-      }
-      else if (claims.clerk) {
-        fetchSingleStore(
-          uiRoutes.getContextListRouteFor({type : 'users', id : 'self'}, 'stores'))
-          .then(processResult)
+      if (resolveDefaultContext) {
+        resolveDefaultContext(authUser, claims).then(processResult)
       }
       else {
-        /*setErrorMessage("Authenticated user has no authorized 'role'. Contact support.");
-        setContextError();*/
-        setNoContext() // TODO: set self-context
+        setContext(authUser) // authUser may be null; that's OK
       }
     }
   }
@@ -87,12 +65,8 @@ const withContext = (appAdminClaim, resolveDefaultContext) => (Component) => {
   }
 
   const mapDispatchToProps = (dispatch) => ({
-    fetchSingleServiceLocation : (source) => dispatch(resourceActions.fetchSingleFromList(source)),
-    fetchSingleStore           : (source) => dispatch(resourceActions.fetchSingleFromList(source)),
     setErrorMessage            : (errorMsg) => dispatch(appActions.setErrorMessage(errorMsg)),
-    setContext                 : (context) => dispatch(contextActions.setStoreContext(context)),
-    setAdminContext           : () => dispatch(contextActions.setAdminContext()),
-    setNoContext               : () => dispatch(contextActions.setNoContext()),
+    setContext                 : (context) => dispatch(contextActions.setContext(context)),
     setContextError            : () => dispatch(contextActions.setContextError())
   })
 
