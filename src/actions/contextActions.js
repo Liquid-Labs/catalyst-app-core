@@ -1,16 +1,7 @@
-export const setServiceLocationContext = (serviceLocation) => ({
-  type            : 'SET_SERVICE_LOCATION_CONTEXT',
-  serviceLocation : serviceLocation
+export const setContext = (context) => ({
+  type    : 'SET_CONTEXT',
+  context : context
 })
-
-export const setStoreContext = (store) => ({
-  type  : 'SET_STORE_CONTEXT',
-  store : store
-})
-
-export const setGlobalContext = () => ({ type : 'SET_GLOBAL_CONTEXT' })
-
-export const setNoContext = () => ({ type : 'SET_NO_CONTEXT' })
 
 export const resetContext = () => ({ type : 'RESET_CONTEXT' })
 

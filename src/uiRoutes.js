@@ -58,7 +58,7 @@ export const getItemEditRoute = (resource, itemId) =>
   `/${resource}/${itemId || ':id'}/edit`
 
 export const getDefaultListRoute = (resource, context) => {
-  if (context.contextSet && !context.contextError) {
+  if (context.contextResolved && !context.contextError) {
     let contextItem = null
     const contextInfo =
       config.contexts.ordering.find(contextInfo => {

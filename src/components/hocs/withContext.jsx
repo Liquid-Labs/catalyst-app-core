@@ -6,57 +6,40 @@ import { config } from '../../config'
 
 import * as appActions from '../../actions/appActions'
 import * as contextActions from '../../actions/contextActions'
-import * as resourceActions from '../../actions/resourceActions'
-import * as uiRoutes from '../../uiRoutes'
 
 import { CenteredProgress } from '@liquid-labs/mui-extensions'
 
 import camelCase from 'lodash.camelcase'
 import upperFirst from 'lodash.upperfirst'
 
-const withContext = (appAdminClaim) => (Component) => {
+const withContext = (appAdminClaim, resolveDefaultContext) => (Component) => {
   function determineContext() {
-    // Since the App does not render this until authentication is settled, we
-    // don't have to wait on authentication to settle here.
+    // Since we require authentication must settle before context is resolved
+    // it's not necessary to wait on authentication.
     const { authUser, claims, // auth props
-      contextSet, contextError, // context
+      contextResolved, contextError, // context
       // context setting dispatches
-      setNoContext, setContextError, setGlobalContext,
-      setServiceLocationContext, setStoreContext,
-      fetchSingleServiceLocation, fetchSingleStore, // single-list fetch dispatches
+      setContextError, setContext,
       setErrorMessage
     } = this.props;
 
-    const processResult = (successDispatch) => (resAction) => {
-      if (resAction === null) {return;} // Fetch not executed for whatever reason, e.g., already fetching.
-      else if (resAction.type.endsWith('SUCCESS')) {successDispatch(resAction.data[0]);}
-      else {
-        setErrorMessage("Error determining application context.") // TODO: be more helpful
-        setContextError()
+    if (!contextError && !contextResolved) {
+      const processResult = (resAction) => {
+        if (resAction === null) { return } // Fetch not executed for whatever reason, e.g., already fetching.
+        else if (resAction.type.endsWith('SUCCESS')) {
+          setContext(resAction.data[0])
+        }
+        else {
+          setErrorMessage("Error determining application context.") // TODO: be more helpful
+          setContextError()
+        }
       }
-    }
 
-    if (!contextError && !contextSet) {
-      if (!authUser) {
-        setNoContext()
-      }
-      else if (claims[appAdminClaim]) {
-        setGlobalContext()
-      }
-      else if (claims.coordinator) {
-        fetchSingleServiceLocation(
-          uiRoutes.getContextListRouteFor({type : 'users', id : 'self'}, 'service-locations'))
-          .then(processResult(setServiceLocationContext));
-      }
-      else if (claims.clerk) {
-        fetchSingleStore(
-          uiRoutes.getContextListRouteFor({type : 'users', id : 'self'}, 'stores'))
-          .then(processResult(setStoreContext));
+      if (resolveDefaultContext) {
+        resolveDefaultContext(authUser, claims).then(processResult)
       }
       else {
-        /*setErrorMessage("Authenticated user has no authorized 'role'. Contact support.");
-        setContextError();*/
-        setNoContext() // TODO: set self-context
+        setContext(authUser) // authUser may be null; that's OK
       }
     }
   }
@@ -64,9 +47,9 @@ const withContext = (appAdminClaim) => (Component) => {
   const mapStateToProps = (state, ownProps) => {
     const { contextState } = state
     const props = {
-      context      : Object.assign({}, contextState),
-      contextSet   : contextState.contextSet,
-      contextError : contextState.contextError,
+      context         : Object.assign({}, contextState),
+      contextResolved : contextState.contextResolved,
+      contextError    : contextState.contextError,
     }
     config.contexts
       && config.contexts.ordering
@@ -79,14 +62,9 @@ const withContext = (appAdminClaim) => (Component) => {
   }
 
   const mapDispatchToProps = (dispatch) => ({
-    fetchSingleServiceLocation : (source) => dispatch(resourceActions.fetchSingleFromList(source)),
-    fetchSingleStore           : (source) => dispatch(resourceActions.fetchSingleFromList(source)),
-    setErrorMessage            : (errorMsg) => dispatch(appActions.setErrorMessage(errorMsg)),
-    setStoreContext            : (store) => dispatch(contextActions.setStoreContext(store)),
-    setServiceLocationContext  : (serviceLocation) => dispatch(contextActions.setServiceLocationContext(serviceLocation)),
-    setGlobalContext           : () => dispatch(contextActions.setGlobalContext()),
-    setNoContext               : () => dispatch(contextActions.setNoContext()),
-    setContextError            : () => dispatch(contextActions.setContextError())
+    setErrorMessage : (errorMsg) => dispatch(appActions.setErrorMessage(errorMsg)),
+    setContext      : (context) => dispatch(contextActions.setContext(context)),
+    setContextError : () => dispatch(contextActions.setContextError())
   })
 
   return compose(
@@ -98,7 +76,7 @@ const withContext = (appAdminClaim) => (Component) => {
       componentDidUpdate : determineContext}),
     branch(({contextError}) => Boolean(contextError),
       renderNothing),
-    branch(({contextSet}) => !contextSet,
+    branch(({contextResolved}) => !contextResolved,
       renderComponent(() => <CenteredProgress />))
   )(Component);
 }
