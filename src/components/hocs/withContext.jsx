@@ -6,8 +6,6 @@ import { config } from '../../config'
 
 import * as appActions from '../../actions/appActions'
 import * as contextActions from '../../actions/contextActions'
-import * as resourceActions from '../../actions/resourceActions'
-import * as uiRoutes from '../../uiRoutes'
 
 import { CenteredProgress } from '@liquid-labs/mui-extensions'
 
@@ -21,8 +19,7 @@ const withContext = (appAdminClaim, resolveDefaultContext) => (Component) => {
     const { authUser, claims, // auth props
       contextResolved, contextError, // context
       // context setting dispatches
-      setNoContext, setContextError, setAdminContext, setContext,
-      fetchSingleServiceLocation, fetchSingleStore, // single-list fetch dispatches
+      setContextError, setContext,
       setErrorMessage
     } = this.props;
 
@@ -65,9 +62,9 @@ const withContext = (appAdminClaim, resolveDefaultContext) => (Component) => {
   }
 
   const mapDispatchToProps = (dispatch) => ({
-    setErrorMessage            : (errorMsg) => dispatch(appActions.setErrorMessage(errorMsg)),
-    setContext                 : (context) => dispatch(contextActions.setContext(context)),
-    setContextError            : () => dispatch(contextActions.setContextError())
+    setErrorMessage : (errorMsg) => dispatch(appActions.setErrorMessage(errorMsg)),
+    setContext      : (context) => dispatch(contextActions.setContext(context)),
+    setContextError : () => dispatch(contextActions.setContextError())
   })
 
   return compose(
