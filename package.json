@@ -50,7 +50,7 @@
     "redux-thunk": "^2.3.0"
   },
   "peerDependencies": {
-    "@liquid-labs/mui-extensions": "0.0.7",
+    "@liquid-labs/mui-extensions": "0.0.9",
     "@liquid-labs/regex-repo": "1.0.0-alpha.2",
     "@material-ui/core": "^1.5.1 || 3.x",
     "classnames": "^2.2.6",
@@ -61,7 +61,7 @@
     "lodash.upperfirst": "^4.3.1",
     "moment-timezone": "^0.5.21",
     "react": "16.x",
-    "react-redux": "5.x",
+    "react-redux": "5.x || 6.x",
     "react-router-dom": "4.x",
     "recompose": "^0.30.0"
   },

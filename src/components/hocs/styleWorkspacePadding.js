@@ -1,6 +1,6 @@
 import { compose, mapProps } from 'recompose'
 
-import { withMainPadding } from './withMainPadding'
+import { withMainPadding } from '@liquid-labs/mui-extensions'
 
 import merge from 'lodash.merge'
 
