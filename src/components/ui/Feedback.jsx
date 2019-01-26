@@ -4,8 +4,8 @@ import { compose } from 'recompose'
 import { connect } from 'react-redux'
 
 import CloseIcon from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton'
 import Snackbar from '@material-ui/core/Snackbar'
+import { TinyIconButton } from '@liquid-labs/mui-extensions'
 
 import { withStyles } from '@material-ui/core/styles'
 
@@ -52,14 +52,14 @@ const FeedbackBase = ({infoMessages, errorMessages, sticky, clearAppMessages, cl
         }}
         message={<span id="message-id">{message}</span>}
         action={
-          <IconButton
+          <TinyIconButton
               aria-label="Close"
               color="inherit"
               className={classes.close}
               onClick={clearAppMessages}
         >
             <CloseIcon />
-          </IconButton>
+          </TinyIconButton>
       }
     />
   )
