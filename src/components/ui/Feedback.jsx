@@ -74,7 +74,7 @@ FeedbackBase.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-  const { errorMessages, infoMessages, sticky } = state.appState;
+  const { errorMessages, infoMessages, sticky } = state.appState
 
   return {
     errorMessages : errorMessages,
