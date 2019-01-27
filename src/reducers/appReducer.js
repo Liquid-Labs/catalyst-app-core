@@ -31,8 +31,7 @@ const appReducer = (currentState = INITIAL_STATE, action) => {
     return mergeMessage(currentState, action.infoMessage, 'infoMessages', action.sticky)
   case ('SET_ERROR_MESSAGE'):
     console.error(action.errorMessage) // eslint-disable-line no-console
-    return currentState
-    // return mergeMessage(currentState, action.errorMessage, 'errorMessages', true)
+    return mergeMessage(currentState, action.errorMessage, 'errorMessages', true)
   case ('CLEAR_APP_MESSAGES'):
     return {
       ...currentState,
