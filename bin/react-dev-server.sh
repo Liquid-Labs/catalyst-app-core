@@ -40,6 +40,8 @@ case "$ACTION" in
     startDevServer;;
   stop)
     stopDevServer;;
+  param-default)
+    echo '';;
   restart)
     stopDevServer
     sleep 1

@@ -75,7 +75,7 @@
     {
       "name": "react-dev-server",
       "interface-classes": [
-        "http-html"
+        "html"
       ],
       "platform-types": [
         "local"
