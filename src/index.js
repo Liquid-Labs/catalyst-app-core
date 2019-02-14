@@ -19,8 +19,8 @@ export * from './CommonResourceConf'
 
 export * from './reducers'
 
+export * from './components/Await'
 export * from './components/hocs/styleWorkspacePadding'
-export * from './components/hocs/withAwait'
 export * from './components/hocs/withContext'
 export * from './components/ui/AppFrame'
 export * from './components/ui/AppNavigation'
