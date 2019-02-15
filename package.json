@@ -18,7 +18,8 @@
     "start": "catalyst-scripts start",
     "pretest": "catalyst-scripts pretest",
     "test": "catalyst-scripts test",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "watch": "catalyst-scripts watch"
   },
   "repository": {
     "type": "git",
