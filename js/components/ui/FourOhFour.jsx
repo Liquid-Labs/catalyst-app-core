@@ -7,7 +7,7 @@ import { compose } from 'recompose'
 
 import Typography from '@material-ui/core/Typography'
 
-const FourOhFourBase = ({noAuthRedirect, history}) => {
+const FourOhFour = withRouter(({noAuthRedirect, history}) => {
   // TODO: make slick with countdown
   const waitTime = 5 // seconds
 
@@ -24,20 +24,11 @@ const FourOhFourBase = ({noAuthRedirect, history}) => {
       </Typography>
     </div>
     : <Typography component="div" color="error">No such resource available.</Typography>
-}
+})
 
-FourOhFourBase.propTypes = {
+FourOhFour.propTypes = {
   noAuthRedirect : PropTypes.string,
   history        : PropTypes.object.isRequired,
 }
-
-const mapStateToProps = (state) => ({
-  authUser : state.sessionState.authUser,
-});
-
-const FourOhFour = compose(
-  connect(mapStateToProps),
-  withRouter
-)(FourOhFourBase)
 
 export { FourOhFour }
