@@ -48,13 +48,21 @@ AppParticulars.propTypes = {
 
 const ContextualizedAppParticulars = withContext()(AppParticulars)
 
-const AppFrameBase = ({children, classes, ...AppParticularsProps}) => (
-  <Typography component="div" className={classes.root}>
-    <CssBaseline />
-    <Feedback />
-    <ContextualizedAppParticulars {...AppParticularsProps} />
-  </Typography>
-)
+const mapDispatchToProps = (dispatch) => ({
+  apiErrorHandler: (msg) => dispatch(appActions.setErrorMessage(msg))
+})
+
+const AppFrameBase = ({apiErrorHandler, children, classes, ...AppParticularsProps}) => {
+  resourceSettings.setErrorHandser(apiErrorHandler)
+
+  return (
+    <Typography component="div" className={classes.root}>
+      <CssBaseline />
+      <Feedback />
+      <ContextualizedAppParticulars {...AppParticularsProps} />
+    </Typography>
+  )
+}
 
 AppFrameBase.propTypes = {
   classes : PropTypes.object.isRequired,
