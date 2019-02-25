@@ -1,5 +1,5 @@
 import React from 'react'
-import { compose } from 'recompose'
+import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import Grid from '@material-ui/core/Grid'
@@ -16,24 +16,27 @@ const styles = (theme) => ({
   }
 })
 
-const AppMainBase = ({classes, children, component, className, ...props}) => {
-  className = classNames(classes.root, className)
+const AppMain = withStyles(styles, { name : 'AppMain' })(styleWorkspacePadding()(
+  ({classes, children, className, ...props}) => {
+    className = classNames(classes.root, className)
 
-  return (
-    <Grid id="main"
-        container
-        direction="column"
-        wrap="nowrap"
-        className={className}
-        {...props}>
-      { children }
-    </Grid>
-  )
+    return (
+      <Grid id="main"
+          container
+          direction="column"
+          wrap="nowrap"
+          className={className}
+          {...props}>
+        { children }
+      </Grid>
+    )
+  }))
+
+if (process.env.NODE_ENV !== 'production') {
+  AppMain.propTypes = {
+    children  : PropTypes.node.isRequired,
+    className : PropTypes.string
+  }
 }
-
-const AppMain = compose(
-  withStyles(styles, { name : 'AppMain' }),
-  styleWorkspacePadding(),
-)(AppMainBase)
 
 export { AppMain }

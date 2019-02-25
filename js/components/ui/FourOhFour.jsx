@@ -1,9 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
-import { compose } from 'recompose'
 
 import Typography from '@material-ui/core/Typography'
 
@@ -17,7 +15,7 @@ const FourOhFour = withRouter(({noAuthRedirect, history}) => {
 
   return noAuthRedirect
     ? <div>
-      <Typography variant="headline">404!</Typography>
+      <Typography variant="h5">404!</Typography>
       <Typography>
           The URL you entered is not available. You will be automatically redirected
           to <code><Link to={noAuthRedirect}>{noAuthRedirect}</Link></code> in {waitTime} seconds.

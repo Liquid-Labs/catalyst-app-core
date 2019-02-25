@@ -19,7 +19,9 @@
     "pretest": "catalyst-scripts pretest",
     "test": "catalyst-scripts test",
     "prepare": "npm run build",
-    "watch": "catalyst-scripts watch"
+    "watch": "catalyst-scripts watch",
+    "lint": "catalyst-scripts lint",
+    "lint-fix": "catalyst-scripts lint-fix"
   },
   "repository": {
     "type": "git",
@@ -36,6 +38,7 @@
   "homepage": "https://github.com/Liquid-Labs/catalyst-core#readme",
   "devDependencies": {
     "@liquid-labs/catalyst-scripts": "latest",
+    "@liquid-labs/catalyst-theme": "^1.0.0-prototype.0",
     "@liquid-labs/regex-repo": "latest",
     "lodash.camelcase": "^4.3.0",
     "moment-timezone": "^0.5.21"
@@ -88,5 +91,6 @@
       ],
       "params-opt": []
     }
-  ]
+  ],
+  "dependencies": {}
 }
