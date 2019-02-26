@@ -38,34 +38,37 @@ const FeedbackContext = createContext()
 
 const FeedbackProvider = withSnackbar(
   ({autoHideDuration, warningHideFactor, enqueueSnackbar, children}) => {
+    // 'enqueueSnackbar' changes with ever render. Which means we can't rely on
+    // it as an indicator when to recalculate the 'addInfoMessage', etc.
+    // Luckily, it appears that we don't have to.
     const addInfoMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
         { persist: false, variant: 'info', autoHideDuration: autoHideDuration },
         options)),
-      [ enqueueSnackbar ])
+      [ /* enqueueSnackbar */ ])
     const addConfirmMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
         { persist: false, variant: 'success', autoHideDuration: autoHideDuration },
         options)),
-      [ enqueueSnackbar ])
+      [ /* enqueueSnackbar */ ])
     const addWarningMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
         { persist: false,
           variant: 'warning',
           autoHideDuration: autoHideDuration * warningHideFactor },
         options)),
-      [ enqueueSnackbar ])
+      [ /* enqueueSnackbar */ ])
     const addErrorMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
         { persist: true, variant: 'error' },
-        options))
-      [ enqueueSnackbar ])
+        options)),
+      [ /* enqueueSnackbar */ ])
     const feedbackAPI = useMemo(() => ({
       addInfoMessage,
       addConfirmMessage,
       addWarningMessage,
       addErrorMessage
-    }), [ addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage ])
+    }), [ /* addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */ ])
 
     return (
       <FeedbackContext.Provider value={ feedbackAPI }>
@@ -104,8 +107,11 @@ const Feedback = withStyles(styles, { name: 'Feedback' })(({
   warningHideFactor=defaultWarningHideFactor,
   children, classes, ...props}) => {
   return (
-    <SnackbarProvider action={snackbarActions}
-        anchorOrigin={anchorOrigin} {...props}>
+    <SnackbarProvider
+        action={snackbarActions}
+        anchorOrigin={anchorOrigin}
+        preventDuplicate={true}
+        {...props}>
       <FeedbackProvider autoHideDuration={autoHideDuration}
           warningHideFactor={warningHideFactor}>
         {children}
