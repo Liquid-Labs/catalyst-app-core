@@ -30,6 +30,8 @@ const styles = theme => ({
   },
 })
 
+const defaultInfoAutoHide = 3500 // miliseconds
+
 const FeedbackContext = createContext()
 
 const defaultSnackAnchor = {
@@ -49,13 +51,20 @@ const clearMessage = (setMessages, message) =>
   }))
 
 const MessageLine = ({className, timer, message, setMessages, component}) => {
-  <component className={className}
-      onClick={(ev) => { clearMessage(setMessages, message); ev.preventDefault()}}>
-    {message}
-  </component>
+  // It's necessary to capitalize 'Component' in order to get react to evaluate
+  // the variables; otherwise, it treats it as a literal HTML element.
+  const Component = component
+  return (
+    <Component className={className}
+        onClick={(ev) => { clearMessage(setMessages, message); ev.preventDefault()}}>
+      {message}
+    </Component>
+  )
 }
 
-const Feedback = withStyles(styles)(({children, classes}) => {
+const Feedback = withStyles(styles)(({
+  infoAutoHideDuration=defaultInfoAutoHide,
+  children, classes, ...props}) => {
   const [ infoMessages, setInfoMessages ] = useState([])
   const [ errorMessages, setErrorMessages ] = useState([])
 
@@ -64,25 +73,26 @@ const Feedback = withStyles(styles)(({children, classes}) => {
       if (msg.message === message) {
         // then reset the timer
         clearTimeout(msg.timer)
-        msg.timer = setTimeout(() => clearMessage(setInfoMessages, message), 3500)
+        msg.timer = setTimeout(() => clearMessage(setInfoMessages, message), infoAutoHideDuration)
         return true
       }
       return false
     })) {
-      infoMessages.push({
+      const newInfoMessages = infoMessages.concat({
         message : message,
         sticky  : sticky,
         type    : 'info',
-        timer   : setTimeout(() => clearMessage(setInfoMessages, message), 3500)
+        timer   : setTimeout(() => clearMessage(setInfoMessages, message), infoAutoHideDuration)
       })
-      setInfoMessages(infoMessages)
+      setInfoMessages(newInfoMessages)
     }
   }, [ infoMessages, setInfoMessages ])
 
   const addErrorMessage = useCallback((message) => {
     if (!errorMessages.some((msg) => msg.message === message)) {
-      errorMessages.push({ message : message, sticky : true, type : 'error' })
-      setErrorMessages(errorMessages)
+      const newErrorMessages = errorMessages
+        .concat({message : message, sticky : true, type : 'error' })
+      setErrorMessages(newErrorMessages)
     }
   }, [ errorMessages, setErrorMessages ])
 
@@ -97,8 +107,8 @@ const Feedback = withStyles(styles)(({children, classes}) => {
     setErrorMessages([])
   }, [ setInfoMessages, setErrorMessages ])
 
-  const open = Boolean(infoMessages.length > 0 || errorMessages.length > 0)
-  const type = errorMessages.length > 0 ? 'error' : 'info'
+  const open = infoMessages.length > 0 || errorMessages.length > 0
+  console.log("open: ", open)
 
   const messages = errorMessages.concat(infoMessages)
 
@@ -125,10 +135,7 @@ const Feedback = withStyles(styles)(({children, classes}) => {
           open={open}
           autoHideDuration={null}
           onClose={clearAllMessages}
-          ContentProps={{
-            'aria-describedby' : 'message-id',
-            className          : (type === 'error' && classes.errorSnack) || null
-          }}
+          ContentProps={{'aria-describedby' : 'message-id'}}
           message={<span id="message-id">{message}</span>}
           action={
             <TinyIconButton
@@ -140,6 +147,7 @@ const Feedback = withStyles(styles)(({children, classes}) => {
               <CloseIcon />
             </TinyIconButton>
         }
+        {...props}
       />
       {children}
     </FeedbackContext.Provider>
@@ -147,7 +155,8 @@ const Feedback = withStyles(styles)(({children, classes}) => {
 })
 
 Feedback.propTypes = {
-  children : PropTypes.PropTypes.node
+  children             : PropTypes.PropTypes.node,
+  infoAutoHideDuration : PropTypes.number
 }
 
 export { Feedback, FeedbackContext }
