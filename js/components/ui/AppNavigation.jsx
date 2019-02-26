@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { Link } from 'react-router-dom'
-import { compose } from 'recompose'
 import classNames from 'classnames'
 
 import AppBar from '@material-ui/core/AppBar'
@@ -38,23 +37,12 @@ const logoStyle = {
   }
 }
 
-const AppNavigationBase = ({contextResolved, contextError, classes, children, ...remainder}) => {
-  return (
-    <AppBar className={classNames(classes.root, classes.lightNavbar)}
-        position="static" style={{flex : '0 0 auto'}}>
-      <Toolbar>
-        <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
-      </Toolbar>
-    </AppBar>
-  )
-}
-
 const LogoLink = withStyles(logoStyle)(({to, url, description, classes}) =>
   <Link to={to}>
     { url
     && <img className={classes.logo} src={url} alt="{description} Logo" />}
     { !url
-      && <Typography variant="headline">{description}</Typography> }
+      && <Typography variant="h5">{description}</Typography> }
   </Link>
 )
 
@@ -123,12 +111,24 @@ const NavigationBar = ({ classes, children, rightChildren, logoTo, ...remainder 
     </Grid>
   </Grid>
 
-AppNavigationBase.propTypes = {
-  classes : PropTypes.object.isRequired,
+if (process.env.NODE_ENV !== 'production') {
+  NavigationBar.propTypes = {
+    classes       : PropTypes.object.isRequired,
+    children      : PropTypes.node,
+    logoTo        : PropTypes.string.isRequired,
+    rightChildren : PropTypes.node
+  }
 }
 
-const AppNavigation = compose(
-  withStyles(styles),
-)(AppNavigationBase)
+const AppNavigation = withStyles(styles)(({classes, children, ...remainder}) => {
+  return (
+    <AppBar className={classNames(classes.root, classes.lightNavbar)}
+        position="static" style={{flex : '0 0 auto'}}>
+      <Toolbar>
+        <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
+      </Toolbar>
+    </AppBar>
+  )
+})
 
 export { AppNavigation }

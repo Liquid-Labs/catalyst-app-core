@@ -19,7 +19,9 @@
     "pretest": "catalyst-scripts pretest",
     "test": "catalyst-scripts test",
     "prepare": "npm run build",
-    "watch": "catalyst-scripts watch"
+    "watch": "catalyst-scripts watch",
+    "lint": "catalyst-scripts lint",
+    "lint-fix": "catalyst-scripts lint-fix"
   },
   "repository": {
     "type": "git",
@@ -35,10 +37,21 @@
   },
   "homepage": "https://github.com/Liquid-Labs/catalyst-core#readme",
   "devDependencies": {
+    "@liquid-labs/catalyst-firewrap": "^2.0.0-prototype.0",
     "@liquid-labs/catalyst-scripts": "latest",
+    "@liquid-labs/catalyst-theme": "^1.0.0-prototype.0",
+    "@liquid-labs/mui-extensions": "^1.0.0-prototype.0",
     "@liquid-labs/regex-repo": "latest",
+    "@material-ui/core": "^3.9.2",
+    "@material-ui/icons": "^3.0.2",
+    "dom-testing-library": "^3.16.8",
     "lodash.camelcase": "^4.3.0",
-    "moment-timezone": "^0.5.21"
+    "lodash.merge": "^4.6.1",
+    "moment-timezone": "^0.5.21",
+    "notistack": "^0.4.3",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
+    "react-testing-library": "^6.0.0"
   },
   "peerDependencies": {
     "@liquid-labs/mui-extensions": "latest",
@@ -55,6 +68,7 @@
     "mdi-material-ui": "^5.9.0",
     "moment-timezone": "^0.5.21",
     "normalizr": "^3.2.4",
+    "notistack": "^0.4.3",
     "prop-types": "^15.7.2",
     "react": "16.x",
     "react-redux": "5.x || 6.x",
@@ -68,6 +82,21 @@
     "not ie <= 11",
     "not op_mini all"
   ],
+  "catalyst": {
+    "rollupConfig": {
+      "commonjsConfig": {
+        "namedExports": {
+          "node_modules/react/index.js": [
+            "useEffect",
+            "useState"
+          ]
+        }
+      }
+    },
+    "jestConfig": {
+      "testEnvironment": "jsdom"
+    }
+  },
   "_catServices": [
     {
       "name": "react-dev-server",
@@ -88,5 +117,6 @@
       ],
       "params-opt": []
     }
-  ]
+  ],
+  "dependencies": {}
 }
