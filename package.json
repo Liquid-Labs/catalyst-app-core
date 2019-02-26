@@ -48,6 +48,7 @@
     "lodash.camelcase": "^4.3.0",
     "lodash.merge": "^4.6.1",
     "moment-timezone": "^0.5.21",
+    "notistack": "^0.4.3",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
     "react-testing-library": "^6.0.0"
@@ -67,6 +68,7 @@
     "mdi-material-ui": "^5.9.0",
     "moment-timezone": "^0.5.21",
     "normalizr": "^3.2.4",
+    "notistack": "^0.4.3",
     "prop-types": "^15.7.2",
     "react": "16.x",
     "react-redux": "5.x || 6.x",

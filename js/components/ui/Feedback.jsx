@@ -3,15 +3,19 @@ import PropTypes from 'prop-types'
 
 import CloseIcon from '@material-ui/icons/Close'
 import Snackbar from '@material-ui/core/Snackbar'
+import { SnackbarProvider, withSnackbar } from 'notistack'
 import { TinyIconButton } from '@liquid-labs/mui-extensions'
 
 import { withStyles } from '@material-ui/core/styles'
 
-const styles = theme => ({
+const dismissStyles = (theme) => ({
   close : {
     width  : theme.spacing.unit * 4,
     height : theme.spacing.unit * 4,
-  },
+  }
+})
+
+const styles = theme => ({
   infoSnack  : {},
   errorSnack : {
     background : theme.palette.error.light,
@@ -30,133 +34,90 @@ const styles = theme => ({
   },
 })
 
-const defaultInfoAutoHide = 3500 // miliseconds
-
 const FeedbackContext = createContext()
+
+const FeedbackProvider = withSnackbar(
+  ({autoHideDuration, warningHideFactor, enqueueSnackbar, children}) => {
+    const addInfoMessage = useCallback((message, options) =>
+      enqueueSnackbar(message, Object.assign(
+        { persist: false, variant: 'info', autoHideDuration: autoHideDuration },
+        options)),
+      [ enqueueSnackbar ])
+    const addConfirmMessage = useCallback((message, options) =>
+      enqueueSnackbar(message, Object.assign(
+        { persist: false, variant: 'success', autoHideDuration: autoHideDuration },
+        options)),
+      [ enqueueSnackbar ])
+    const addWarningMessage = useCallback((message, options) =>
+      enqueueSnackbar(message, Object.assign(
+        { persist: false,
+          variant: 'warning',
+          autoHideDuration: autoHideDuration * warningHideFactor },
+        options)),
+      [ enqueueSnackbar ])
+    const addErrorMessage = useCallback((message, options) =>
+      enqueueSnackbar(message, Object.assign(
+        { persist: true, variant: 'error' },
+        options))
+      [ enqueueSnackbar ])
+    const feedbackAPI = useMemo(() => ({
+      addInfoMessage,
+      addConfirmMessage,
+      addWarningMessage,
+      addErrorMessage
+    }), [ addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage ])
+
+    return (
+      <FeedbackContext.Provider value={ feedbackAPI }>
+        {children}
+      </FeedbackContext.Provider>
+    )
+  }
+)
+
+const defaultAutoHideDuration = 3500 // miliseconds
+
+const defaultWarningHideFactor = 1.5
 
 const defaultSnackAnchor = {
   vertical   : 'top',
   horizontal : 'center',
 }
 
-const clearMessage = (setMessages, message) =>
-  setMessages((prevMsgs) => prevMsgs.filter((msgData) => {
-    if (msgData.message !== message) {
-      return true
-    }
-    else {
-      clearTimeout(msgData.timer)
-      return false
-    }
-  }))
+const DismissButton = withStyles(dismissStyles, { name: 'DismissButton' })(
+  ({classes}) =>
+    <TinyIconButton
+      aria-label="Close"
+      color="inherit"
+      className={classes.close}
+    >
+      <CloseIcon />
+    </TinyIconButton>
+)
 
-const MessageLine = ({className, timer, message, setMessages, component}) => {
-  // It's necessary to capitalize 'Component' in order to get react to evaluate
-  // the variables; otherwise, it treats it as a literal HTML element.
-  const Component = component
-  return (
-    <Component className={className}
-        onClick={(ev) => { clearMessage(setMessages, message); ev.preventDefault()}}>
-      {message}
-    </Component>
-  )
-}
+const snackbarActions = [ <DismissButton key="dismissButton" /> ]
 
-const Feedback = withStyles(styles)(({
-  infoAutoHideDuration=defaultInfoAutoHide,
+const Feedback = withStyles(styles, { name: 'Feedback' })(({
+  id='appMessages',
+  autoHideDuration=defaultAutoHideDuration,
+  anchorOrigin=defaultSnackAnchor,
+  warningHideFactor=defaultWarningHideFactor,
   children, classes, ...props}) => {
-  const [ infoMessages, setInfoMessages ] = useState([])
-  const [ errorMessages, setErrorMessages ] = useState([])
-
-  const addInfoMessage = useCallback((message, sticky=false) => {
-    if (!infoMessages.some((msg) => {
-      if (msg.message === message) {
-        // then reset the timer
-        clearTimeout(msg.timer)
-        msg.timer = setTimeout(() => clearMessage(setInfoMessages, message), infoAutoHideDuration)
-        return true
-      }
-      return false
-    })) {
-      const newInfoMessages = infoMessages.concat({
-        message : message,
-        sticky  : sticky,
-        type    : 'info',
-        timer   : setTimeout(() => clearMessage(setInfoMessages, message), infoAutoHideDuration)
-      })
-      setInfoMessages(newInfoMessages)
-    }
-  }, [ infoMessages, setInfoMessages ])
-
-  const addErrorMessage = useCallback((message) => {
-    if (!errorMessages.some((msg) => msg.message === message)) {
-      const newErrorMessages = errorMessages
-        .concat({message : message, sticky : true, type : 'error' })
-      setErrorMessages(newErrorMessages)
-    }
-  }, [ errorMessages, setErrorMessages ])
-
-  const feedbackContext = useMemo(() => ({
-    addInfoMessage  : addInfoMessage,
-    addErrorMessage : addErrorMessage
-  }),
-  [addInfoMessage, addErrorMessage])
-
-  const clearAllMessages = useCallback(() => {
-    setInfoMessages([])
-    setErrorMessages([])
-  }, [ setInfoMessages, setErrorMessages ])
-
-  const open = infoMessages.length > 0 || errorMessages.length > 0
-  console.log("open: ", open)
-
-  const messages = errorMessages.concat(infoMessages)
-
-  let message = null
-  if (messages.length > 1) {
-    message =
-      <ul>
-        {messages.map((msg) =>
-          <MessageLine component='li' className={`${msg.type}Snack`}
-              setMessages={msg.type === 'info' ? setInfoMessages : setErrorMessages}
-              {...msg} />)}
-      </ul>
-  }
-  else if (messages.length === 1) {
-    message = <MessageLine component="div"
-        className={`${messages[0].type}Snack`}
-        {...messages[0]} />
-  }
-
   return (
-    <FeedbackContext.Provider value={feedbackContext}>
-      <Snackbar
-          anchorOrigin={defaultSnackAnchor}
-          open={open}
-          autoHideDuration={null}
-          onClose={clearAllMessages}
-          ContentProps={{'aria-describedby' : 'message-id'}}
-          message={<span id="message-id">{message}</span>}
-          action={
-            <TinyIconButton
-                aria-label="Close"
-                color="inherit"
-                className={classes.close}
-                onClick={clearAllMessages}
-          >
-              <CloseIcon />
-            </TinyIconButton>
-        }
-        {...props}
-      />
-      {children}
-    </FeedbackContext.Provider>
+    <SnackbarProvider action={snackbarActions}
+        anchorOrigin={anchorOrigin} {...props}>
+      <FeedbackProvider autoHideDuration={autoHideDuration}
+          warningHideFactor={warningHideFactor}>
+        {children}
+      </FeedbackProvider>
+    </SnackbarProvider>
   )
 })
 
 Feedback.propTypes = {
   children             : PropTypes.PropTypes.node,
-  infoAutoHideDuration : PropTypes.number
+  infoAutoHideDuration : PropTypes.number,
+  anchorOrigin         : PropTypes.object,
 }
 
 export { Feedback, FeedbackContext }
