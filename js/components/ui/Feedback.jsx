@@ -1,8 +1,7 @@
-import React, { createContext, useCallback, useMemo, useState } from 'react'
+import React, { createContext, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import CloseIcon from '@material-ui/icons/Close'
-import Snackbar from '@material-ui/core/Snackbar'
 import { SnackbarProvider, withSnackbar } from 'notistack'
 import { TinyIconButton } from '@liquid-labs/mui-extensions'
 
@@ -38,37 +37,40 @@ const FeedbackContext = createContext()
 
 const FeedbackProvider = withSnackbar(
   ({autoHideDuration, warningHideFactor, enqueueSnackbar, children}) => {
+    // 'enqueueSnackbar' changes with ever render. Which means we can't rely on
+    // it as an indicator when to recalculate the 'addInfoMessage', etc.
+    // Luckily, it appears that we don't have to.
     const addInfoMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist: false, variant: 'info', autoHideDuration: autoHideDuration },
+        { persist : false, variant : 'info', autoHideDuration : autoHideDuration },
         options)),
-      [ enqueueSnackbar ])
+    [ /* enqueueSnackbar */ ])
     const addConfirmMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist: false, variant: 'success', autoHideDuration: autoHideDuration },
+        { persist : false, variant : 'success', autoHideDuration : autoHideDuration },
         options)),
-      [ enqueueSnackbar ])
+    [ /* enqueueSnackbar */ ])
     const addWarningMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist: false,
-          variant: 'warning',
-          autoHideDuration: autoHideDuration * warningHideFactor },
+        { persist          : false,
+          variant          : 'warning',
+          autoHideDuration : autoHideDuration * warningHideFactor },
         options)),
-      [ enqueueSnackbar ])
+    [ /* enqueueSnackbar */ ])
     const addErrorMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist: true, variant: 'error' },
-        options))
-      [ enqueueSnackbar ])
+        { persist : true, variant : 'error' },
+        options)),
+    [ /* enqueueSnackbar */ ])
     const feedbackAPI = useMemo(() => ({
       addInfoMessage,
       addConfirmMessage,
       addWarningMessage,
       addErrorMessage
-    }), [ addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage ])
+    }), [ /* addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */ ])
 
     return (
-      <FeedbackContext.Provider value={ feedbackAPI }>
+      <FeedbackContext.Provider value={feedbackAPI}>
         {children}
       </FeedbackContext.Provider>
     )
@@ -84,12 +86,12 @@ const defaultSnackAnchor = {
   horizontal : 'center',
 }
 
-const DismissButton = withStyles(dismissStyles, { name: 'DismissButton' })(
+const DismissButton = withStyles(dismissStyles, { name : 'DismissButton' })(
   ({classes}) =>
     <TinyIconButton
-      aria-label="Close"
-      color="inherit"
-      className={classes.close}
+        aria-label="Close"
+        color="inherit"
+        className={classes.close}
     >
       <CloseIcon />
     </TinyIconButton>
@@ -97,15 +99,18 @@ const DismissButton = withStyles(dismissStyles, { name: 'DismissButton' })(
 
 const snackbarActions = [ <DismissButton key="dismissButton" /> ]
 
-const Feedback = withStyles(styles, { name: 'Feedback' })(({
+const Feedback = withStyles(styles, { name : 'Feedback' })(({
   id='appMessages',
   autoHideDuration=defaultAutoHideDuration,
   anchorOrigin=defaultSnackAnchor,
   warningHideFactor=defaultWarningHideFactor,
   children, classes, ...props}) => {
   return (
-    <SnackbarProvider action={snackbarActions}
-        anchorOrigin={anchorOrigin} {...props}>
+    <SnackbarProvider
+        action={snackbarActions}
+        anchorOrigin={anchorOrigin}
+        preventDuplicate
+        {...props}>
       <FeedbackProvider autoHideDuration={autoHideDuration}
           warningHideFactor={warningHideFactor}>
         {children}

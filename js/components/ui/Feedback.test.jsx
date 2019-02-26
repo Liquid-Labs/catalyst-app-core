@@ -1,14 +1,11 @@
-/* global afterEach beforeAll beforeEach describe expect jest test */
+/* global afterEach describe expect jest test */
 import React, { useContext } from 'react'
-import { act, cleanup, render, waitForElement, wait } from 'react-testing-library'
-import {bindElementToQueries} from 'dom-testing-library'
+import { act, cleanup, render, waitForElement } from 'react-testing-library'
 
 import { Feedback, FeedbackContext } from './Feedback'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 
 import { createCatalystTheme } from '@liquid-labs/catalyst-theme'
-
-const bodyUtils = bindElementToQueries(document.body)
 
 const catalystTheme = createCatalystTheme()
 
@@ -30,8 +27,8 @@ function renderFeedback(feedback) {
 let feedbackFuncs = {}
 const FeedbackGenerator = () => {
   const
-   feedbackAPI = useContext(FeedbackContext)
-   feedbackFuncs = feedbackAPI
+    feedbackAPI = useContext(FeedbackContext)
+  feedbackFuncs = feedbackAPI
 
   return (
     <>
@@ -59,7 +56,7 @@ describe('Feedback', () => {
     expect(Boolean(feedbackFuncs.addErrorMessage)).toBe(true)
   })
 
-  test("should update and display info message when 'addInfoMessage' is called", async () => {
+  test("should update and display info message when 'addInfoMessage' is called", async() => {
     const { getByText } = renderFeedback(
       <Feedback><FeedbackGenerator /></Feedback>
     )
@@ -69,8 +66,8 @@ describe('Feedback', () => {
   })
 
   test("should remove and auto-hide info messages after 'autoHideDuration'", () => {
-    const { queryByText, container, rerender } = renderFeedback(
-      <Feedback autoHideDuration={1000} transitionDuration={{ exit: 1, enter: 1 }}><FeedbackGenerator /></Feedback>
+    const { queryByText, container } = renderFeedback(
+      <Feedback autoHideDuration={1000} transitionDuration={{ exit : 1, enter : 1 }}><FeedbackGenerator /></Feedback>
     )
     act(() => { feedbackFuncs.addInfoMessage('Hello!') })
     expect(queryByText('Hello!')).toBeTruthy()
