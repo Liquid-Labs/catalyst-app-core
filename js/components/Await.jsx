@@ -29,7 +29,7 @@ const Await = (props) => {
     }
     else {
       addWarningMessage(`${awaitReport.name} has not yet resolved. This is the final warning.`,
-                        { persist: true })
+        { persist : true })
     }
   }, [addErrorMessage, addWarningMessage])
 

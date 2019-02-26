@@ -1,8 +1,7 @@
-import React, { createContext, useCallback, useMemo, useState } from 'react'
+import React, { createContext, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import CloseIcon from '@material-ui/icons/Close'
-import Snackbar from '@material-ui/core/Snackbar'
 import { SnackbarProvider, withSnackbar } from 'notistack'
 import { TinyIconButton } from '@liquid-labs/mui-extensions'
 
@@ -43,26 +42,26 @@ const FeedbackProvider = withSnackbar(
     // Luckily, it appears that we don't have to.
     const addInfoMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist: false, variant: 'info', autoHideDuration: autoHideDuration },
+        { persist : false, variant : 'info', autoHideDuration : autoHideDuration },
         options)),
-      [ /* enqueueSnackbar */ ])
+    [ /* enqueueSnackbar */ ])
     const addConfirmMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist: false, variant: 'success', autoHideDuration: autoHideDuration },
+        { persist : false, variant : 'success', autoHideDuration : autoHideDuration },
         options)),
-      [ /* enqueueSnackbar */ ])
+    [ /* enqueueSnackbar */ ])
     const addWarningMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist: false,
-          variant: 'warning',
-          autoHideDuration: autoHideDuration * warningHideFactor },
+        { persist          : false,
+          variant          : 'warning',
+          autoHideDuration : autoHideDuration * warningHideFactor },
         options)),
-      [ /* enqueueSnackbar */ ])
+    [ /* enqueueSnackbar */ ])
     const addErrorMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist: true, variant: 'error' },
+        { persist : true, variant : 'error' },
         options)),
-      [ /* enqueueSnackbar */ ])
+    [ /* enqueueSnackbar */ ])
     const feedbackAPI = useMemo(() => ({
       addInfoMessage,
       addConfirmMessage,
@@ -71,7 +70,7 @@ const FeedbackProvider = withSnackbar(
     }), [ /* addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */ ])
 
     return (
-      <FeedbackContext.Provider value={ feedbackAPI }>
+      <FeedbackContext.Provider value={feedbackAPI}>
         {children}
       </FeedbackContext.Provider>
     )
@@ -87,12 +86,12 @@ const defaultSnackAnchor = {
   horizontal : 'center',
 }
 
-const DismissButton = withStyles(dismissStyles, { name: 'DismissButton' })(
+const DismissButton = withStyles(dismissStyles, { name : 'DismissButton' })(
   ({classes}) =>
     <TinyIconButton
-      aria-label="Close"
-      color="inherit"
-      className={classes.close}
+        aria-label="Close"
+        color="inherit"
+        className={classes.close}
     >
       <CloseIcon />
     </TinyIconButton>
@@ -100,7 +99,7 @@ const DismissButton = withStyles(dismissStyles, { name: 'DismissButton' })(
 
 const snackbarActions = [ <DismissButton key="dismissButton" /> ]
 
-const Feedback = withStyles(styles, { name: 'Feedback' })(({
+const Feedback = withStyles(styles, { name : 'Feedback' })(({
   id='appMessages',
   autoHideDuration=defaultAutoHideDuration,
   anchorOrigin=defaultSnackAnchor,
@@ -110,7 +109,7 @@ const Feedback = withStyles(styles, { name: 'Feedback' })(({
     <SnackbarProvider
         action={snackbarActions}
         anchorOrigin={anchorOrigin}
-        preventDuplicate={true}
+        preventDuplicate
         {...props}>
       <FeedbackProvider autoHideDuration={autoHideDuration}
           warningHideFactor={warningHideFactor}>
