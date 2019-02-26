@@ -19,15 +19,19 @@ const DefaultBlocked = (report) =>
   </Centered>
 
 const Await = (props) => {
-  const { addErrorMessage, addInfoMessage } = useContext(FeedbackContext)
-  const followupHandler = useCallback((awaitReport) => {
+  const { addErrorMessage, addWarningMessage } = useContext(FeedbackContext)
+  const followupHandler = useCallback((awaitReport, followupCount, followupMax) => {
     if (awaitReport.errorMessage) {
       addErrorMessage(awaitReport.errorMessage)
     }
-    else {
-      addInfoMessage(`${awaitReport.name} is taking awhile to resolve...`)
+    else if (followupCount !== followupMax) {
+      addWarningMessage(`${awaitReport.name} is taking awhile to resolve...`)
     }
-  }, [addErrorMessage])
+    else {
+      addWarningMessage(`${awaitReport.name} has not yet resolved. This is the final warning.`,
+                        { persist: true })
+    }
+  }, [addErrorMessage, addWarningMessage])
 
   return (
     <AwaitBase
