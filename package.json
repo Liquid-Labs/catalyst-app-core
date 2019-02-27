@@ -18,6 +18,7 @@
     "start": "catalyst-scripts start",
     "pretest": "catalyst-scripts pretest",
     "test": "catalyst-scripts test",
+    "postversion": "git push && git push --tags",
     "prepare": "npm run build",
     "watch": "catalyst-scripts watch",
     "lint": "catalyst-scripts lint",
