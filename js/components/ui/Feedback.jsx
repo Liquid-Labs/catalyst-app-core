@@ -5,7 +5,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import CloseIcon from '@material-ui/icons/Close'
 import ErrorIcon from '@material-ui/icons/Error'
 import InfoIcon from '@material-ui/icons/Info'
-import { SnackbarProvider, withSnackbar, variantIcon } from 'notistack'
+import { SnackbarProvider, withSnackbar } from 'notistack'
 import { TinyIconButton } from '@liquid-labs/mui-extensions'
 import WarningIcon from '@material-ui/icons/Warning'
 
@@ -20,17 +20,17 @@ const dismissStyles = (theme) => ({
 
 const styles = theme => ({
   // allow our snackbars to take up most of the space
-  snackItemRoot: {
-    flex: '0 0 auto',
-    maxWidth: 'none',
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: '90vw'
+  snackItemRoot : {
+    flex                         : '0 0 auto',
+    maxWidth                     : 'none',
+    [theme.breakpoints.up('sm')] : {
+      maxWidth : '90vw'
     },
-    [theme.breakpoints.up('md')]: {
-      maxWidth: '80vw'
+    [theme.breakpoints.up('md')] : {
+      maxWidth : '80vw'
     },
-    [theme.breakpoints.up('xl')]: {
-      maxWidth: '60vw'
+    [theme.breakpoints.up('xl')] : {
+      maxWidth : '60vw'
     },
   }
 })
@@ -104,16 +104,16 @@ const DismissButton = withStyles(dismissStyles, { name : 'DismissButton' })(
 const snackbarActions = [ <DismissButton key="dismissButton" /> ]
 
 const iconStyle = {
-  marginRight: '0.25em',
-  height: '0.8em'
+  marginRight : '0.25em',
+  height      : '0.8em'
 }
 
 // use standard material icons
 const iconVariant = {
-  success: <CheckCircleIcon style={iconStyle} />,
-  info: <InfoIcon style={iconStyle} />,
-  error: <ErrorIcon style={iconStyle} />,
-  warning: <WarningIcon style={iconStyle} />
+  success : <CheckCircleIcon style={iconStyle} />,
+  info    : <InfoIcon style={iconStyle} />,
+  error   : <ErrorIcon style={iconStyle} />,
+  warning : <WarningIcon style={iconStyle} />
 }
 
 const Feedback = withStyles(styles, { name : 'Feedback' })(({
@@ -127,7 +127,7 @@ const Feedback = withStyles(styles, { name : 'Feedback' })(({
         action={snackbarActions}
         anchorOrigin={anchorOrigin}
         iconVariant={iconVariant}
-        ContentProps={{ classes: { root: classes.snackItemRoot } }}
+        ContentProps={{ classes : { root : classes.snackItemRoot } }}
         {...props}>
       <FeedbackProvider autoHideDuration={autoHideDuration}
           warningHideFactor={warningHideFactor}>

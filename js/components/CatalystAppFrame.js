@@ -14,7 +14,7 @@
  * In practice, this is primarily intended for dialog components that are
  * are either hidden or rendered absolutely.
  */
-import React, { useCallback } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider as ReduxProvider } from 'react-redux'
 
@@ -24,7 +24,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { Feedback } from './ui/Feedback'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import { ThemeProvider } from '@material-ui/styles'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 
 import { withStyles } from '@material-ui/core/styles'

@@ -9,31 +9,31 @@ import { withStyles } from '@material-ui/core/styles'
 import { useTheme } from '@material-ui/styles'
 
 const styles = (theme) => ({
-  awaitContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: '1 1 auto',
-    placeSelf: 'center',
-    alignItems: 'center',
-    justifyContent: 'center'
+  awaitContainer : {
+    display        : 'flex',
+    flexDirection  : 'column',
+    flex           : '1 1 auto',
+    placeSelf      : 'center',
+    alignItems     : 'center',
+    justifyContent : 'center'
   },
-  awaitIcon: {
-    bottomMargin: '1.5rem'
+  awaitIcon : {
+    bottomMargin : '1.5rem'
   },
-  errorIcon: {
-    color: theme.palette.error.main
+  errorIcon : {
+    color : theme.palette.error.main
   },
   report : {
-    color: theme.palette.primary.main,
-    fontStyle: 'oblique'
+    color     : theme.palette.primary.main,
+    fontStyle : 'oblique'
   },
-  errorReport: {
-    color: theme.palette.error.dark,
-    fontWeight: 'bold'
+  errorReport : {
+    color      : theme.palette.error.dark,
+    fontWeight : 'bold'
   }
 })
 
-const AwaitContent = withStyles(styles, { name: 'AwaitContent' })(
+const AwaitContent = withStyles(styles, { name : 'AwaitContent' })(
   ({Icon, report, reportClass, classes}) =>
     <div className={classes.awaitContainer}>
       <div className={classes.awaitIcon}>
@@ -51,9 +51,9 @@ const DefaultSpinner = (report) =>
 const DefaultBlocked = (report) =>
   // tried '<ErrorIcon color="error" .../>, but it was ineffective for whatever reason.'
   <AwaitContent
-    Icon={({outerclasses}) => <ErrorIcon className={outerclasses.errorIcon} fontSize="large" />}
-    report={report}
-    reportClass="errorReport" />
+      Icon={({outerclasses}) => <ErrorIcon className={outerclasses.errorIcon} fontSize="large" />}
+      report={report}
+      reportClass="errorReport" />
 
 const Await = (props) => {
   const { addErrorMessage, addWarningMessage, closeMessage } = useContext(FeedbackContext)
@@ -74,7 +74,7 @@ const Await = (props) => {
       else {
         currMsgKey.current =
           addWarningMessage(`${awaitReport.name} has not yet resolved. This is the final warning.`,
-                            { persist : true })
+            { persist : true })
       }
     }
     // Give the previous message time to clear off. Even though the prior message
