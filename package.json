@@ -54,6 +54,8 @@
     "react-testing-library": "^6.0.0"
   },
   "peerDependencies": {
+    "@liquid-labs/catalyst-firewrap": "^2.0.0-prototype.0",
+    "@liquid-labs/catalyst-theme": "^1.0.0-prototype.0",
     "@liquid-labs/mui-extensions": "latest",
     "@liquid-labs/react-await": "latest",
     "@liquid-labs/regex-repo": "latest",
@@ -70,7 +72,8 @@
     "normalizr": "^3.2.4",
     "notistack": "^0.4.3",
     "prop-types": "^15.7.2",
-    "react": "16.x",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3",
     "react-redux": "5.x || 6.x",
     "react-router-dom": "4.x",
     "recompose": "^0.30.0",
