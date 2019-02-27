@@ -14,7 +14,7 @@
  * In practice, this is primarily intended for dialog components that are
  * are either hidden or rendered absolutely.
  */
-import React, { useCallback } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider as ReduxProvider } from 'react-redux'
 
@@ -23,7 +23,8 @@ import { Contextualizer } from './util/Contextualizer'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { Feedback } from './ui/Feedback'
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { ThemeProvider } from '@material-ui/styles'
+import { BrowserRouter } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 
 import { withStyles } from '@material-ui/core/styles'
@@ -39,33 +40,31 @@ const styles = (theme) => ({
 })
 
 const CatalystAppFrame = withStyles(styles)(({classes, theme, ContentSwitch, BottomNavigation, reduxStore}) => {
-  const renderFrame = useCallback(() =>
-    <div style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
-      <div style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
-        <ContentSwitch />
-      </div>
-      <div style={{flex : '0 0 auto'}}>
-        <BottomNavigation />
-      </div>
-    </div>,
-  [ ContentSwitch, BottomNavigation ])
-
   return (
     <MuiThemeProvider theme={theme}>
-      <Typography component="div" className={classes.root}>
-        <CssBaseline />
-        <Feedback>
-          <BrowserRouter>
-            <AuthenticationManager>
-              <Contextualizer>
-                <ReduxProvider store={reduxStore}>
-                  <Route path="/" render={renderFrame} />
-                </ReduxProvider>
-              </Contextualizer>
-            </AuthenticationManager>
-          </BrowserRouter>
-        </Feedback>
-      </Typography>
+      <ThemeProvider theme={theme}>
+        <Typography component="div" className={classes.root}>
+          <CssBaseline />
+          <Feedback>
+            <BrowserRouter>
+              <div id="appRootFrame" style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
+                <AuthenticationManager>
+                  <Contextualizer>
+                    <ReduxProvider store={reduxStore}>
+                      <div id="appMainFrame" style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
+                        <ContentSwitch />
+                      </div>
+                      <div id="appNavFrame" style={{flex : '0 0 auto'}}>
+                        <BottomNavigation />
+                      </div>
+                    </ReduxProvider>
+                  </Contextualizer>
+                </AuthenticationManager>
+              </div>
+            </BrowserRouter>
+          </Feedback>
+        </Typography>
+      </ThemeProvider>
     </MuiThemeProvider>
   )
 })

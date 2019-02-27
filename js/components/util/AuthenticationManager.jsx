@@ -78,7 +78,7 @@ const AuthenticationManager = ({children, ...props}) => {
 
   return (
     <AuthenticationContext.Provider value={authenticationStatus}>
-      <Await name="Authentication manager"
+      <Await name="Authentication verification"
           checks={checks} checkProps={authenticationStatus} {...props}>
         { typeof children === 'function' ? children(props) : children }
       </Await>
