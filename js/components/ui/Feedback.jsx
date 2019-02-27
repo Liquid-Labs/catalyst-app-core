@@ -1,9 +1,13 @@
 import React, { createContext, useCallback, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import CloseIcon from '@material-ui/icons/Close'
-import { SnackbarProvider, withSnackbar } from 'notistack'
+import ErrorIcon from '@material-ui/icons/Error'
+import InfoIcon from '@material-ui/icons/Info'
+import { SnackbarProvider, withSnackbar, variantIcon } from 'notistack'
 import { TinyIconButton } from '@liquid-labs/mui-extensions'
+import WarningIcon from '@material-ui/icons/Warning'
 
 import { withStyles } from '@material-ui/core/styles'
 
@@ -15,28 +19,26 @@ const dismissStyles = (theme) => ({
 })
 
 const styles = theme => ({
-  infoSnack  : {},
-  errorSnack : {
-    background : theme.palette.error.light,
-    color      : theme.palette.error.contrastLight,
-    border     : `1px solid ${theme.palette.error.dark}`
-  },
-  warnSnack : {
-    background : theme.palette.warn.light,
-    color      : theme.palette.warn.contrastLight,
-    border     : `1px solid ${theme.palette.warn.dark}`
-  },
-  confirmSnack : {
-    background : theme.palette.confirm.light,
-    color      : theme.palette.confirm.contrastLight,
-    border     : `1px solid ${theme.palette.confirm.dark}`
-  },
+  // allow our snackbars to take up most of the space
+  snackItemRoot: {
+    flex: '0 0 auto',
+    maxWidth: 'none',
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: '90vw'
+    },
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '80vw'
+    },
+    [theme.breakpoints.up('xl')]: {
+      maxWidth: '60vw'
+    },
+  }
 })
 
 const FeedbackContext = createContext()
 
 const FeedbackProvider = withSnackbar(
-  ({autoHideDuration, warningHideFactor, enqueueSnackbar, children}) => {
+  ({autoHideDuration, warningHideFactor, enqueueSnackbar, closeSnackbar, children}) => {
     // 'enqueueSnackbar' changes with ever render. Which means we can't rely on
     // it as an indicator when to recalculate the 'addInfoMessage', etc.
     // Luckily, it appears that we don't have to.
@@ -62,11 +64,13 @@ const FeedbackProvider = withSnackbar(
         { persist : true, variant : 'error' },
         options)),
     [ /* enqueueSnackbar */ ])
+    const closeMessage = useCallback((key) => closeSnackbar(key), [])
     const feedbackAPI = useMemo(() => ({
       addInfoMessage,
       addConfirmMessage,
       addWarningMessage,
-      addErrorMessage
+      addErrorMessage,
+      closeMessage,
     }), [ /* addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */ ])
 
     return (
@@ -77,7 +81,7 @@ const FeedbackProvider = withSnackbar(
   }
 )
 
-const defaultAutoHideDuration = 3500 // miliseconds
+const defaultAutoHideDuration = 2000 // miliseconds
 
 const defaultWarningHideFactor = 1.5
 
@@ -99,6 +103,19 @@ const DismissButton = withStyles(dismissStyles, { name : 'DismissButton' })(
 
 const snackbarActions = [ <DismissButton key="dismissButton" /> ]
 
+const iconStyle = {
+  marginRight: '0.25em',
+  height: '0.8em'
+}
+
+// use standard material icons
+const iconVariant = {
+  success: <CheckCircleIcon style={iconStyle} />,
+  info: <InfoIcon style={iconStyle} />,
+  error: <ErrorIcon style={iconStyle} />,
+  warning: <WarningIcon style={iconStyle} />
+}
+
 const Feedback = withStyles(styles, { name : 'Feedback' })(({
   id='appMessages',
   autoHideDuration=defaultAutoHideDuration,
@@ -109,7 +126,8 @@ const Feedback = withStyles(styles, { name : 'Feedback' })(({
     <SnackbarProvider
         action={snackbarActions}
         anchorOrigin={anchorOrigin}
-        preventDuplicate
+        iconVariant={iconVariant}
+        ContentProps={{ classes: { root: classes.snackItemRoot } }}
         {...props}>
       <FeedbackProvider autoHideDuration={autoHideDuration}
           warningHideFactor={warningHideFactor}>
