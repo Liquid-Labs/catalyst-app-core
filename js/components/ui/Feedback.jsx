@@ -1,6 +1,7 @@
-import React, { createContext, useCallback, useMemo } from 'react'
+import React, { createContext, useCallback, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 
+import { CatalystSpinner, CatalystBlocker } from '../widgets/CatalystWaiterDisplay'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import CloseIcon from '@material-ui/icons/Close'
 import ErrorIcon from '@material-ui/icons/Error'
@@ -9,7 +10,12 @@ import { SnackbarProvider, withSnackbar } from 'notistack'
 import { TinyIconButton } from '@liquid-labs/mui-extensions'
 import WarningIcon from '@material-ui/icons/Warning'
 
+import { useTheme } from '@material-ui/styles'
+
 import { withStyles } from '@material-ui/core/styles'
+
+import { catalystFollowupHandler } from '../../utils/catalystFollowupHandler'
+import { waiterSettings } from '@liquid-labs/react-waiter'
 
 const dismissStyles = (theme) => ({
   close : {
@@ -41,7 +47,8 @@ const FeedbackProvider = withSnackbar(
   ({autoHideDuration, warningHideFactor, enqueueSnackbar, closeSnackbar, children}) => {
     // 'enqueueSnackbar' changes with ever render. Which means we can't rely on
     // it as an indicator when to recalculate the 'addInfoMessage', etc.
-    // Luckily, it appears that we don't have to.
+    // Luckily, it appears that we don't have to; even though the function
+    // changes, the 'old' ones continue to work.
     const addInfoMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
         { persist : false, variant : 'info', autoHideDuration : autoHideDuration },
@@ -72,6 +79,14 @@ const FeedbackProvider = withSnackbar(
       addErrorMessage,
       closeMessage,
     }), [ /* addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */ ])
+
+    const currMsgKey = useRef()
+    const theme = useTheme()
+    const followupHandler = catalystFollowupHandler(feedbackAPI, theme, currMsgKey)
+
+    waiterSettings.setDefaultSpinner(CatalystSpinner)
+    waiterSettings.setDefaultBlocker(CatalystBlocker)
+    waiterSettings.setDefaultFollowupHandler(followupHandler)
 
     return (
       <FeedbackContext.Provider value={feedbackAPI}>

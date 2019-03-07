@@ -1,5 +1,4 @@
 
-export * from './components/Await'
 export * from './components/CatalystAppFrame'
 export * from './components/hocs/styleWorkspacePadding'
 export * from './components/ui/AppNavigation'

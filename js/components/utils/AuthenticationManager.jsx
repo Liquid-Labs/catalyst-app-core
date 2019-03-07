@@ -9,8 +9,7 @@ import PropTypes from 'prop-types'
 
 import { FeedbackContext } from '../ui/Feedback'
 
-import { Waiter } from '../Await'
-import { waiterStatus } from '@liquid-labs/react-waiter'
+import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 
 import { fireauth } from '@liquid-labs/catalyst-firewrap'
 

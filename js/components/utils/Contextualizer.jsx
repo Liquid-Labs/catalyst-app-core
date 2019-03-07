@@ -4,10 +4,9 @@ import PropTypes from 'prop-types'
 // TODO: use this to verify that the context selected is valid
 // import { contextConfig } from '@liquid-labs/catalyst-core-api'
 
-import { waiterStatus } from '@liquid-labs/react-waiter'
-import { Waiter } from '../Await'
 import { AuthenticationContext } from './AuthenticationManager'
 import { FeedbackContext } from '../ui/Feedback'
+import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 
 const initialAppContextState = {
   appContext : undefined,

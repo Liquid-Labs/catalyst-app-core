@@ -39,35 +39,33 @@ const styles = (theme) => ({
   }
 })
 
-const CatalystAppFrame = withStyles(styles)(({classes, theme, ContentSwitch, BottomNavigation, reduxStore}) => {
-  return (
-    <MuiThemeProvider theme={theme}>
-      <ThemeProvider theme={theme}>
-        <Typography component="div" className={classes.root}>
-          <CssBaseline />
-          <Feedback>
-            <BrowserRouter>
-              <div id="appRootFrame" style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
-                <AuthenticationManager>
-                  <Contextualizer>
-                    <ReduxProvider store={reduxStore}>
-                      <div id="appMainFrame" style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
-                        <ContentSwitch />
-                      </div>
-                      <div id="appNavFrame" style={{flex : '0 0 auto'}}>
-                        <BottomNavigation />
-                      </div>
-                    </ReduxProvider>
-                  </Contextualizer>
-                </AuthenticationManager>
-              </div>
-            </BrowserRouter>
-          </Feedback>
-        </Typography>
-      </ThemeProvider>
-    </MuiThemeProvider>
-  )
-})
+const CatalystAppFrame = withStyles(styles)(({classes, theme, ContentSwitch, BottomNavigation, reduxStore}) =>
+  <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <Typography component="div" className={classes.root}>
+        <CssBaseline />
+        <Feedback>
+          <BrowserRouter>
+            <div id="appRootFrame" style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
+              <AuthenticationManager>
+                <Contextualizer>
+                  <ReduxProvider store={reduxStore}>
+                    <div id="appMainFrame" style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
+                      <ContentSwitch />
+                    </div>
+                    <div id="appNavFrame" style={{flex : '0 0 auto'}}>
+                      <BottomNavigation />
+                    </div>
+                  </ReduxProvider>
+                </Contextualizer>
+              </AuthenticationManager>
+            </div>
+          </BrowserRouter>
+        </Feedback>
+      </Typography>
+    </ThemeProvider>
+  </MuiThemeProvider>
+)
 
 if (process.env.NODE_ENV !== 'production') {
   CatalystAppFrame.propTypes = {
