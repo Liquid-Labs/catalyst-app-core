@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 // TODO: use this to verify that the context selected is valid
 // import { contextConfig } from '@liquid-labs/catalyst-core-api'
 
-import { awaitStatus } from '@liquid-labs/react-await'
-import { Await } from '../Await'
+import { waiterStatus } from '@liquid-labs/react-waiter'
+import { Waiter } from '../Await'
 import { AuthenticationContext } from './AuthenticationManager'
 import { FeedbackContext } from '../ui/Feedback'
 
@@ -18,12 +18,12 @@ const AppContext = createContext(initialAppContextState.appContext)
 
 const statusCheck = ({appContext, error}) =>
   error !== null
-    ? { status  : awaitStatus.BLOCKED,
+    ? { status  : waiterStatus.BLOCKED,
       summary : "is blocked on error while resolving application context." }
     : appContext !== null
-      ? { status  : awaitStatus.RESOLVED,
+      ? { status  : waiterStatus.RESOLVED,
         summary : "has resolved application context." }
-      : { status  : awaitStatus.WAITING,
+      : { status  : waiterStatus.WAITING,
         summary : "is waiting to resolve application context..." }
 
 const checks = [statusCheck]
@@ -63,10 +63,10 @@ const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
 
   return (
     <AppContext.Provider value={contextApi}>
-      <Await name="Contextualizer"
+      <Waiter name="Contextualizer"
           checks={checks} checkProps={appContextState} {...props}>
         { typeof children === 'function' ? children(props) : children }
-      </Await>
+      </Waiter>
     </AppContext.Provider>
   )
 }

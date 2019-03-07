@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useRef } from 'react'
 
-import { Await as AwaitBase, defaultReportDisplay } from '@liquid-labs/react-await'
+import { Waiter as WaiterBase, BasicWaiterDisplay } from '@liquid-labs/react-waiter'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import ErrorIcon from '@material-ui/icons/Error'
 import { FeedbackContext } from './ui/Feedback'
@@ -9,7 +9,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { useTheme } from '@material-ui/styles'
 
 const styles = (theme) => ({
-  awaitContainer : {
+  waiterContainer : {
     display        : 'flex',
     flexDirection  : 'column',
     flex           : '1 1 auto',
@@ -17,7 +17,7 @@ const styles = (theme) => ({
     alignItems     : 'center',
     justifyContent : 'center'
   },
-  awaitIcon : {
+  waiterIcon : {
     bottomMargin : '1.5rem'
   },
   errorIcon : {
@@ -33,47 +33,47 @@ const styles = (theme) => ({
   }
 })
 
-const AwaitContent = withStyles(styles, { name : 'AwaitContent' })(
+const WaiterContent = withStyles(styles, { name : 'WaiterContent' })(
   ({Icon, report, reportClass, classes}) =>
-    <div className={classes.awaitContainer}>
-      <div className={classes.awaitIcon}>
+    <div className={classes.waiterContainer}>
+      <div className={classes.waiterIcon}>
         <Icon outerclasses={classes} />
       </div>
       <div className={classes[reportClass]}>
-        { defaultReportDisplay(report) }
+        <BasicWaiterDisplay report={report} />
       </div>
     </div>
 )
 
-const DefaultSpinner = (report) =>
-  <AwaitContent Icon={CircularProgress} report={report} reportClass="report" />
+const DefaultSpinner = ({report}) =>
+  <WaiterContent Icon={CircularProgress} report={report} reportClass="report" />
 
-const DefaultBlocked = (report) =>
+const DefaultBlocked = ({report}) =>
   // tried '<ErrorIcon color="error" .../>, but it was ineffective for whatever reason.'
-  <AwaitContent
+  <WaiterContent
       Icon={({outerclasses}) => <ErrorIcon className={outerclasses.errorIcon} fontSize="large" />}
       report={report}
       reportClass="errorReport" />
 
-const Await = (props) => {
+const Waiter = (props) => {
   const { addErrorMessage, addWarningMessage, closeMessage } = useContext(FeedbackContext)
   const theme = useTheme()
   const currMsgKey = useRef()
-  const followupHandler = useCallback((awaitReport, followupCount, followupMax) => {
+  const followupHandler = useCallback((waiterReport, followupCount, followupMax) => {
     if (currMsgKey.current) {
       closeMessage(currMsgKey.current)
     }
     const newMsg = () => {
-      if (awaitReport.errorMessage) {
-        currMsgKey.current = addErrorMessage(awaitReport.errorMessage)
+      if (waiterReport.errorMessage) {
+        currMsgKey.current = addErrorMessage(waiterReport.errorMessage)
       }
       else if (followupCount !== followupMax) {
         currMsgKey.current =
-          addWarningMessage(`${awaitReport.name} is taking awhile to resolve...`)
+          addWarningMessage(`${waiterReport.name} is taking awhile to resolve...`)
       }
       else {
         currMsgKey.current =
-          addWarningMessage(`${awaitReport.name} has not yet resolved. This is the final warning.`,
+          addWarningMessage(`${waiterReport.name} has not yet resolved. This is the final warning.`,
             { persist : true })
       }
     }
@@ -85,12 +85,12 @@ const Await = (props) => {
   }, [addErrorMessage, addWarningMessage, closeMessage])
 
   return (
-    <AwaitBase
+    <WaiterBase
         spinner={DefaultSpinner}
-        blocked={DefaultBlocked}
+        blocker={DefaultBlocked}
         followupHandler={followupHandler}
         {...props} />
   )
 }
 
-export { Await }
+export { Waiter }

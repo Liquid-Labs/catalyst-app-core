@@ -22,7 +22,8 @@
     "prepare": "npm run build",
     "watch": "catalyst-scripts watch",
     "lint": "catalyst-scripts lint",
-    "lint-fix": "catalyst-scripts lint-fix"
+    "lint-fix": "catalyst-scripts lint-fix",
+    "postyalc": "chmod a+x ~/.yalc/packages/@liquid-labs/catalyst-core-ui/*/bin/*"
   },
   "repository": {
     "type": "git",
@@ -39,10 +40,10 @@
   "homepage": "https://github.com/Liquid-Labs/catalyst-core#readme",
   "devDependencies": {
     "@liquid-labs/catalyst-firewrap": "^2.0.0-prototype.0",
-    "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.12",
+    "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.13",
     "@liquid-labs/catalyst-theme": "^1.0.0-prototype.1",
     "@liquid-labs/mui-extensions": "^1.0.0-prototype.0",
-    "@liquid-labs/react-await": "^1.0.0-prototype.9",
+    "@liquid-labs/react-waiter": "^1.0.0-prototype.9",
     "@liquid-labs/regex-repo": "latest",
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
@@ -70,7 +71,7 @@
     "@liquid-labs/catalyst-firewrap": "^2.0.0-prototype.0",
     "@liquid-labs/catalyst-theme": "^1.0.0-prototype.0",
     "@liquid-labs/mui-extensions": "^1.0.0-prototype.0",
-    "@liquid-labs/react-await": "latest",
+    "@liquid-labs/react-waiter": "^1.0.0-prototype.9",
     "@liquid-labs/regex-repo": "latest",
     "@material-ui/core": "^1.5.1 || 3.x",
     "@material-ui/icons": "^3.0.2",

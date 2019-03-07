@@ -9,8 +9,8 @@ import PropTypes from 'prop-types'
 
 import { FeedbackContext } from '../ui/Feedback'
 
-import { Await } from '../Await'
-import { awaitStatus } from '@liquid-labs/react-await'
+import { Waiter } from '../Await'
+import { waiterStatus } from '@liquid-labs/react-waiter'
 
 import { fireauth } from '@liquid-labs/catalyst-firewrap'
 
@@ -27,12 +27,12 @@ const AuthenticationContext = React.createContext(initialAuthenticationState)
 
 const statusCheck = ({resolved, error}) =>
   error !== null
-    ? { status  : awaitStatus.BLOCKED,
+    ? { status  : waiterStatus.BLOCKED,
       summary : "is blocked on error form auth provider (firebase). Ensure you have a good network connection." }
     : resolved
-      ? { status  : awaitStatus.RESOLVED,
+      ? { status  : waiterStatus.RESOLVED,
         summary : "has received response from auth provider (firebase)." }
-      : { status  : awaitStatus.WAITING,
+      : { status  : waiterStatus.WAITING,
         summary : "is waiting on response from auth provider (firebase)..." }
 
 const checks = [statusCheck]
@@ -78,10 +78,10 @@ const AuthenticationManager = ({children, ...props}) => {
 
   return (
     <AuthenticationContext.Provider value={authenticationStatus}>
-      <Await name="Authentication verification"
+      <Waiter name="Authentication verification"
           checks={checks} checkProps={authenticationStatus} {...props}>
         { typeof children === 'function' ? children(props) : children }
-      </Await>
+      </Waiter>
     </AuthenticationContext.Provider>
   )
 }
