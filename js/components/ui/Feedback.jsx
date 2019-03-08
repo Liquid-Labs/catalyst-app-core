@@ -72,21 +72,28 @@ const FeedbackProvider = withSnackbar(
         options)),
     [ /* enqueueSnackbar */ ])
     const closeMessage = useCallback((key) => closeSnackbar(key), [])
-    const feedbackAPI = useMemo(() => ({
-      addInfoMessage,
-      addConfirmMessage,
-      addWarningMessage,
-      addErrorMessage,
-      closeMessage,
-    }), [ /* addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */ ])
-
     const currMsgKey = useRef()
     const theme = useTheme()
-    const followupHandler = catalystFollowupHandler(feedbackAPI, theme, currMsgKey)
+    // The memo is doing two things; since the currMsgKey ref and 'theme' should
+    // rarely if ever change (currMsgKey is the same by def) and the feedbackAPI
+    // only need be updated on mount, we can use one memo calculation instead
+    // of two.
+    const feedbackAPI = useMemo(() => {
+      const api = {
+        addInfoMessage,
+        addConfirmMessage,
+        addWarningMessage,
+        addErrorMessage,
+        closeMessage
+      }
+      const followupHandler = catalystFollowupHandler(api, theme, currMsgKey)
 
-    waiterSettings.setDefaultSpinner(CatalystSpinner)
-    waiterSettings.setDefaultBlocker(CatalystBlocker)
-    waiterSettings.setDefaultFollowupHandler(followupHandler)
+      console.log("setting default spinner")
+      waiterSettings.setDefaultSpinner(CatalystSpinner)
+      waiterSettings.setDefaultBlocker(CatalystBlocker)
+      waiterSettings.setDefaultFollowupHandler(followupHandler)
+      return api
+    }, [ theme/*, addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */ ])
 
     return (
       <FeedbackContext.Provider value={feedbackAPI}>
