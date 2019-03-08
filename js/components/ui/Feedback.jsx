@@ -88,7 +88,6 @@ const FeedbackProvider = withSnackbar(
       }
       const followupHandler = catalystFollowupHandler(api, theme, currMsgKey)
 
-      console.log("setting default spinner")
       waiterSettings.setDefaultSpinner(CatalystSpinner)
       waiterSettings.setDefaultBlocker(CatalystBlocker)
       waiterSettings.setDefaultFollowupHandler(followupHandler)
