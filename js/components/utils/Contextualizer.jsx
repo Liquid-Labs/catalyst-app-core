@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 // TODO: use this to verify that the context selected is valid
 // import { contextConfig } from '@liquid-labs/catalyst-core-api'
 
-import { AuthenticationContext } from './AuthenticationManager'
+import { useAuthenticationStatus } from './AuthenticationManager'
 import { FeedbackContext } from '../ui/Feedback'
 import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 
@@ -19,7 +19,7 @@ const statusCheck = ({appContext, error}) =>
   error !== null
     ? { status  : waiterStatus.BLOCKED,
       summary : "is blocked on error while resolving application context." }
-    : appContext !== null
+    : appContext !== undefined
       ? { status  : waiterStatus.RESOLVED,
         summary : "has resolved application context." }
       : { status  : waiterStatus.WAITING,
@@ -30,7 +30,7 @@ const checks = [statusCheck]
 const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
   const [ appContextState, setAppContextState ] = useState(initialAppContextState)
   const { addErrorMessage } = useContext(FeedbackContext)
-  const { authUser, claims } = useContext(AuthenticationContext)
+  const { authUser, claims } = useAuthenticationStatus()
 
   useEffect(() => {
     if (!appContextState.error && appContextState.appContext === undefined) {
@@ -55,9 +55,9 @@ const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
 
   const contextApi = useMemo(() => ({
     appContext    : appContextState.appContext,
-    resetContext  : () => setAppContextState({appContext : null, ...appContextState}),
+    resetContext  : () => setAppContextState(initialAppContextState),
     setAppContext : (appContext) =>
-      setAppContextState({appContext : appContext, ...appContextState})
+      setAppContextState({...appContextState, appContext : appContext})
   }))
 
   return (
