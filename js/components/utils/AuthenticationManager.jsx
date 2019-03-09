@@ -57,38 +57,41 @@ const handlePostAuthError = (userMsg, devMsg, authError, setAuthenticationStatus
   }
 }
 
+// Initially registering the user will cause the user to be logged in, which
+// will change the auth state. But, the reg process may have more to do (like
+// updating the new user with a 'dislay name'), and so we track 'postAuthGates'.
+const postAuthGates = []
+
 // After authentication with firebase, we need to pull the 'Person' data from
 // the main database.
 const postAuthentication = async(authUser, setAuthenticationStatus, addErrorMessage) => {
-  console.log("In postAuthentication")
   try {
     const tokenInfo = await authUser.getIdTokenResult()
     const authToken = tokenInfo.token
     const authId = authUser.uid
 
     try {
-      console.log("trying fetch")
-      // TODO: we really want the status here because if it's not 404/NOT_FOUND, then we'll want to handle differently
+      await Promise.all(postAuthGates) // see note on 'postAuthGates'
+      // TODO: we really want the status here because if it's not 404/NOT_FOUND,
+      // then we'll want to handle differently
       // see https://github.com/Liquid-Labs/catalyst-core-api/issues/2
-      // TODO: potentially treat 'null' as 404 indicator? as a bridge?
-      let { data:person } = resources.fetchItemBySource(`/persons/auth-id-${authId}/`, authToken)
-      console.log("got: ", person)
+      let { data:person } = await resources.fetchItemBySource(`/persons/auth-id-${authId}/`, authToken)
       // This is expected if the user was just created
       if (!person) {
-        console.log('creating person based on authUser: ', authUser)
         const newPersonModel = new Person({
           displayName : authUser.displayName,
+          active : true,
           authId : authId,
           email  : authUser.email
         })
         try {
-          const { errorMessage, ...rest } = await
+          const { errorMessage, data:newPerson } = await
             resources.createItem(newPersonModel, authToken)
-          console.log('rest: ', rest)
-          if (errorMessage) {
+          if (newPerson) person = newPerson
+          else {
             handlePostAuthError(
               'User partially created. Try logging in again. Contact customer support if problems persist.',
-              `Error creating 'persons' record: ${errorMessage}`,
+              `Error creating 'persons' record: ${errorMessage || "Hmm... no error message provided (fishy)."}`,
               null, setAuthenticationStatus, addErrorMessage)
           }
         }
@@ -133,7 +136,17 @@ const AuthenticationManager = ({children, ...props}) => {
     logOut        : () => fireauth.logOut(),
     setAuthPerson : (person) =>
       setAuthenticationStatus(Object.assign(
-        {}, authenticationStatus, { authPerson : person}))
+        {}, authenticationStatus, { authPerson : person})),
+    // TODO: should 'synhronize' these
+    addPostAuthGate : (promise) => postAuthGates.push(promise),
+    removePostAuthGate : (promise) => {
+      const i = postAuthGates.indexOf()
+      if (i === -1) return false
+      else {
+        postAuthGates.splice(i, 1)
+        return true
+      }
+    }
   }
 
   // We set up the listener on mount.
