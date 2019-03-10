@@ -22,25 +22,27 @@ const waiterChecks = [ ({item, errorMessage, url}) =>
       }
 ]
 
-const resolveItem = async(resName, resId, itemUrl, authToken, setCheckProps) => {
-  const { data, errorMessage } = await resources.fetchItem(resName, resId, authToken)
+const resolveItem = async(resourceName, pubId, itemUrl, authToken, setCheckProps) => {
+  const { data, errorMessage } = await resources.fetchItem(resourceName, pubId, authToken)
   setCheckProps({ item : data, errorMessage : errorMessage, url : itemUrl })
 }
 
+// TODO: itemUrl -> itemPath
 const ItemFetcher = ({itemUrl, itemKey='item', children, ...props}) => {
   const waiterName = `${upperFirst(itemKey)} fetch`
-  const { resName, resId } = routes.extractItemIdentifiers(itemUrl)
+  const { resourceName, pubId } = routes.extractItemIdentifiers(itemUrl)
+  // TODO: handle bad URL: if (!resourceName || !pubId)
   // We check the cache synchronously to avoid blinking.
   const initialCheckProps = {item : null, errorMessage : null, url : itemUrl}
   const { permanentError } = resourcesCache.getFreshSourceData(itemUrl)
   if (permanentError) initialCheckProps.errorMessage = permanentError.message
-  else initialCheckProps.item = resourcesCache.getFreshCompleteItem(resId)
+  else initialCheckProps.item = resourcesCache.getFreshCompleteItem(pubId)
 
   const { authToken } = useAuthenticationStatus()
   const [ checkProps, setCheckProps ] = useState(initialCheckProps)
 
   useEffect(() => {
-    if (!checkProps.item) resolveItem(resName, resId, itemUrl, authToken, setCheckProps)
+    if (!checkProps.item) resolveItem(resourceName, pubId, itemUrl, authToken, setCheckProps)
   }, [ itemUrl, itemKey, authToken ])
 
   // this isn't always used, but no need to memo-ize
