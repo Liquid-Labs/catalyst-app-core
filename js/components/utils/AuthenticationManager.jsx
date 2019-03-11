@@ -7,7 +7,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 
-import { FeedbackContext } from '../ui/Feedback'
+import { FeedbackContext } from '../widgets/Feedback'
 
 import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 

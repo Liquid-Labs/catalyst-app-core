@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 import AppBar from '@material-ui/core/AppBar'
-import { ContextReset } from './ContextReset'
+import { ContextReset } from '../widgets/ContextReset'
 import Grid from '@material-ui/core/Grid'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'

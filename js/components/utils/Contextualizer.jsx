@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 // import { contextConfig } from '@liquid-labs/catalyst-core-api'
 
 import { useAuthenticationStatus } from './AuthenticationManager'
-import { FeedbackContext } from '../ui/Feedback'
+import { FeedbackContext } from '../widgets/Feedback'
 import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 
 const initialAppContextState = {
