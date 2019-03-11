@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { BasicWaiterDisplay } from '@liquid-labs/react-waiter'
+import { BasicWaiterDisplay, CompactWaiterDisplay } from '@liquid-labs/react-waiter'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import ErrorIcon from '@material-ui/icons/Error'
 
@@ -17,7 +17,18 @@ const styles = (theme) => ({
     justifyContent : 'center'
   },
   waiterIcon : {
-    bottomMargin : '1.5rem'
+    marginBottom : '1.5rem'
+  },
+  tinyWaiterContainer : {
+    display        : 'flex',
+    flexDirection  : 'row',
+    flex           : '1 1 auto',
+    placeSelf      : '',
+    alignItems     : 'center',
+    justifyContent : 'flex-start'
+  },
+  tinyWaiterIcon : {
+    marginRight: '0.65em'
   },
   errorIcon : {
     color : theme.palette.error.main
@@ -33,38 +44,54 @@ const styles = (theme) => ({
 })
 
 const CatalystWaiterDisplay = withStyles(styles, { name : 'CatalystWaiterDisplay' })(
-  ({icon, report, reportClass, classes}) => {
+  ({icon, report, tiny, reportClass, classes}) => {
     const Icon = icon
+    // note, the 'size' is not transmitted to the underlying 'ErrorIcon', only
+    // the 'CiruclarProgress component.'
+    const size = tiny ? 15 : undefined
+    const [ containerClass, iconClass, ReportDisplay ] = tiny
+      ? [ classes.tinyWaiterContainer,
+          classes.tinyWaiterIcon,
+          CompactWaiterDisplay ]
+      : [ classes.waiterContainer, classes.waiterIcon, BasicWaiterDisplay ]
+
     return (
-      <div className={classes.waiterContainer}>
-        <div className={classes.waiterIcon}>
-          <Icon outerclasses={classes} />
+      <div className={containerClass}>
+        <div className={iconClass}>
+          <Icon size={size} outerclasses={classes} />
         </div>
         <div className={classes[reportClass]}>
-          <BasicWaiterDisplay report={report} />
+          <ReportDisplay report={report} />
         </div>
       </div>
     )
   }
 )
 
-const CatalystSpinner = ({report}) =>
-  <CatalystWaiterDisplay icon={CircularProgress} report={report} reportClass="report" />
+const CatalystSpinner = ({report, tiny}) =>
+  <CatalystWaiterDisplay
+    icon={CircularProgress}
+    report={report}
+    tiny={tiny}
+    reportClass="report" />
 
-const CatalystBlocker = ({report}) =>
+const CatalystBlocker = ({report, tiny}) =>
   // tried '<ErrorIcon color="error" .../>, but it was ineffective for whatever reason.'
   <CatalystWaiterDisplay
       icon={({outerclasses}) => <ErrorIcon className={outerclasses.errorIcon} fontSize="large" />}
       report={report}
+      tiny={tiny}
       reportClass="errorReport" />
 
 if (process.env.NODE_ENV !== 'production') {
   CatalystSpinner.propTypes = {
-    report : PropTypes.object.isRequired
+    report : PropTypes.object.isRequired,
+    tiny   : PropTypes.bool,
   }
 
   CatalystBlocker.propTypes = {
-    report : PropTypes.object.isRequired
+    report : PropTypes.object.isRequired,
+    tiny   : PropTypes.bool,
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useMemo, useRef } from 'react'
+import React, { createContext, useCallback, useContext, useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
 
 import { CatalystSpinner, CatalystBlocker } from '../widgets/CatalystWaiterDisplay'
@@ -42,6 +42,8 @@ const styles = theme => ({
 })
 
 const FeedbackContext = createContext()
+
+const useFeedbackAPI = () => useContext(FeedbackContext)
 
 const FeedbackProvider = withSnackbar(
   ({autoHideDuration, warningHideFactor, enqueueSnackbar, closeSnackbar, children}) => {
@@ -164,4 +166,8 @@ Feedback.propTypes = {
   anchorOrigin         : PropTypes.object,
 }
 
-export { Feedback, FeedbackContext }
+export {
+  Feedback,
+  FeedbackContext, // TODO: deprecate
+  useFeedbackAPI
+}
