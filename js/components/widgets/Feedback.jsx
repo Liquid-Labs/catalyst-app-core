@@ -94,7 +94,7 @@ const FeedbackProvider = withSnackbar(
       waiterSettings.setDefaultBlocker(CatalystBlocker)
       waiterSettings.setDefaultFollowupHandler(followupHandler)
       return api
-    }, [ theme/*, addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */ ])
+    }, [ theme/*, addInfoMessage, addConfirmMessage, addWarningMessage, addErrorMessage */])
 
     return (
       <FeedbackContext.Provider value={feedbackAPI}>
