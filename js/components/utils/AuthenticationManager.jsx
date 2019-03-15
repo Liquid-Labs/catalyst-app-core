@@ -80,13 +80,13 @@ const postAuthentication = async(authUser, setAuthenticationStatus, addErrorMess
       if (!person) {
         const newPersonModel = new Person({
           displayName : authUser.displayName,
-          active : true,
-          authId : authId,
-          email  : authUser.email
+          active      : true,
+          authId      : authId,
+          email       : authUser.email
         })
         try {
           const { errorMessage, data:newPerson } = await
-            resources.createItem(newPersonModel, authToken)
+          resources.createItem(newPersonModel, authToken)
           if (newPerson) person = newPerson
           else {
             handlePostAuthError(
@@ -138,7 +138,7 @@ const AuthenticationManager = ({children, ...props}) => {
       setAuthenticationStatus(Object.assign(
         {}, authenticationStatus, { authPerson : person})),
     // TODO: should 'synhronize' these
-    addPostAuthGate : (promise) => postAuthGates.push(promise),
+    addPostAuthGate    : (promise) => postAuthGates.push(promise),
     removePostAuthGate : (promise) => {
       const i = postAuthGates.indexOf()
       if (i === -1) return false

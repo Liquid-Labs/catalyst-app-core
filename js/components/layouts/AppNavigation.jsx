@@ -98,13 +98,13 @@ LogoAndContext.propTypes = {
   contextServiceLocation   : PropTypes.object
 }
 
-const NavigationBar = ({ classes, children, rightChildren, logoTo, ...remainder }) =>
+const NavigationBar = ({ classes, children, showChildren, rightChildren, logoTo, ...remainder }) =>
   <Grid container>
     <Grid item xs={2}>
       <LogoAndContext to={logoTo} {...remainder} />
     </Grid>
     <Grid item xs={8}>
-      {children}
+      { (!showChildren || showChildren()) && children }
     </Grid>
     <Grid item xs={2} className={classes.right}>
       {rightChildren}

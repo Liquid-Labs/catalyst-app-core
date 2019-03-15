@@ -28,7 +28,7 @@ const styles = (theme) => ({
     justifyContent : 'flex-start'
   },
   tinyWaiterIcon : {
-    marginRight: '0.65em'
+    marginRight : '0.65em'
   },
   errorIcon : {
     color : theme.palette.error.main
@@ -51,8 +51,8 @@ const CatalystWaiterDisplay = withStyles(styles, { name : 'CatalystWaiterDisplay
     const size = tiny ? 15 : undefined
     const [ containerClass, iconClass, ReportDisplay ] = tiny
       ? [ classes.tinyWaiterContainer,
-          classes.tinyWaiterIcon,
-          CompactWaiterDisplay ]
+        classes.tinyWaiterIcon,
+        CompactWaiterDisplay ]
       : [ classes.waiterContainer, classes.waiterIcon, BasicWaiterDisplay ]
 
     return (
@@ -70,10 +70,10 @@ const CatalystWaiterDisplay = withStyles(styles, { name : 'CatalystWaiterDisplay
 
 const CatalystSpinner = ({report, tiny}) =>
   <CatalystWaiterDisplay
-    icon={CircularProgress}
-    report={report}
-    tiny={tiny}
-    reportClass="report" />
+      icon={CircularProgress}
+      report={report}
+      tiny={tiny}
+      reportClass="report" />
 
 const CatalystBlocker = ({report, tiny}) =>
   // tried '<ErrorIcon color="error" .../>, but it was ineffective for whatever reason.'
