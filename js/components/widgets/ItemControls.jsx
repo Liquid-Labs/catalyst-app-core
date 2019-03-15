@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 
 import Grid from '@material-ui/core/Grid'
@@ -11,6 +10,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import RestoreIcon from 'mdi-material-ui/Restore'
 import SaveIcon from '@material-ui/icons/SaveAlt'
 
+import { routes } from '@liquid-labs/catalyst-core-api'
 import { useValidationContextAPI } from '@liquid-labs/react-validation'
 
 const primaryProps = { variant : 'contained', color : 'primary' };
@@ -42,8 +42,8 @@ const defaultIconLabels = {
 const ItemControls = withRouter(({ onDone, onRevert, onSave, // handlers
   include=defaultInclude, exclude, controlStyle='icons', // configurations
   unsavedChanges, childrenBefore=false,
-  from, history, mode, isValid, children}) => {
-
+  from, history, isValid, children}) => {
+  const mode = routes.getRenderMode()
   const vcAPI = useValidationContextAPI()
 
   if (exclude) {
@@ -90,9 +90,5 @@ const ItemControls = withRouter(({ onDone, onRevert, onSave, // handlers
     </Grid>
   )
 })
-
-ItemControls.propTypes = {
-  requestSave  : PropTypes.func, // TODO: required if mode != view
-};
 
 export { ItemControls }
