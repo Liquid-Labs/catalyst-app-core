@@ -7,7 +7,6 @@ import { AppNavigation } from './AppNavigation'
 // something we need to handle changing constantly.
 const BasicContentFrame = ({children, navChildren, navLogoTo, navRightChildren, navShowChildren, AppNavigationProps, ...remainder}) => [
   <AppNavigation key="appNavigation"
-      children={navChildren}
       showChildren={navShowChildren}
       logoTo={navLogoTo}
       rightChildren={navRightChildren}
