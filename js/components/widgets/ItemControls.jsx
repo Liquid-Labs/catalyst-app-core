@@ -82,7 +82,7 @@ const ItemControls = withRouter(({ onDone, onRevert, onSave, // handlers
   return (
     <Grid container justify="center">
       { childrenBefore && children }
-      { showEdit && <IconControl {...showEdit} onClick={() => history.push(`${currPath}/edit`, {from : currPath})}>{editLabel}</IconControl> }
+      { showEdit && <IconControl {...showEdit} onClick={() => history.push(`${currPath}edit/`, {from : currPath})}>{editLabel}</IconControl> }
       { showCancel && <IconControl {...showCancel} onClick={onDone}>{cancelLabel}</IconControl> }
       { showRevert && <IconControl {...showRevert} disabled={!hasChange} onClick={onRevert}>{revertLabel}</IconControl> }
       { showSave && <IconControl {...showSave} disabled={!isValidAndChanged} onClick={onSave}>{saveLabel}</IconControl> }
