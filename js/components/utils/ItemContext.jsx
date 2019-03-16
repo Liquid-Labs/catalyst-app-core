@@ -9,9 +9,10 @@ const ItemContext = ({ item:propItem, children }) => {
 
   const api = useMemo(() => ({
     getItem        : () => item,
+    setItem        : (newItem) => setItem(newItem),
     updateItemData : (data) => item && setItem(item.update(data)),
     isItemReady    : () => Boolean(item),
-  }), [ item ])
+  }), [ item, setItem ])
 
   return (
     <MyContext.Provider value={api}>
