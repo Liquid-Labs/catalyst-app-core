@@ -116,7 +116,8 @@ if (process.env.NODE_ENV !== 'production') {
     classes       : PropTypes.object.isRequired,
     children      : PropTypes.node,
     logoTo        : PropTypes.string.isRequired,
-    rightChildren : PropTypes.node
+    rightChildren : PropTypes.node,
+    showChildren  : PropTypes.boolean,
   }
 }
 

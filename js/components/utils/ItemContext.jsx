@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useMemo, useState } from 'react'
+import PropTypes from 'prop-types'
 
 const MyContext = createContext()
 
@@ -19,6 +20,13 @@ const ItemContext = ({ item:propItem, children }) => {
       {children}
     </MyContext.Provider>
   )
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  ItemContext.propTypes = {
+    item     : PropTypes.object,
+    children : PropTypes.node.isRequired,
+  }
 }
 
 export { ItemContext, useItemContextAPI }

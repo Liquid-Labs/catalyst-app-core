@@ -136,7 +136,7 @@ const AuthenticationManager = ({children, ...props}) => {
     logOut        : () => fireauth.logOut(),
     setAuthPerson : (person) =>
       setAuthenticationStatus(Object.assign(
-        {}, authenticationStatus, { authPerson : person})),
+        {}, authenticationStatus, { authPerson : person })),
     // TODO: should 'synhronize' these
     addPostAuthGate    : (promise) => postAuthGates.push(promise),
     removePostAuthGate : (promise) => {

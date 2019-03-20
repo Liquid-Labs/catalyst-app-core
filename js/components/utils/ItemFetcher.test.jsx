@@ -16,8 +16,10 @@ const testChild = jest.fn(
   ({item}) => <span data-testid="content">{item.pubId}</span>
 )
 const testWaitFn = jest.fn(() => null)
+// eslint-disable-next-line react/prop-types
 const TestWait = ({report}) => <div>{testWaitFn()}</div>
 const testBlockFn = jest.fn(({errorMessage}) => errorMessage)
+// eslint-disable-next-line react/prop-types
 const TestBlock = ({report}) =>
   <span data-testid="errorMessage">{testBlockFn(report)}</span>
 const testWaiterProps = { spinner : TestWait, blocker : TestBlock }

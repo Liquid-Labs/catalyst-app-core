@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { routes, resources, resourcesCache } from '@liquid-labs/catalyst-core-api'
 
