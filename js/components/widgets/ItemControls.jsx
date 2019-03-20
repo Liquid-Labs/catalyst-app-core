@@ -79,6 +79,13 @@ const ItemControls = withRouter(({ onDone, onRevert, onSave, // handlers
     (isValid !== undefined ? isValid : vcAPI.isValid()) && hasChange
   const currPath = window.location.pathname
 
+  if (process.env.NODE_ENV !== 'production') {
+    if (showSave && !onSave) {
+      // eslint-disable-next-line no-console
+      console.warn(`No 'onSave' provided to 'ItemControls' displaying the save-control. Either exclude the save control or provide 'onSave'.`)
+    }
+  }
+
   return (
     <Grid container justify="center">
       { childrenBefore && children }
