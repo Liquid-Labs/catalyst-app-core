@@ -42,12 +42,14 @@ const defaultIconLabels = {
 // TOOD: add hover-popover that explains why a control is disabled. E.g., because there's no need to save or the data is invalid.
 // TODO: at the moment, we only really support default 'icons' style because we render everything in an IconBottun; text should be rendered in Button
 const ItemControls = withRouter(({
+  // TODO: onDone or onCancel?
   onDone, onRevert, onSave, afterSave, // handlers
   include=defaultInclude, exclude, controlStyle='icons', // configurations
   unsavedChanges, childrenBefore=false,
   createProps,
-  from, history, isValid, children}) => {
+  location, history, isValid, children}) => {
   const mode = routes.getRenderMode()
+  const from = location.state && location.state.from
   const vcAPI = useValidationContextAPI()
   const icAPI = useItemContextAPI()
   // we don't always use the authToken, but need to keep hook calls consistent.
@@ -87,6 +89,14 @@ const ItemControls = withRouter(({
   const currPath = window.location.pathname
 
   // setup the handlers, as necessary
+  if (!onDone && showCancel) {
+    if (process.env.NODE_ENV !== 'production') {
+      if (!from) {
+        console.error("You must either define 'from' on the 'locataion.state' or provide an explicit 'onDone' handler to support the 'Cancel' control in 'ItemControls.'")
+      }
+    }
+    onDone = () => history.push(from)
+  }
   if (!onRevert && vcAPI) onRevert = () => vcAPI.resetData()
   if (!onSave && vcAPI && icAPI && (mode === 'create' || mode === 'edit')) {
     const editItem = icAPI.getItem()
