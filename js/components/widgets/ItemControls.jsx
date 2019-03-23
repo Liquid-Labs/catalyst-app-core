@@ -2,9 +2,11 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 
 import Grid from '@material-ui/core/Grid'
-import { IconControl } from './IconControl'
+import { IconControl,
+  CTRL_RANK_PRIMARY, CTRL_RANK_SECONDARY,
+  CTRL_DANGER_DANGEROUS, CTRL_DANGER_SAFE } from './IconControl'
 
-import CancelIcon from '@material-ui/icons/Cancel'
+import CancelIcon from '@material-ui/icons/CancelOutlined'
 import CreateIcon from '@material-ui/icons/AddBox'
 import EditIcon from '@material-ui/icons/Edit'
 import RestoreIcon from 'mdi-material-ui/Restore'
@@ -15,27 +17,28 @@ import { useAuthenticationStatus } from '../utils/AuthenticationManager'
 import { useItemContextAPI } from '../utils/ItemContext'
 import { useValidationContextAPI } from '@liquid-labs/react-validation'
 
-const primaryProps = { variant : 'contained', color : 'primary' };
-const optionalPrimaryProps = { color : 'primary' };
-const secondaryProps = { color : 'primary' };
-const dangerousSecondary = { color : 'secondary' };
+const primaryProps = { rank : CTRL_RANK_PRIMARY }
+const secondaryProps = { danger : CTRL_DANGER_SAFE, rank : CTRL_RANK_SECONDARY }
+const dangerousSecondary =
+  { danger : CTRL_DANGER_DANGEROUS , rank : CTRL_RANK_SECONDARY }
 
 const defaultInclude = ['edit', 'cancel', 'revert', 'save', 'save and close']
 const defaultTextLabels = {
-  cancel             : 'Cancel',
-  create             : 'Create',
-  edit               : 'Edit',
-  save               : 'Save',
-  revert             : 'Revert',
-  'save and close'   : 'Save & close',
-  'create and close' : 'Create & close',
+  cancel             : (primOrSec) => primOrSec === CTRL_RANK_PRIMARY ? 'Done' : 'Cancel',
+  create             : () => 'Create',
+  edit               : () => 'Edit',
+  save               : () => 'Save',
+  revert             : () => 'Revert',
+  'save and close'   : () => 'Save & close',
+  'create and close' : () => 'Create & close',
 }
+
 const defaultIconLabels = {
-  cancel : <CancelIcon />,
-  create : <CreateIcon />,
-  edit   : <EditIcon />,
-  save   : <SaveIcon />,
-  revert : <RestoreIcon /> // TODO: there are 'restore' and 'undo' icons; 'restore seems the closest'
+  cancel : () => <CancelIcon />,
+  create : () => <CreateIcon />,
+  edit   : () => <EditIcon />,
+  save   : () => <SaveIcon />,
+  revert : () => <RestoreIcon /> // TODO: there are 'restore' and 'undo' icons; 'restore seems the closest'
   /* TODO: not sure what to do for 'save and close' here; part of the reason we're excluding it for now; see 'TODO' note below */
 }
 
@@ -70,17 +73,15 @@ const ItemControls = withRouter(({
 
   const showEdit = isIncluded('edit')
     && mode === 'view'
-    && ((from && secondaryProps) || optionalPrimaryProps)
-  const showCancel /* aka close */ = isIncluded('cancel')
-    // is a primary
-    && ((mode === 'view' && primaryProps) || dangerousSecondary)
+    && ((from && secondaryProps) || primaryProps)
+  const showCancel /* aka close */ =
+    (isIncluded('done') && mode === 'view' && primaryProps)
+    || (isIncluded('cancel') && mode !== 'view' && dangerousSecondary)
   // Reversion doesn't make sense for 'view' or 'create, only edit'
   const showRevert = isIncluded('revert')
     && mode === 'edit' && dangerousSecondary
   // If we are creating and have from, then 'save and close' makes more sense.
-  const showSave = isIncluded('save')
-    && mode !== 'view'
-    && ((from && secondaryProps) || primaryProps)
+  const showSave = isIncluded('save') && mode !== 'view' && primaryProps
 
   const hasChange =
     (unsavedChanges === undefined && vcAPI && vcAPI.isChanged())
@@ -142,10 +143,10 @@ const ItemControls = withRouter(({
   return (
     <Grid container justify="center">
       { childrenBefore && children }
-      { showEdit && <IconControl {...showEdit} onClick={() => history.push(`${currPath}edit/`, {from : currPath})}>{editLabel}</IconControl> }
-      { showCancel && <IconControl {...showCancel} onClick={onDone}>{cancelLabel}</IconControl> }
-      { showRevert && <IconControl {...showRevert} disabled={!hasChange} onClick={onRevert}>{revertLabel}</IconControl> }
-      { showSave && <IconControl {...showSave} disabled={!isValidAndChanged} onClick={onSave}>{saveLabel}</IconControl> }
+      { showEdit && <IconControl {...showEdit} onClick={() => history.push(`${currPath}edit/`, {from : currPath})}>{editLabel(showEdit.rank)}</IconControl> }
+      { showCancel && <IconControl {...showCancel} onClick={onDone}>{cancelLabel(showCancel.rank)}</IconControl> }
+      { showRevert && <IconControl {...showRevert} disabled={!hasChange} onClick={onRevert}>{revertLabel(showRevert.rank)}</IconControl> }
+      { showSave && <IconControl {...showSave} disabled={!isValidAndChanged} onClick={onSave}>{saveLabel(showSave.rank)}</IconControl> }
       { !childrenBefore && children }
     </Grid>
   )
