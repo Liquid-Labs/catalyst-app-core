@@ -42,7 +42,7 @@ const defaultIconLabels = {
 // TOOD: add hover-popover that explains why a control is disabled. E.g., because there's no need to save or the data is invalid.
 // TODO: at the moment, we only really support default 'icons' style because we render everything in an IconBottun; text should be rendered in Button
 const ItemControls = withRouter(({
-  // TODO: onDone or onCancel?
+  // TODO: onDone or onCancel? Pick one and stick to it. Problem is, it's more like 'Done' on a view page, but 'Cancel' on an edit page. So maybe 'close' is best...
   onDone, onRevert, onSave, afterSave, // handlers
   include=defaultInclude, exclude, controlStyle='icons', // configurations
   unsavedChanges, childrenBefore=false,
@@ -72,7 +72,8 @@ const ItemControls = withRouter(({
     && mode === 'view'
     && ((from && secondaryProps) || optionalPrimaryProps)
   const showCancel /* aka close */ = isIncluded('cancel')
-    && from && ((mode === 'view' && primaryProps) || dangerousSecondary)
+    // is a primary
+    && ((mode === 'view' && primaryProps) || dangerousSecondary)
   // Reversion doesn't make sense for 'view' or 'create, only edit'
   const showRevert = isIncluded('revert')
     && mode === 'edit' && dangerousSecondary
