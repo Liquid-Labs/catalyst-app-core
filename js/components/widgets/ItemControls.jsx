@@ -23,18 +23,19 @@ const dangerousSecondary =
   { danger : CTRL_DANGER_DANGEROUS , rank : CTRL_RANK_SECONDARY }
 
 const defaultInclude = ['edit', 'cancel', 'revert', 'save', 'save and close']
+/* TODO https://github.com/Liquid-Labs/catalyst-core-ui/issues/3
 const defaultTextLabels = {
-  cancel             : (primOrSec) => primOrSec === CTRL_RANK_PRIMARY ? 'Done' : 'Cancel',
+  close              : (primOrSec) => primOrSec === CTRL_RANK_PRIMARY ? 'Done' : 'Cancel',
   create             : () => 'Create',
   edit               : () => 'Edit',
   save               : () => 'Save',
   revert             : () => 'Revert',
   'save and close'   : () => 'Save & close',
   'create and close' : () => 'Create & close',
-}
+}*/
 
 const defaultIconLabels = {
-  cancel : () => <CancelIcon />,
+  close : () => <CancelIcon />,
   create : () => <CreateIcon />,
   edit   : () => <EditIcon />,
   save   : () => <SaveIcon />,
@@ -45,9 +46,9 @@ const defaultIconLabels = {
 // TOOD: add hover-popover that explains why a control is disabled. E.g., because there's no need to save or the data is invalid.
 // TODO: at the moment, we only really support default 'icons' style because we render everything in an IconBottun; text should be rendered in Button
 const ItemControls = withRouter(({
-  // TODO: onDone or onCancel? Pick one and stick to it. Problem is, it's more like 'Done' on a view page, but 'Cancel' on an edit page. So maybe 'close' is best...
-  onDone, onRevert, onSave, afterSave, // handlers
-  include=defaultInclude, exclude, controlStyle='icons', // configurations
+  onClose, onRevert, onSave, afterSave, // handlers
+  // TODO https://github.com/Liquid-Labs/catalyst-core-ui/issues/3
+  include=defaultInclude, exclude, // controlStyle='icons', // configurations
   unsavedChanges, childrenBefore=false,
   createProps,
   location, history, isValid, children}) => {
@@ -62,11 +63,13 @@ const ItemControls = withRouter(({
     exclude.forEach((exLabel) => include.splice(include.indexOf(exLabel), 1))
   }
   const isIncluded = (label) => include.indexOf(label) !== -1
-  const labels = controlStyle === 'icons'
+  const labels = defaultIconLabels
+  /* TODO https://github.com/Liquid-Labs/catalyst-core-ui/issues/3
+  cost controlStyle === 'icons'
     ? defaultIconLabels
-    : defaultTextLabels
+    : defaultTextLabels */
 
-  const cancelLabel = labels['cancel']
+  const closeLabel = labels['close']
   const editLabel = labels['edit']
   const revertLabel = labels['revert']
   const saveLabel = mode === 'create' ? labels['create'] : labels['save']
@@ -74,7 +77,11 @@ const ItemControls = withRouter(({
   const showEdit = isIncluded('edit')
     && mode === 'view'
     && ((from && secondaryProps) || primaryProps)
-  const showCancel /* aka close */ =
+  const showClose =
+    // notice the inclusion flags are 'done' and 'cancel', which are mode
+    // dependent. The control, however, is just 'close' because it's the same
+    // technical action, even though it carries different connotations for the
+    // user.
     (isIncluded('done') && mode === 'view' && primaryProps)
     || (isIncluded('cancel') && mode !== 'view' && dangerousSecondary)
   // Reversion doesn't make sense for 'view' or 'create, only edit'
@@ -91,13 +98,13 @@ const ItemControls = withRouter(({
   const currPath = window.location.pathname
 
   // setup the handlers, as necessary
-  if (!onDone && showCancel) {
+  if (!onClose && showClose) {
     if (process.env.NODE_ENV !== 'production') {
       if (!from) {
-        console.error("You must either define 'from' on the 'locataion.state' or provide an explicit 'onDone' handler to support the 'Cancel' control in 'ItemControls.'")
+        console.error("You must either define 'from' on the 'locataion.state' or provide an explicit 'onClose' handler to support the 'Cancel' control in 'ItemControls.'")
       }
     }
-    onDone = () => history.push(from)
+    onClose = () => history.push(from)
   }
   if (!onRevert && vcAPI) onRevert = () => vcAPI.resetData()
   if (!onSave && vcAPI && icAPI && (mode === 'create' || mode === 'edit')) {
@@ -144,7 +151,7 @@ const ItemControls = withRouter(({
     <Grid container justify="center">
       { childrenBefore && children }
       { showEdit && <IconControl {...showEdit} onClick={() => history.push(`${currPath}edit/`, {from : currPath})}>{editLabel(showEdit.rank)}</IconControl> }
-      { showCancel && <IconControl {...showCancel} onClick={onDone}>{cancelLabel(showCancel.rank)}</IconControl> }
+      { showClose && <IconControl {...showClose} onClick={onClose}>{closeLabel(showClose.rank)}</IconControl> }
       { showRevert && <IconControl {...showRevert} disabled={!hasChange} onClick={onRevert}>{revertLabel(showRevert.rank)}</IconControl> }
       { showSave && <IconControl {...showSave} disabled={!isValidAndChanged} onClick={onSave}>{saveLabel(showSave.rank)}</IconControl> }
       { !childrenBefore && children }
