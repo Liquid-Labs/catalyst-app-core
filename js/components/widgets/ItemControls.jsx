@@ -10,7 +10,9 @@ import EditIcon from '@material-ui/icons/Edit'
 import RestoreIcon from 'mdi-material-ui/Restore'
 import SaveIcon from '@material-ui/icons/SaveAlt'
 
-import { routes } from '@liquid-labs/catalyst-core-api'
+import { resources, resourcesSettings, routes } from '@liquid-labs/catalyst-core-api'
+import { useAuthenticationStatus } from '../utils/AuthenticationManager'
+import { useItemContextAPI } from '../utils/ItemContext'
 import { useValidationContextAPI } from '@liquid-labs/react-validation'
 
 const primaryProps = { variant : 'contained', color : 'primary' };
@@ -39,12 +41,17 @@ const defaultIconLabels = {
 
 // TOOD: add hover-popover that explains why a control is disabled. E.g., because there's no need to save or the data is invalid.
 // TODO: at the moment, we only really support default 'icons' style because we render everything in an IconBottun; text should be rendered in Button
-const ItemControls = withRouter(({ onDone, onRevert, onSave, // handlers
+const ItemControls = withRouter(({
+  onDone, onRevert, onSave, afterSave, // handlers
   include=defaultInclude, exclude, controlStyle='icons', // configurations
   unsavedChanges, childrenBefore=false,
+  createProps,
   from, history, isValid, children}) => {
   const mode = routes.getRenderMode()
   const vcAPI = useValidationContextAPI()
+  const icAPI = useItemContextAPI()
+  // we don't always use the authToken, but need to keep hook calls consistent.
+  const { authToken } = useAuthenticationStatus()
 
   if (exclude) {
     exclude.forEach((exLabel) => include.splice(include.indexOf(exLabel), 1))
@@ -79,10 +86,45 @@ const ItemControls = withRouter(({ onDone, onRevert, onSave, // handlers
     (isValid !== undefined ? isValid : vcAPI.isValid()) && hasChange
   const currPath = window.location.pathname
 
+  // setup the handlers, as necessary
+  if (!onRevert && vcAPI) onRevert = () => vcAPI.resetData()
+  if (!onSave && vcAPI && icAPI && (mode === 'create' || mode === 'edit')) {
+    const editItem = icAPI.getItem()
+    onSave = async() => {
+      icAPI.setIsItemUpdating(true)
+      const requestSave = mode === 'create'
+        ? async() => {
+          const newStruct = resourcesSettings.prepareCreate
+            ? resourcesSettings.prepareCreate(editItem.forApi(), createProps)
+            : editItem
+          return resources.createItem(newStruct, authToken)
+        }
+        : async() => /* then mode === 'edit' */
+          resources.updateItem(editItem.forApi(), authToken)
+
+      const result = await requestSave()
+      if (result.errorMessage !== null) {
+        icAPI.setItem(null)
+        icAPI.setIsItemUpdating(false)
+        return // bail out
+      }
+
+      // notice afterSave may be synchronous or asynchronous or not
+      if (afterSave) await afterSave(result.data)
+
+      icAPI.setItem(result.data)
+      icAPI.setIsItemUpdating(false)
+    }
+  }
+
   if (process.env.NODE_ENV !== 'production') {
     if (showSave && !onSave) {
       // eslint-disable-next-line no-console
-      console.warn(`No 'onSave' provided to 'ItemControls' displaying the save-control. Either exclude the save control or provide 'onSave'.`)
+      console.warn(`No 'onSave' available to 'ItemControls' displaying the save-control. Either exclude the control, place controls in 'ItemContext' and 'ValidationContext', or provide explicit 'onSave'.`)
+    }
+    if (showRevert && !onRevert) {
+      // eslint-disable-next-line no-console
+      console.warn(`No 'onRevert' available to 'ItemControls' displaying the revert-control. Either exclude the control, place controls in 'ValidationContext', or provide explicit 'onRevert'.`)
     }
   }
 

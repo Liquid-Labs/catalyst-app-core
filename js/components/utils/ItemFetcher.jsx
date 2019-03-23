@@ -24,8 +24,8 @@ const waiterChecks = [ ({item, errorMessage, url}) =>
 ]
 
 const resolveItem = async(resourceName, pubId, itemUrl, authToken, setCheckProps) => {
-  const { data, errorMessage } = await resources.fetchItem(resourceName, pubId, authToken)
-  setCheckProps({ item : data, errorMessage : errorMessage, url : itemUrl })
+  const { data:item, errorMessage } = await resources.fetchItem(resourceName, pubId, authToken)
+  setCheckProps({ item, errorMessage, url : itemUrl })
 }
 
 // TODO: itemUrl -> itemPath

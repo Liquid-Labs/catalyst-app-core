@@ -121,7 +121,7 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const AppNavigation = withStyles(styles, { name: 'AppNavigation' })(({classes, children, ...remainder}) => {
+const AppNavigation = withStyles(styles, { name : 'AppNavigation' })(({classes, children, ...remainder}) => {
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
         position="static" style={{flex : '0 0 auto'}}>
