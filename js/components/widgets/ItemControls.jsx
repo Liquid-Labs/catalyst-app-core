@@ -144,7 +144,6 @@ const ItemControls = withRouter(({
 
       const result = await requestSave()
       if (result.errorMessage !== null) {
-        icAPI.setItem(null)
         icAPI.setIsItemUpdating(false)
         feedbackAPI.addErrorMessage(`Attempt to save data failed: ${result.errorMessage}`)
         return // bail out
