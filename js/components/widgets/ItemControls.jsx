@@ -15,6 +15,7 @@ import SaveIcon from '@material-ui/icons/SaveAlt'
 
 import { resources, resourcesSettings, routes } from '@liquid-labs/catalyst-core-api'
 import { useAuthenticationStatus } from '../utils/AuthenticationManager'
+import { useFeedbackAPI } from './Feedback'
 import { useItemContextAPI } from '../utils/ItemContext'
 import { useValidationContextAPI } from '@liquid-labs/react-validation'
 
@@ -67,6 +68,7 @@ const ItemControls = withRouter(({
   const from = location.state && location.state.from
   const vcAPI = useValidationContextAPI()
   const icAPI = useItemContextAPI()
+  const feedbackAPI = useFeedbackAPI()
   const controlsHistory = useRef([])
 
   // we don't always use the authToken, but need to keep hook calls consistent.
@@ -144,6 +146,7 @@ const ItemControls = withRouter(({
       if (result.errorMessage !== null) {
         icAPI.setItem(null)
         icAPI.setIsItemUpdating(false)
+        feedbackAPI.addErrorMessage(`Attempt to save data failed: ${result.errorMessage}`)
         return // bail out
       }
 
