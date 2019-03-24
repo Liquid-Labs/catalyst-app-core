@@ -20,8 +20,8 @@ const styles = (theme) => ({
   },
   primaryControl : {
     backgroundColor : theme.palette.primary.main,
-    color : theme.palette.primary.contrastText,
-    '&:hover' : {
+    color           : theme.palette.primary.contrastText,
+    '&:hover'       : {
       backgroundColor : theme.palette.primary.light,
     }
   },
@@ -29,11 +29,11 @@ const styles = (theme) => ({
     color : theme.palette.primary.main,
   },
   secondaryDangerousControl : {
-    color : theme.palette.secondary.main,
+    color : theme.palette.dangerous.main,
   },
   disabledPrimary : {
     backgroundColor : theme.palette.action.disabledBackground,
-    color : `${theme.palette.primary.contrastText} !important`,
+    color           : `${theme.palette.primary.contrastText} !important`,
   },
   disabledSecondary : {
     color : theme.palette.action.disabled,
@@ -45,15 +45,15 @@ const IconControl = withStyles(styles)(
     <Grid item className={classes.root}>
       <IconButton
           className={classNames(rank === CTRL_RANK_PRIMARY && classes.primaryControl,
-                                rank === CTRL_RANK_SECONDARY
+            rank === CTRL_RANK_SECONDARY
                                   && danger === CTRL_DANGER_SAFE
                                   && classes.secondarySafeControl,
-                                rank === CTRL_RANK_SECONDARY
+            rank === CTRL_RANK_SECONDARY
                                   && danger === CTRL_DANGER_DANGEROUS
                                   && classes.secondaryDangerousControl )}
           classes={{ disabled : rank === CTRL_RANK_PRIMARY
-                                ? classes.disabledPrimary
-                                : classes.disabledSecondary }}
+            ? classes.disabledPrimary
+            : classes.disabledSecondary }}
           {...props}>
         {children}
       </IconButton>
