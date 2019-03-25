@@ -61,6 +61,7 @@ const ItemControls = withRouter(({
   onClose, onRevert, onSave, afterSave, // handlers
   // TODO https://github.com/Liquid-Labs/catalyst-core-ui/issues/3
   include=defaultInclude, exclude, // controlStyle='icons', // configurations
+  // TODO: firstControls, lastControls instead of using children
   unsavedChanges, childrenBefore=false,
   createProps,
   location, history, isValid, children}) => {
