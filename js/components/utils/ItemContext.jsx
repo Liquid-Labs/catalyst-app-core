@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 
+import { useValidationContextAPI } from '@liquid-labs/react-validation'
+
 import { Model } from '@liquid-labs/catalyst-core-api'
 
 const MyContext = createContext()
@@ -10,6 +12,7 @@ const useItemContextAPI = () => useContext(MyContext)
 const ItemContext = ({ item:propItem, children }) => {
   const [ item, setItem ] = useState(propItem)
   const [ isItemUpdating, setIsItemUpdating ] = useState(false)
+  const vcAPI = useValidationContextAPI()
 
   const api = useMemo(() => ({
     getItem : () => item,
@@ -22,13 +25,16 @@ const ItemContext = ({ item:propItem, children }) => {
         }
       }
       setItem(newItem)
+      if (newItem !== null && vcAPI) vcAPI.updateMatchingFields(newItem)
     },
 
     isItemUpdating    : () => isItemUpdating,
     setIsItemUpdating : (bool) => setIsItemUpdating(bool),
 
-    isItemReady : () => Boolean(item) && !isItemUpdating,
-  }), [ item, setItem ])
+    isItemReady : () => {
+      console.log(`ItemContext.isItemReady: `, isItemUpdating, item)
+      return Boolean(item) && !isItemUpdating },
+  }), [ item, setItem, isItemUpdating, setIsItemUpdating, vcAPI ])
 
   return (
     <MyContext.Provider value={api}>
