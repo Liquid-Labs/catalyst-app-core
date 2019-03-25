@@ -37,7 +37,8 @@ primary purpose is to convert the incoming JSON data into one or more
 
 To initiate the update flow:
 
-1. The resource item is loaded into the [`ItemValidaitonContext`]().
+1. The resource item has been loaded into the [`ItemValidaitonContext`]() by
+   the `ItemFetcher`.
 2. The user interacts with the item fields normally through [`ValidInput`]()
    components.
 3. After the user prepare the update and hits the submit control (typically
