@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import { AppContext } from '../util/Contextualizer'
+import { AppContext } from '../utils/Contextualizer'
 
 import IconButton from '@material-ui/core/IconButton'
 import RestoreIcon from 'mdi-material-ui/Restore'

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 
 import AppBar from '@material-ui/core/AppBar'
-import { ContextReset } from './ContextReset'
+import { ContextReset } from '../widgets/ContextReset'
 import Grid from '@material-ui/core/Grid'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -98,13 +98,13 @@ LogoAndContext.propTypes = {
   contextServiceLocation   : PropTypes.object
 }
 
-const NavigationBar = ({ classes, children, rightChildren, logoTo, ...remainder }) =>
+const NavigationBar = ({ classes, children, showChildren=true, rightChildren, logoTo, ...remainder }) =>
   <Grid container>
     <Grid item xs={2}>
       <LogoAndContext to={logoTo} {...remainder} />
     </Grid>
     <Grid item xs={8}>
-      {children}
+      { showChildren && children }
     </Grid>
     <Grid item xs={2} className={classes.right}>
       {rightChildren}
@@ -116,11 +116,12 @@ if (process.env.NODE_ENV !== 'production') {
     classes       : PropTypes.object.isRequired,
     children      : PropTypes.node,
     logoTo        : PropTypes.string.isRequired,
-    rightChildren : PropTypes.node
+    rightChildren : PropTypes.node,
+    showChildren  : PropTypes.bool,
   }
 }
 
-const AppNavigation = withStyles(styles)(({classes, children, ...remainder}) => {
+const AppNavigation = withStyles(styles, { name : 'AppNavigation' })(({classes, children, ...remainder}) => {
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
         position="static" style={{flex : '0 0 auto'}}>

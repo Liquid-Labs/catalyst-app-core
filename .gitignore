@@ -2,3 +2,5 @@ node_modules/
 dist/
 coverage/
 /test-staging/
+/.yalc
+/yalc.lock
