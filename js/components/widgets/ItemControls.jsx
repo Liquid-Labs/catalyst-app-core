@@ -1,5 +1,4 @@
-import React, { useMemo, useRef } from 'react'
-import PropTypes from 'prop-types'
+import React, { useRef } from 'react'
 
 import Grid from '@material-ui/core/Grid'
 import Collapse from '@material-ui/core/Collapse'
@@ -13,11 +12,12 @@ import EditIcon from '@material-ui/icons/Edit'
 import RestoreIcon from 'mdi-material-ui/Restore'
 import SaveIcon from '@material-ui/icons/SaveAlt'
 
-import { resources, resourcesSettings, routes } from '@liquid-labs/catalyst-core-api'
+import { resources, resourcesSettings } from '@liquid-labs/catalyst-core-api'
+import * as uiPaths from '@liquid-labs/restful-paths'
 import { useAuthenticationStatus } from '../utils/AuthenticationManager'
 import { useFeedbackAPI } from './Feedback'
-import { useItemContextAPI } from '../utils/ItemContext'
-import { useValidationContextAPI } from '@liquid-labs/react-validation'
+import { useItemContextAPI } from '../contexts/ItemContext'
+import { useValidationAPI } from '@liquid-labs/react-validation'
 
 import { withRouter } from 'react-router-dom'
 
@@ -65,9 +65,9 @@ const ItemControls = withRouter(({
   unsavedChanges, childrenBefore=false,
   createProps,
   location, history, isValid, children}) => {
-  const mode = routes.getRenderMode()
+  const { actionMode } = uiPaths.extractPathInfo()
   const from = location.state && location.state.from
-  const vcAPI = useValidationContextAPI()
+  const vcAPI = useValidationAPI()
   const icAPI = useItemContextAPI()
   const feedbackAPI = useFeedbackAPI()
   const controlsHistory = useRef([])
@@ -88,7 +88,9 @@ const ItemControls = withRouter(({
   const closeLabel = labels['close']
   const editLabel = labels['edit']
   const revertLabel = labels['revert']
-  const saveLabel = mode === 'create' ? labels['create'] : labels['save']
+  const saveLabel = actionMode === uiPaths.ACTION_MODE_CREATE
+    ? labels['create']
+    : labels['save']
 
   const hasChange =
     (unsavedChanges === undefined && vcAPI && vcAPI.isChanged())
@@ -96,25 +98,32 @@ const ItemControls = withRouter(({
   const isValidAndChanged =
     (isValid !== undefined ? isValid : vcAPI.isValid()) && hasChange
 
-  const showEdit = isIncluded('edit') && mode === 'view' && primaryProps
+  const showEdit = isIncluded('edit')
+    && actionMode === uiPaths.ACTION_MODE_VIEW
+    && primaryProps
   const showClose =
-    // notice the inclusion flags are 'done' and 'cancel', which are mode
+    // notice the inclusion flags are 'done' and 'cancel', which are actionMode
     // dependent. The control, however, is just 'close' because it's the same
     // technical action, even though it carries different connotations for the
     // user.
-    (isIncluded('done') && mode === 'view' && primaryProps)
-    || (isIncluded('cancel') && mode !== 'view'
+    (isIncluded('done')
+      && actionMode === uiPaths.ACTION_MODE_VIEW
+      && primaryProps)
+    || (isIncluded('cancel') && actionMode !== uiPaths.ACTION_MODE_VIEW
         && ((hasChange && dangerousSecondary) || secondaryProps))
   // Reversion doesn't make sense for 'view' or 'create, only edit'
   const showRevert = isIncluded('revert')
-    && mode === 'edit' && dangerousSecondary
+    && actionMode === uiPaths.ACTION_MODE_EDIT && dangerousSecondary
   // If we are creating and have from, then 'save and close' makes more sense.
-  const showSave = isIncluded('save') && mode !== 'view' && primaryProps
+  const showSave = isIncluded('save')
+    && actionMode !== uiPaths.ACTION_MODE_VIEW
+    && primaryProps
   const fingerprint =
     ((showEdit && 1) || 0)
     | ((showClose && 2) || 0)
     | ((showRevert && 4) || 0)
     | ((showSave && 8) || 0)
+  const lastFingerprint = useRef([])
 
   const currPath = window.location.pathname
 
@@ -126,22 +135,32 @@ const ItemControls = withRouter(({
         console.error("You must either define 'from' on the 'locataion.state' or provide an explicit 'onClose' handler to support the 'Cancel' control in 'ItemControls.'")
       }
     }
-    onClose = () => history.push(from)
+    onClose = () => {
+      vcAPI.resetData()
+      history.push(from)
+    }
   }
   if (!onRevert && vcAPI) onRevert = () => vcAPI.resetData()
-  if (!onSave && vcAPI && icAPI && (mode === 'create' || mode === 'edit')) {
-    const editItem = icAPI.getItem()
+
+  if (!onSave
+      && vcAPI
+      && icAPI
+      && (actionMode === uiPaths.ACTION_MODE_CREATE
+          || actionMode === uiPaths.ACTION_MODE_EDIT)) {
     onSave = async() => {
       icAPI.setIsItemUpdating(true)
-      const requestSave = mode === 'create'
+      const getNewItem = () => icAPI.getItem().update(vcAPI.getData())
+
+      const requestSave = actionMode === uiPaths.ACTION_MODE_CREATE
         ? async() => {
+          const createItem = getNewItem()
           const newStruct = resourcesSettings.prepareCreate
-            ? resourcesSettings.prepareCreate(editItem.forApi(), createProps)
-            : editItem
+            ? resourcesSettings.prepareCreate(createItem.forApi(), createProps)
+            : createItem.forAPI()
           return resources.createItem(newStruct, authToken)
         }
-        : async() => /* then mode === 'edit' */
-          resources.updateItem(editItem.forApi(), authToken)
+        : async() => /* then acitonMode === 'edit' */
+          resources.updateItem(getNewItem().forApi(), authToken)
 
       const result = await requestSave()
       if (result.errorMessage !== null) {
@@ -150,13 +169,13 @@ const ItemControls = withRouter(({
         return // bail out
       }
 
-      // notice afterSave may be synchronous or asynchronous or not
+      // notice afterSave may be synchronous or asynchronous
       if (afterSave) await afterSave(result.data)
 
       icAPI.setItem(result.data)
       icAPI.setIsItemUpdating(false)
-    }
-  }
+    } // default onSave
+  } // if (!onSave ...)
 
   if (process.env.NODE_ENV !== 'production') {
     if (showSave && !onSave) {
@@ -169,35 +188,35 @@ const ItemControls = withRouter(({
     }
   }
 
-  useMemo(() => {
-    controlsHistory.current.forEach(([toggleHide]) => toggleHide())
-    const isIn = { value : true }
-    const toggleHide = () => isIn.value = false
-    const thisKey = `x${Math.random()}`
-    const appear = controlsHistory.current.length === 0 ? false : true
-    const Controls = ({hasChange, isValidAndChanged, showClose}) => (
-      <Collapse appear={appear} timeout='auto' key={thisKey} in={isIn.value} mountOnEnter unmountOnExit onExit={() => controlsHistory.current.shift()}>
-        <Grid container direction='row' justify="center">
-          { childrenBefore && children }
-          { showEdit && <IconControl {...showEdit} onClick={isIn.value ? (() => history.push(`${currPath}edit/`, {from : currPath})) : null}>{editLabel(showEdit.rank)}</IconControl> }
-          { showClose && <IconControl {...showClose} onClick={isIn.value ? onClose : null}>{closeLabel(showClose.rank)}</IconControl> }
-          { showSave && <IconControl {...showSave} disabled={!isValidAndChanged} onClick={isIn.value ? onSave : null}>{saveLabel(showSave.rank)}</IconControl> }
-          { showRevert && <IconControl {...showRevert} disabled={!hasChange} onClick={isIn.value ? onRevert : null}>{revertLabel(showRevert.rank)}</IconControl> }
-          { !childrenBefore && children }
-        </Grid>
-      </Collapse>
-    )
-    if (process.env.NODE_ENV !== 'production') {
-      Controls.propTypes = {
-        hasChange         : PropTypes.bool.isRequired,
-        isValidAndChanged : PropTypes.bool.isRequired,
-        showClose         : PropTypes.object.isRequired,
-      }
-    }
-    controlsHistory.current.push([ toggleHide, Controls ])
-  }, [ fingerprint ])
+  const isIn = { value : true }
+  const toggleHide = () => isIn.value = false
+  const thisKey = fingerprint !== lastFingerprint.current[0]
+    ? `x${Math.random()}`
+    : lastFingerprint.current[1]
+  const appear = controlsHistory.current.length === 0 ? false : true
+  const Controls =
+    <Collapse appear={appear} timeout='auto' key={thisKey} in={isIn.value} mountOnEnter unmountOnExit onExit={() => controlsHistory.current.shift()}>
+      <Grid container direction='row' justify="center">
+        { childrenBefore && children }
+        { showEdit && <IconControl {...showEdit} onClick={isIn.value ? (() => history.push(`${currPath}edit/`, {from : currPath})) : null}>{editLabel(showEdit.rank)}</IconControl> }
+        { showClose && <IconControl {...showClose} onClick={isIn.value ? onClose : null}>{closeLabel(showClose.rank)}</IconControl> }
+        { showSave && <IconControl {...showSave} disabled={!isValidAndChanged} onClick={isIn.value ? onSave : null}>{saveLabel(showSave.rank)}</IconControl> }
+        { showRevert && <IconControl {...showRevert} disabled={!hasChange} onClick={isIn.value ? onRevert : null}>{revertLabel(showRevert.rank)}</IconControl> }
+        { !childrenBefore && children }
+      </Grid>
+    </Collapse>
 
-  return controlsHistory.current.map(([x, Controls]) => Controls({ hasChange, isValidAndChanged, showClose }))
+  if (fingerprint !== lastFingerprint.current[0]) {
+    controlsHistory.current.forEach(([toggleHide]) => toggleHide())
+    controlsHistory.current.push([ toggleHide, Controls ])
+  }
+  else {
+    controlsHistory.current.pop()
+    controlsHistory.current.push([ toggleHide, Controls ])
+  }
+  lastFingerprint.current = [fingerprint, thisKey]
+
+  return controlsHistory.current.map(([x, Controls]) => Controls)
 })
 
 export { ItemControls }

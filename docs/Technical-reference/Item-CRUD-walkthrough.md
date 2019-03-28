@@ -39,23 +39,19 @@ To initiate the update flow:
 
 1. The resource item has been loaded into the [`ItemValidaitonContext`]() by
    the `ItemFetcher`.
-2. The user interacts with the item fields normally through [`ValidInput`]()
-   components.
-3. After the user prepare the update and hits the submit control (typically
-   provided by [`ItemControls`]()), the original item instance is updated with
-   the data exported by the `ItemValidationAPI`.
-   * This creates a new instance with updated data.
-   * At this point in time, the original instance is preserved by the
-     `ItemValidaitonContext`, but wrapped `ValidationContext` reflects the
-     updated data.
-   * Because the data sets are divergent, the `ItemValidationAPI` provides
-     the `isItemAvailable` method, which returns `false` before the item has
-     been fetched or while the item is being updated. Components interacting
-     the API should render a blank or disabled state when the item is
-     unavailable.
-4. Once a successful response is received, the `ItemValidationContext` is
-   updated via the `updateItem` method. Updating the item has the effect of
-   making the item available again.
+2. The user interacts with the item fields through [`ValidInput`]() components.
+3. After the user prepares the update and hits the submit control (typically
+   provided by [`ItemControls`]()):
+   1. `setIsItemUpdating(true)` is called to inidcate the item is updating.
+   1. A new item instance is cloned from the original data and updated with the
+      data exported by the `ItemValidationAPI`.
+   2. This updated item is used in the REST-ful update call.
+   3. Note that at this point in time, the item provided by `ItemContext` is
+      out of sync with the updated item. Hence the `isItemUpdating` method.
+      Components interacting the API should render a blank or disabled state
+      when the item is updating.
+4. Once a successful response is received, the `ItemContext` is updated via the
+  `updateItem` method and `setIsItemUpdating(false)` is called.
 
 ### Failure flows
 

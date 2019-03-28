@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { routes, resources, resourcesCache } from '@liquid-labs/catalyst-core-api'
+import { resources, resourcesCache } from '@liquid-labs/catalyst-core-api'
+import * as uiPaths from '@liquid-labs/restful-paths'
 
 import { useAuthenticationStatus } from './AuthenticationManager'
-import { useItemContextAPI } from './ItemContext'
+import { useItemContextAPI } from '../contexts/ItemContext'
 import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 
 import upperFirst from 'lodash.upperfirst'
@@ -23,21 +24,21 @@ const waiterChecks = [ ({item, errorMessage, url}) =>
       }
 ]
 
-const resolveItem = async(resourceName, pubId, itemUrl, authToken, setCheckProps) => {
-  const { data:item, errorMessage } = await resources.fetchItem(resourceName, pubId, authToken)
+const resolveItem = async(resourceName, pubID, itemUrl, authToken, setCheckProps) => {
+  const { data:item, errorMessage } = await resources.fetchItem(resourceName, pubID, authToken)
   setCheckProps({ item, errorMessage, url : itemUrl })
 }
 
 // TODO: itemUrl -> itemPath
 const ItemFetcher = ({itemUrl, itemKey='item', children, ...props}) => {
   const waiterName = `${upperFirst(itemKey)} fetch`
-  const { resourceName, pubId } = routes.extractItemIdentifiers(itemUrl)
-  // TODO: handle bad URL: if (!resourceName || !pubId)
+  const { resourceName, pubID } = uiPaths.extractPathInfo(itemUrl)
+  // TODO: handle bad URL: if (!resourceName || !pubID)
   // We check the cache synchronously to avoid blinking.
   const initialCheckProps = {item : null, errorMessage : null, url : itemUrl}
   const { permanentError } = resourcesCache.getFreshSourceData(itemUrl)
   if (permanentError) initialCheckProps.errorMessage = permanentError.message
-  else initialCheckProps.item = resourcesCache.getFreshCompleteItem(pubId)
+  else initialCheckProps.item = resourcesCache.getFreshCompleteItem(pubID)
 
   const { authToken } = useAuthenticationStatus()
   const [ checkProps, setCheckProps ] = useState(initialCheckProps)
@@ -47,7 +48,7 @@ const ItemFetcher = ({itemUrl, itemKey='item', children, ...props}) => {
   } // else we're not in an ItemContext, and that's OK.
 
   useEffect(() => {
-    if (!checkProps.item) resolveItem(resourceName, pubId, itemUrl, authToken, setCheckProps)
+    if (!checkProps.item) resolveItem(resourceName, pubID, itemUrl, authToken, setCheckProps)
   }, [ itemUrl, itemKey, authToken ])
 
   // this isn't always used, but no need to memo-ize
