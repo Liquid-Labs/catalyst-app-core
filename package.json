@@ -1,6 +1,6 @@
 {
   "name": "@liquid-labs/catalyst-core-ui",
-  "version": "1.0.0-prototype.6",
+  "version": "1.0.0-prototype.7",
   "description": "Core Catalyst app libraries.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
