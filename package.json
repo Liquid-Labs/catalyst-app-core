@@ -103,7 +103,6 @@
     "react-dom": "^16.8.3",
     "react-redux": "5.x || 6.x",
     "react-router-dom": "4.x",
-    "recompose": "^0.30.0",
     "redux": "^4.0.0"
   },
   "browserslist": [
