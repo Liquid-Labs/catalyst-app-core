@@ -40,12 +40,12 @@ const styles = (theme) => ({
 })
 
 const CatalystAppFrame = withStyles(styles)(({classes, theme, ContentSwitch, BottomNavigation, reduxStore}) =>
-  <MuiThemeProvider theme={theme}>
-    <ThemeProvider theme={theme}>
-      <Typography component="div" className={classes.root}>
-        <CssBaseline />
-        <Feedback>
-          <BrowserRouter>
+  <BrowserRouter>
+    <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <Typography component="div" className={classes.root}>
+          <CssBaseline />
+          <Feedback>
             <div id="appRootFrame" style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
               <AuthenticationManager>
                 <Contextualizer>
@@ -60,11 +60,11 @@ const CatalystAppFrame = withStyles(styles)(({classes, theme, ContentSwitch, Bot
                 </Contextualizer>
               </AuthenticationManager>
             </div>
-          </BrowserRouter>
-        </Feedback>
-      </Typography>
-    </ThemeProvider>
-  </MuiThemeProvider>
+          </Feedback>
+        </Typography>
+      </ThemeProvider>
+    </MuiThemeProvider>
+  </BrowserRouter>
 )
 
 if (process.env.NODE_ENV !== 'production') {
