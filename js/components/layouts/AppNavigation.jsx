@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
+import { useTheme } from '@material-ui/styles'
 
 const styles = (theme) => ({
   root : {
@@ -37,54 +38,36 @@ const logoStyle = {
   }
 }
 
-const LogoLink = withStyles(logoStyle)(({to, url, description, classes}) =>
-  <Link to={to}>
-    { url
-    && <img className={classes.logo} src={url} alt="{description} Logo" />}
-    { !url
-      && <Typography variant="h5">{description}</Typography> }
-  </Link>
-)
+const LogoLink = withStyles(logoStyle)(({to, url, description, classes}) => {
+  const theme = useTheme()
+  const { logoURL, logoAltText } = (theme.layout && theme.layout.header)
+    || { logoURL : null, logoAltText : null }
+  return (
+    <Link to={to}>
+      { logoURL
+      && <img className={classes.logo} src={logoURL} alt={logoAltText} />}
+      { !logoURL
+        && <Typography variant="button">{logoAltText || 'logo goes here'}</Typography> }
+    </Link>
+  )
+})
 
-const LogoAndContext = ({
-  to,
-  logoUrl, logoDescription,
-  noContextLogoUrl, noContextLogoDescription,
-  contextStore, contextServiceLocation
-}) => {
-  const justLogo = !contextStore && !contextServiceLocation
-  const { url, description } =
-    logoUrl && { logoUrl, logoDescription }
-    || (
-      (contextStore && {
-        url         : contextStore.logoUrl,
-        description : contextStore.name
-      })
-      || (contextServiceLocation && {
-        url         : contextServiceLocation.logoUrl,
-        description : contextServiceLocation.name
-      })
-      || { url : noContextLogoUrl, description : noContextLogoDescription }
-    )
-  const addGridProps = {}
-  if (!justLogo) {
-    addGridProps.container = true
-    addGridProps.justify = "flex-start"
-  }
 
-  return (<React.Fragment>
-    { justLogo
-    && <LogoLink to={to} url={url} description={description} /> }
-    { !justLogo
+const LogoAndContext = ({ to, showContextReset = false }) => {
+
+  return (<>
+    { !showContextReset
+    && <LogoLink to={to} /> }
+    { showContextReset
     && <Grid container>
       <Grid item xs style={{flexGrow : 0}}>
-        <LogoLink to={to} url={url} description={description} />
+        <LogoLink to={to} />
       </Grid>
       <Grid item xs style={{flexGrow : 0}}>
         <ContextReset />
       </Grid>
     </Grid>}
-  </React.Fragment>)
+  </>)
 }
 
 LogoAndContext.propTypes = {
@@ -122,10 +105,11 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const AppNavigation = withStyles(styles, { name : 'AppNavigation' })(({classes, children, ...remainder}) => {
+  const theme = useTheme()
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
         position="static" style={{flex : '0 0 auto'}}>
-      <Toolbar>
+      <Toolbar variant={ (theme.layout && theme.layout.header.variant) || 'normal' }>
         <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
       </Toolbar>
     </AppBar>

@@ -69,7 +69,7 @@ if (process.env.NODE_ENV !== 'production') {
     BottomNavigation : PropTypes.func.isRequired,
     ContentSwitch    : PropTypes.func.isRequired,
     reduxStore       : PropTypes.object.isRequired,
-    themeRout        : PropTypes.object.isRequired
+    themeRouter      : PropTypes.array.isRequired
   }
 }
 
