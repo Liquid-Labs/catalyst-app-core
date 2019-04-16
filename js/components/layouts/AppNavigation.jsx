@@ -32,28 +32,7 @@ const styles = (theme) => ({
   }
 })
 
-const LogoAndContext = ({ to, logo, showContextReset = false }) =>
-  <>
-    { !showContextReset
-    && <Link to={to}>{logo}</Link>
-    { showContextReset
-    && <Grid container>
-      <Grid item xs style={{flexGrow : 0}}>
-        <Link to={to}>{logo}</Link>
-      </Grid>
-      <Grid item xs style={{flexGrow : 0}}>
-        <ContextReset />
-      </Grid>
-    </Grid>}
-  </>
-
-LogoAndContext.propTypes = {
-  // TODO: use URL regex
-  to                       : PropTypes.string,
-  showContextReset         : PropTypes.boolean,
-}
-
-const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, rightChildren, logo, logoTo, ...remainder }) => {
+const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, showContextReset=false, rightChildren, logo, logoTo, ...remainder }) => {
   const theme = useTheme()
 
   if (showLogo && theme.layout && theme.layout.header && theme.layout.header.logo) {
@@ -68,10 +47,19 @@ const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, ri
     else showLogo = false
   }
 
+
+
   return (
     <Grid container>
-      <Grid item xs={2}>
-        { showLogo && <LogoAndContext to={logoTo} logo={logo} {...remainder} /> }
+      <Grid item container xs={2}>
+        { showLogo
+          && <Grid item xs style={{flexGrow : 0}}>
+              <Link to={logoTo}>{logo}</Link>
+             </Grid> }
+        { showContextReset
+          && <Grid item xs style={{flexGrow : 0}}>
+               <ContextReset />
+            </Grid> }
       </Grid>
       <Grid item xs={8}>
         { showChildren && children }
@@ -89,6 +77,8 @@ if (process.env.NODE_ENV !== 'production') {
     logoTo        : PropTypes.string.isRequired,
     rightChildren : PropTypes.node,
     showChildren  : PropTypes.bool,
+    showContextReset         : PropTypes.bool,
+    showLogo         : PropTypes.bool,
   }
 }
 
