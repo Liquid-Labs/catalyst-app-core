@@ -32,67 +32,55 @@ const styles = (theme) => ({
   }
 })
 
-const logoStyle = {
-  logo : {
-    height : '42px'
-  }
-}
-
-const LogoLink = withStyles(logoStyle)(({to, url, description, classes}) => {
-  const theme = useTheme()
-  const { logoURL, logoAltText } = (theme.layout && theme.layout.header)
-    || { logoURL : null, logoAltText : null }
-  return (
-    <Link to={to}>
-      { logoURL
-      && <img className={classes.logo} src={logoURL} alt={logoAltText} />}
-      { !logoURL
-        && <Typography variant="button">{logoAltText || 'logo goes here'}</Typography> }
-    </Link>
-  )
-})
-
-
-const LogoAndContext = ({ to, showContextReset = false }) => {
-
-  return (<>
+const LogoAndContext = ({ to, logo, showContextReset = false }) =>
+  <>
     { !showContextReset
-    && <LogoLink to={to} /> }
+    && <Link to={to}>{logo}</Link>
     { showContextReset
     && <Grid container>
       <Grid item xs style={{flexGrow : 0}}>
-        <LogoLink to={to} />
+        <Link to={to}>{logo}</Link>
       </Grid>
       <Grid item xs style={{flexGrow : 0}}>
         <ContextReset />
       </Grid>
     </Grid>}
-  </>)
-}
+  </>
 
 LogoAndContext.propTypes = {
   // TODO: use URL regex
   to                       : PropTypes.string,
-  logoUrl                  : PropTypes.string,
-  logoDescription          : PropTypes.string,
-  noContextLogoUrl         : PropTypes.string,
-  noContextLogoDescription : PropTypes.string,
-  contextStore             : PropTypes.object,
-  contextServiceLocation   : PropTypes.object
+  showContextReset         : PropTypes.boolean,
 }
 
-const NavigationBar = ({ classes, children, showChildren=true, rightChildren, logoTo, ...remainder }) =>
-  <Grid container>
-    <Grid item xs={2}>
-      <LogoAndContext to={logoTo} {...remainder} />
+const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, rightChildren, logo, logoTo, ...remainder }) => {
+  const theme = useTheme()
+
+  if (showLogo && theme.layout && theme.layout.header && theme.layout.header.logo) {
+    // TODO: *should* be set on theme, but let's default to visible if not set.
+    if (theme.layout.header.logo.visible && !logo) {
+      const { node, url, altText } = theme.layout.header.logo
+      if (node) logo = node
+      else if (url) {
+        logo = <img className={classes.logo} src={url} alt={altText} />
+      }
+    }
+    else showLogo = false
+  }
+
+  return (
+    <Grid container>
+      <Grid item xs={2}>
+        { showLogo && <LogoAndContext to={logoTo} logo={logo} {...remainder} /> }
+      </Grid>
+      <Grid item xs={8}>
+        { showChildren && children }
+      </Grid>
+      <Grid item xs={2} className={classes.right}>
+        {rightChildren}
+      </Grid>
     </Grid>
-    <Grid item xs={8}>
-      { showChildren && children }
-    </Grid>
-    <Grid item xs={2} className={classes.right}>
-      {rightChildren}
-    </Grid>
-  </Grid>
+)}
 
 if (process.env.NODE_ENV !== 'production') {
   NavigationBar.propTypes = {
