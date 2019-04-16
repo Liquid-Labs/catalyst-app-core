@@ -47,8 +47,6 @@ const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, sh
     else showLogo = false
   }
 
-
-
   return (
     <Grid container>
       <Grid item container xs={2}>
