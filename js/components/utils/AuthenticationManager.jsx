@@ -7,7 +7,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 
-import { FeedbackContext } from '../widgets/Feedback'
+import { useFeedbackAPI } from '../widgets/Feedback'
 
 import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 
@@ -64,7 +64,7 @@ const postAuthGates = []
 
 // After authentication with firebase, we need to pull the 'Person' data from
 // the main database.
-const postAuthentication = async(authUser, setAuthenticationStatus, addErrorMessage) => {
+const postAuthentication = async(authUser, setAuthenticationStatus, addInfoMessage, addErrorMessage) => {
   try {
     const tokenInfo = await authUser.getIdTokenResult()
     const authToken = tokenInfo.token
@@ -100,7 +100,6 @@ const postAuthentication = async(authUser, setAuthenticationStatus, addErrorMess
             'User partially created. Try logging in again. Contact customer support if problems persist.',
             'Error getting authentication token',
             error, setAuthenticationStatus, addErrorMessage)
-          return
         }
       }
 
@@ -112,6 +111,7 @@ const postAuthentication = async(authUser, setAuthenticationStatus, addErrorMess
         claims    : tokenInfo.claims,
         resolved  : true,
       })
+      addInfoMessage(`Logged in as '${authUser.email}'.`)
     }
     catch (error) { // We treat this as coming from the 'fetchItemBySource'
       handlePostAuthError(
@@ -129,11 +129,20 @@ const postAuthentication = async(authUser, setAuthenticationStatus, addErrorMess
 }
 
 const AuthenticationManager = ({children, ...props}) => {
-  const { addErrorMessage } = useContext(FeedbackContext)
+  const { addErrorMessage, addInfoMessage } = useFeedbackAPI()
   const [ authenticationStatus, setAuthenticationStatus ] =
     useState(initialAuthentiactionStatus)
+
   const api = {
-    logOut        : () => fireauth.logOut(),
+    logOut        : async () => {
+      try {
+        await fireauth.logOut()
+        addInfoMessage('Logout successful.')
+      }
+      catch (err) {
+        addErrorMessage(`Error while logging out: ${err}`)
+      }
+    },
     setAuthPerson : (person) =>
       setAuthenticationStatus(Object.assign(
         {}, authenticationStatus, { authPerson : person })),
@@ -153,7 +162,7 @@ const AuthenticationManager = ({children, ...props}) => {
   useEffect(() => {
     fireauth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        postAuthentication(authUser, setAuthenticationStatus, addErrorMessage)
+        postAuthentication(authUser, setAuthenticationStatus, addInfoMessage, addErrorMessage)
       }
       else {
         setAuthenticationStatus({
