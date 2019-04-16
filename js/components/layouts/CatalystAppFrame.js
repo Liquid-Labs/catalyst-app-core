@@ -22,9 +22,8 @@ import { AuthenticationManager } from '../utils/AuthenticationManager'
 import { Contextualizer } from '../utils/Contextualizer'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { Feedback } from '../widgets/Feedback'
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
-import { ThemeProvider } from '@material-ui/styles'
 import { BrowserRouter } from 'react-router-dom'
+import { ThemeContext } from '../contexts/ThemeContext'
 import Typography from '@material-ui/core/Typography'
 
 import { withStyles } from '@material-ui/core/styles'
@@ -39,31 +38,29 @@ const styles = (theme) => ({
   }
 })
 
-const CatalystAppFrame = withStyles(styles)(({classes, theme, ContentSwitch, BottomNavigation, reduxStore}) =>
+const CatalystAppFrame = withStyles(styles)(({classes, themeRouter, ContentSwitch, BottomNavigation, reduxStore}) =>
   <BrowserRouter>
-    <MuiThemeProvider theme={theme}>
-      <ThemeProvider theme={theme}>
-        <Typography component="div" className={classes.root}>
-          <CssBaseline />
-          <Feedback>
-            <div id="appRootFrame" style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
-              <AuthenticationManager>
-                <Contextualizer>
-                  <ReduxProvider store={reduxStore}>
-                    <div id="appMainFrame" style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
-                      <ContentSwitch />
-                    </div>
-                    <div id="appNavFrame" style={{flex : '0 0 auto'}}>
-                      <BottomNavigation />
-                    </div>
-                  </ReduxProvider>
-                </Contextualizer>
-              </AuthenticationManager>
-            </div>
-          </Feedback>
-        </Typography>
-      </ThemeProvider>
-    </MuiThemeProvider>
+    <ThemeContext themeRouter={themeRouter}>
+      <Typography component="div" className={classes.root}>
+        <CssBaseline />
+        <Feedback>
+          <div id="appRootFrame" style={{display : 'flex', flexDirection : 'column', height : '100%'}}>
+            <AuthenticationManager>
+              <Contextualizer>
+                <ReduxProvider store={reduxStore}>
+                  <div id="appMainFrame" style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
+                    <ContentSwitch />
+                  </div>
+                  <div id="appNavFrame" style={{flex : '0 0 auto'}}>
+                    <BottomNavigation />
+                  </div>
+                </ReduxProvider>
+              </Contextualizer>
+            </AuthenticationManager>
+          </div>
+        </Feedback>
+      </Typography>
+    </ThemeContext>
   </BrowserRouter>
 )
 
