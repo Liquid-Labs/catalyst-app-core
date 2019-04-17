@@ -32,8 +32,12 @@ const styles = (theme) => ({
   }
 })
 
-const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, showContextReset=false, rightChildren, logo, logoTo, ...remainder }) => {
+const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, showContextReset=false, rightChildren, logo, logoTo='/', ...remainder }) => {
   const theme = useTheme()
+
+  if (!rightChildren && theme.layout && theme.layout.header && theme.layout.header.appMenu) {
+    rightChildren = theme.layout.header.appMenu.node
+  }
 
   if (showLogo && theme.layout && theme.layout.header && theme.layout.header.logo) {
     // TODO: *should* be set on theme, but let's default to visible if not set.
@@ -72,7 +76,7 @@ if (process.env.NODE_ENV !== 'production') {
   NavigationBar.propTypes = {
     classes       : PropTypes.object.isRequired,
     children      : PropTypes.node,
-    logoTo        : PropTypes.string.isRequired,
+    logoTo        : PropTypes.string,
     rightChildren : PropTypes.node,
     showChildren  : PropTypes.bool,
     showContextReset         : PropTypes.bool,
