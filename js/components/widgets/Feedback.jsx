@@ -38,6 +38,11 @@ const styles = theme => ({
     [theme.breakpoints.up('xl')] : {
       maxWidth : '60vw'
     },
+  },
+
+  snackItemInfo : {
+    backgroundColor : theme.palette.info.main,
+    color : theme.palette.info.contrast,
   }
 })
 
@@ -150,7 +155,10 @@ const Feedback = withStyles(styles, { name : 'Feedback' })(({
         action={snackbarActions}
         anchorOrigin={anchorOrigin}
         iconVariant={iconVariant}
-        ContentProps={{ classes : { root : classes.snackItemRoot } }}
+        ContentProps={{ classes : {
+          root : classes.snackItemRoot,
+        }}}
+        classes={{ variantInfo : classes.snackItemInfo }}
         {...props}>
       <FeedbackProvider autoHideDuration={autoHideDuration}
           warningHideFactor={warningHideFactor}>

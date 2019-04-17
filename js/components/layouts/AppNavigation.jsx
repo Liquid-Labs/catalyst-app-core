@@ -56,7 +56,7 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
     if (node) logo = node
     else if (url) {
       logo = url === 'placeholder'
-        ? <Grid item justify="center" alignItems="center"
+        ? <Grid item container justify="center" alignItems="center"
               style={{ backgroundColor : theme.palette.placeholder || "#9e9e9e" }}>
             {altText | 'placeholder'}
           </Grid>
