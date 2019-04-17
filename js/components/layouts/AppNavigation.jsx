@@ -55,10 +55,18 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
     const { node, url, altText } = theme?.layout?.branding?.header || {}
     if (node) logo = node
     else if (url) {
+      console.log('altText: ', altText)
       logo = url === 'placeholder'
-        ? <Grid item container justify="center" alignItems="center"
-              style={{ backgroundColor : theme.palette.placeholder || "#9e9e9e" }}>
-            {altText | 'placeholder'}
+        ? <Grid container justify="center" alignItems="center"
+              style={{
+                backgroundColor : theme.palette.placeholder || "#9e9e9e",
+                height: '100%' }}>
+            <span style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'}}>
+              {altText || 'placeholder'}
+            </span>
           </Grid>
         : <img className={classes.logo} src={url} alt={altText} />
     }
@@ -66,15 +74,11 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
 
   return (
     <Grid container alignItems="center">
-      <Grid item container xs={2}>
+      <Grid item container xs={2} wrap="nowrap" style={{ alignSelf: 'stretch' }} alignItems="stretch">
         { logo !== null
-          && <Grid item xs style={{flexGrow : 0}}>
-              <Link style={{ lineHeight: 0, display : 'block' }} to={logoTo}>{logo}</Link>
-             </Grid> }
+          && <Link style={{ display : 'block', width: '100%' }} to={logoTo}>{logo}</Link> }
         { showContextReset
-          && <Grid item xs style={{flexGrow : 0}}>
-               <ContextReset />
-            </Grid> }
+          && <ContextReset /> }
       </Grid>
       <Grid item xs={8}>
         { showChildren && children }
