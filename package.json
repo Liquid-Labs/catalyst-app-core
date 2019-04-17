@@ -41,7 +41,7 @@
   "devDependencies": {
     "@liquid-labs/catalyst-core-api": "^1.0.0-prototype.5",
     "@liquid-labs/catalyst-firewrap": "^2.0.0-prototype.0",
-    "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.17",
+    "@liquid-labs/catalyst-scripts": "^1.0.0-alpha.21",
     "@liquid-labs/catalyst-theme": "^1.0.0-prototype.1",
     "@liquid-labs/mui-extensions": "^1.0.0-prototype.0",
     "@liquid-labs/react-validation": "^1.0.0-prototype.0",
