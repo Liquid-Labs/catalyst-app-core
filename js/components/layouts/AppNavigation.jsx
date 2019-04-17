@@ -51,13 +51,20 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
     rightChildren = theme.layout.header.appMenu.node
   }
 
+  const linkStyle = { display : 'block', width: '100%' }
+
   if (logo === undefined) { // then refer to the theme
-    const { node, url, altText } = theme?.layout?.branding?.header || {}
-    if (node) logo = node
-    else if (url) {
-      console.log('altText: ', altText)
-      logo = url === 'placeholder'
-        ? <Grid container justify="center" alignItems="center"
+    if (theme?.layout?.header?.showLogo === false) logo = null
+    else {
+      const { node, url, altText } = theme?.branding?.header || {}
+      if (node) {
+        logo = node
+        linkStyle.lineHeight = 0
+      }
+      else if (url) {
+        if (url === 'placeholder') {
+        logo =
+          <Grid container justify="center" alignItems="center"
               style={{
                 backgroundColor : theme.palette.placeholder || "#9e9e9e",
                 height: '100%' }}>
@@ -68,7 +75,12 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
               {altText || 'placeholder'}
             </span>
           </Grid>
-        : <img className={classes.logo} src={url} alt={altText} />
+        }
+        else {
+          logo = <img className={classes.logo} src={url} alt={altText} />
+          linkStyle.lineHeight = 0
+        }
+      }
     }
   }
 
@@ -76,7 +88,7 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
     <Grid container alignItems="center">
       <Grid item container xs={2} wrap="nowrap" style={{ alignSelf: 'stretch' }} alignItems="stretch">
         { logo !== null
-          && <Link style={{ display : 'block', width: '100%' }} to={logoTo}>{logo}</Link> }
+          && <Link style={linkStyle} to={logoTo}>{logo}</Link> }
         { showContextReset
           && <ContextReset /> }
       </Grid>
