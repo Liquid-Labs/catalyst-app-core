@@ -48,7 +48,7 @@ const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, sh
   }
 
   return (
-    <Grid container>
+    <Grid container alignItems="center">
       <Grid item container xs={2}>
         { showLogo
           && <Grid item xs style={{flexGrow : 0}}>
