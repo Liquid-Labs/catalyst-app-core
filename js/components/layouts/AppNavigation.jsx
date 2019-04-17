@@ -1,3 +1,15 @@
+// TODO: rename 'AppMenu'; 'Then 'BottomAppNavigation' can become 'AppNavigation'
+/**
+ * AppNavigation provides a Catalyst standard application menu. The menu
+ * consistst of there components:
+ * - a logo, which by default links to the application root ('/')
+ * - content specific controls
+ * - a dropdown, application wide menu
+ *
+ * Properties:
+ * - `logo` : A React node or null to supress showing any logo. If undefined,
+ *    the settings from the theme will be used, if available.
+ */
 import React from 'react'
 import PropTypes from 'prop-types'
 
@@ -32,29 +44,30 @@ const styles = (theme) => ({
   }
 })
 
-const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, showContextReset=false, rightChildren, logo, logoTo='/', ...remainder }) => {
+const NavigationBar = ({ classes, children, showChildren=true, showContextReset=false, rightChildren, logo, logoTo='/', ...remainder }) => {
   const theme = useTheme()
 
-  if (!rightChildren && theme.layout && theme.layout.header && theme.layout.header.appMenu) {
+  if (!rightChildren && theme?.layout?.header?.appMenu) {
     rightChildren = theme.layout.header.appMenu.node
   }
 
-  if (showLogo && theme.layout && theme.layout.header && theme.layout.header.logo) {
-    // TODO: *should* be set on theme, but let's default to visible if not set.
-    if (theme.layout.header.logo.visible && !logo) {
-      const { node, url, altText } = theme.layout.header.logo
-      if (node) logo = node
-      else if (url) {
-        logo = <img className={classes.logo} src={url} alt={altText} />
-      }
+  if (logo === undefined) { // then refer to the theme
+    const { node, url, altText } = theme?.layout?.branding?.header || {}
+    if (node) logo = node
+    else if (url) {
+      logo = url === 'placeholder'
+        ? <Grid item justify="center" alignItems="center"
+              style={{ backgroundColor : theme.palette.placeholder || "#9e9e9e" }}>
+            {altText | 'placeholder'}
+          </Grid>
+        : <img className={classes.logo} src={url} alt={altText} />
     }
-    else showLogo = false
   }
 
   return (
     <Grid container alignItems="center">
       <Grid item container xs={2}>
-        { showLogo
+        { logo !== null
           && <Grid item xs style={{flexGrow : 0}}>
               <Link style={{ lineHeight: 0, display : 'block' }} to={logoTo}>{logo}</Link>
              </Grid> }
