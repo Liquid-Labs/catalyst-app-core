@@ -52,7 +52,7 @@ const NavigationBar = ({ classes, children, showChildren=true, showLogo=true, sh
       <Grid item container xs={2}>
         { showLogo
           && <Grid item xs style={{flexGrow : 0}}>
-              <Link to={logoTo}>{logo}</Link>
+              <Link style={{ lineHeight: 0, display : 'block' }} to={logoTo}>{logo}</Link>
              </Grid> }
         { showContextReset
           && <Grid item xs style={{flexGrow : 0}}>
