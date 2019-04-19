@@ -1,6 +1,5 @@
-// TODO: rename 'AppMenu'; 'Then 'BottomAppNavigation' can become 'AppNavigation'
 /**
- * AppNavigation provides a Catalyst standard application menu. The menu
+ * AppMenu provides a Catalyst standard application menu. The menu
  * consistst of there components:
  * - a logo, which by default links to the application root ('/')
  * - content specific controls
@@ -36,7 +35,7 @@ const styles = (theme) => ({
   },
   lightNavbar : {
     backgroundColor : 'white',
-    border          : '2px solid ' + theme.palette.primary.main,
+    borderBottom    : '2px solid ' + theme.palette.primary.main,
     color           : theme.palette.primary.main
   },
   right : {
@@ -113,7 +112,7 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const AppNavigation = withStyles(styles, { name : 'AppNavigation' })(({classes, children, ...remainder}) => {
+const AppMenu = withStyles(styles, { name : 'AppMenu' })(({classes, children, ...remainder}) => {
   const theme = useTheme()
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
@@ -125,4 +124,4 @@ const AppNavigation = withStyles(styles, { name : 'AppNavigation' })(({classes, 
   )
 })
 
-export { AppNavigation }
+export { AppMenu }
