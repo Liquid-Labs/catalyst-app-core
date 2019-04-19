@@ -1,14 +1,14 @@
 import React from 'react'
 
 import { AppMain } from './AppMain'
-import { AppMenu } from '../widgets/AppMenu'
+import { AppMenuBar } from '../widgets/AppMenuBar'
 
 // TODO https://github.com/Liquid-Labs/catalyst-core-ui/issues/4
-const BasicContentFrame = ({children, AppMenuProps={}, ...remainder}) => {
+const BasicContentFrame = ({children, AppMenuBarProps={}, ...remainder}) => {
   return (<>
-      <AppMenu {...AppMenuProps}>
-        {AppMenuProps.children}
-      </AppMenu>
+      <AppMenuBar {...AppMenuBarProps}>
+        {AppMenuBarProps.children}
+      </AppMenuBar>
       <AppMain {...remainder}>
         {children}
       </AppMain>

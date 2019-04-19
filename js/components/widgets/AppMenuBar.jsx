@@ -1,5 +1,5 @@
 /**
- * AppMenu provides a Catalyst standard application menu. The menu
+ * AppMenuBar provides a Catalyst standard application menu. The menu
  * consistst of there components:
  * - a logo, which by default links to the application root ('/')
  * - content specific controls
@@ -112,7 +112,7 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const AppMenu = withStyles(styles, { name : 'AppMenu' })(({classes, children, ...remainder}) => {
+const AppMenuBar = withStyles(styles, { name : 'AppMenuBar' })(({classes, children, ...remainder}) => {
   const theme = useTheme()
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
@@ -124,4 +124,4 @@ const AppMenu = withStyles(styles, { name : 'AppMenu' })(({classes, children, ..
   )
 })
 
-export { AppMenu }
+export { AppMenuBar }
