@@ -9,35 +9,35 @@ import classNames from 'classnames'
 
 
 const style = (theme) => ({
-  root: {
-    width: '100%',
-    bottom: 0,
-    borderTop: '2px solid',
-    borderColor: theme.palette.primary.main,
-    '&$shrinkSome > *': {
-      [theme.breakpoints.down('xs')]: {
-        minWidth: '65px',
-        '& span': {
-          fontSize: '0.75rem'
+  root : {
+    width              : '100%',
+    bottom             : 0,
+    borderTop          : '2px solid',
+    borderColor        : theme.palette.primary.main,
+    '&$shrinkSome > *' : {
+      [theme.breakpoints.down('xs')] : {
+        minWidth : '65px',
+        '& span' : {
+          fontSize : '0.75rem'
         }
       }
     },
-    '&$shrinkMore > *': {
-      [theme.breakpoints.down('xs')]: {
-        minWidth: '55px',
-        '& span': {
-          fontSize: '0.70rem'
+    '&$shrinkMore > *' : {
+      [theme.breakpoints.down('xs')] : {
+        minWidth : '55px',
+        '& span' : {
+          fontSize : '0.70rem'
         }
       }
     }
   },
-  shrinkSome: {},
-  shrinkMore: {},
+  shrinkSome : {},
+  shrinkMore : {},
 
-  action: {
-    fontFamily: "'Open Sans'",
-    fontWeight: 700,
-    textTransform: "uppercase"
+  action : {
+    fontFamily    : "'Open Sans'",
+    fontWeight    : 700,
+    textTransform : "uppercase"
   },
 })
 
@@ -52,8 +52,8 @@ const AppNavigationBar = ({onChange, variant, showLabel=false}) => {
   return (
     <BottomNavigation value={1/*selection*/} onChange={onChange}
         className={classNames(classes.root,
-          'small' === variant && classes.shrinkMore,
-          'tiny' === variant && classes.shrinkSome)}>
+          variant === 'small' && classes.shrinkMore,
+          variant === 'tiny' && classes.shrinkSome)}>
       {
         theme.layout.sections.map((sectionDef) => {
           const { label, path, onClick, Icon } = sectionDef

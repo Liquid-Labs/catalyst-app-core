@@ -50,7 +50,7 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
     rightChildren = theme.layout.header.appMenu.node
   }
 
-  const linkStyle = { display : 'block', width: '100%' }
+  const linkStyle = { display : 'block', width : '100%' }
 
   if (logo === undefined) { // then refer to the theme
     if (theme?.layout?.header?.showLogo === false) logo = null
@@ -62,18 +62,18 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
       }
       else if (url) {
         if (url === 'placeholder') {
-        logo =
-          <Grid container justify="center" alignItems="center"
-              style={{
-                backgroundColor : theme.palette.placeholder || "#9e9e9e",
-                height: '100%' }}>
-            <span style={{
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis'}}>
-              {altText || 'placeholder'}
-            </span>
-          </Grid>
+          logo =
+            <Grid container justify="center" alignItems="center"
+                style={{
+                  backgroundColor : theme.palette.placeholder || "#9e9e9e",
+                  height          : '100%' }}>
+              <span style={{
+                whiteSpace   : 'nowrap',
+                overflow     : 'hidden',
+                textOverflow : 'ellipsis'}}>
+                {altText || 'placeholder'}
+              </span>
+            </Grid>
         }
         else {
           logo = <img className={classes.logo} src={url} alt={altText} />
@@ -85,7 +85,7 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
 
   return (
     <Grid container alignItems="center">
-      <Grid item container xs={2} wrap="nowrap" style={{ alignSelf: 'stretch' }} alignItems="stretch">
+      <Grid item container xs={2} wrap="nowrap" style={{ alignSelf : 'stretch' }} alignItems="stretch">
         { logo !== null
           && <Link style={linkStyle} to={logoTo}>{logo}</Link> }
         { showContextReset
@@ -98,16 +98,17 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
         {rightChildren}
       </Grid>
     </Grid>
-)}
+  )
+}
 
 if (process.env.NODE_ENV !== 'production') {
   NavigationBar.propTypes = {
-    classes       : PropTypes.object.isRequired,
-    children      : PropTypes.node,
-    logoTo        : PropTypes.string,
-    rightChildren : PropTypes.node,
-    showChildren  : PropTypes.bool,
-    showContextReset         : PropTypes.bool,
+    classes          : PropTypes.object.isRequired,
+    children         : PropTypes.node,
+    logoTo           : PropTypes.string,
+    rightChildren    : PropTypes.node,
+    showChildren     : PropTypes.bool,
+    showContextReset : PropTypes.bool,
     showLogo         : PropTypes.bool,
   }
 }
@@ -117,7 +118,7 @@ const AppMenuBar = withStyles(styles, { name : 'AppMenuBar' })(({classes, childr
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
         position="static" style={{flex : '0 0 auto'}}>
-      <Toolbar variant={ (theme.layout && theme.layout.header.variant) || 'normal' }>
+      <Toolbar variant={(theme.layout && theme.layout.header.variant) || 'normal'}>
         <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
       </Toolbar>
     </AppBar>

@@ -72,9 +72,9 @@ const CatalystAppFrame = withStyles(styles)(({classes, themeRouter, ContentSwitc
 
 if (process.env.NODE_ENV !== 'production') {
   CatalystAppFrame.propTypes = {
-    ContentSwitch    : PropTypes.func.isRequired,
-    reduxStore       : PropTypes.object.isRequired,
-    themeRouter      : PropTypes.array.isRequired
+    ContentSwitch : PropTypes.func.isRequired,
+    reduxStore    : PropTypes.object.isRequired,
+    themeRouter   : PropTypes.array.isRequired
   }
 }
 

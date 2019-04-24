@@ -134,7 +134,7 @@ const AuthenticationManager = ({children, ...props}) => {
     useState(initialAuthentiactionStatus)
 
   const api = {
-    logOut        : async () => {
+    logOut : async() => {
       try {
         await fireauth.logOut()
         addInfoMessage('Logout successful.')

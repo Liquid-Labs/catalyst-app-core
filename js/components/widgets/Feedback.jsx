@@ -42,7 +42,7 @@ const styles = theme => ({
 
   snackItemInfo : {
     backgroundColor : theme.palette.info.main,
-    color : theme.palette.info.contrast,
+    color           : theme.palette.info.contrast,
   }
 })
 
