@@ -9,6 +9,10 @@ const ThemeContext = withRouter(({location, themeRouter, children}) => {
   const theme = themeRouter.find(([pathMatcher]) =>
     pathMatcher.test(location.pathname))[1]
 
+  if (!theme) {
+    throw new Error(`No theme for path '${location.pathname}'`)
+  }
+
   return (
     <MuiThemeProvider theme={theme}>
       <ThemeProvider theme={theme}>
