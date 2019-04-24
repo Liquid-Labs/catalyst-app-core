@@ -4,8 +4,8 @@ import classNames from 'classnames'
 
 import Grid from '@material-ui/core/Grid'
 
-import { withStyles } from '@material-ui/core/styles'
-import { styleWorkspacePadding } from '../hocs/styleWorkspacePadding'
+import { makeStyles } from '@material-ui/styles'
+import { mainPaddingStyles } from '@liquid-labs/react-viewport-context'
 
 const styles = (theme) => ({
   root : {
@@ -16,21 +16,31 @@ const styles = (theme) => ({
   }
 })
 
-const AppMain = withStyles(styles, { name : 'AppMain' })(styleWorkspacePadding()(
-  ({classes, children, className, ...props}) => {
-    className = classNames(classes.root, className)
+const useStyles = makeStyles(styles)
+const useMainPaddingStyles = makeStyles(mainPaddingStyles)
 
-    return (
-      <Grid id="main"
-          container
-          direction="column"
-          wrap="nowrap"
-          className={className}
-          {...props}>
-        { children }
-      </Grid>
-    )
-  }))
+const AppMain = ({children, className, ...props}) => {
+  const classes = useStyles()
+  const paddingClasses = useMainPaddingStyles()
+
+  className = classNames(
+    classes.root,
+    paddingClasses.mainPaddingSides,
+    paddingClasses.mainPaddingTop,
+    paddingClasses.mainPaddingBottom,
+    className)
+
+  return (
+    <Grid id="main"
+        container
+        direction="column"
+        wrap="nowrap"
+        className={className}
+        {...props}>
+      { children }
+    </Grid>
+  )
+}
 
 if (process.env.NODE_ENV !== 'production') {
   AppMain.propTypes = {
