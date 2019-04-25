@@ -53,19 +53,23 @@ const AppNavigationBar = ({onChange, variant, showLabel=false}) => {
   const classes = useAppNavigationBarStyles()
   const pathname = window.location.pathname
 
-  return (
-    <BottomNavigation value={1/*selection*/} onChange={onChange}
-        className={classNames(classes.root,
-          variant === 'small' && classes.shrinkMore,
-          variant === 'tiny' && classes.shrinkSome)}>
-      {
-        theme.layout.sections.map((sectionDef) => {
-          const { label, path, onClick, Icon } = sectionDef
-          return <BottomNavigationAction className={classes.action} key={path} label={label} showLabel={showLabel} icon={<Icon />} />
-        })
-      }
-    </BottomNavigation>
-  )
+  return <>
+    { theme.layout.navigation.visible &&
+      <div id="appNavFrame" style={{position : 'fixed', width: '100%'}}>
+        <BottomNavigation value={1/*selection*/} onChange={onChange}
+            className={classNames(classes.root,
+              variant === 'small' && classes.shrinkMore,
+              variant === 'tiny' && classes.shrinkSome)}>
+          {
+            theme.layout.sections.map((sectionDef) => {
+              const { label, path, onClick, Icon } = sectionDef
+              return <BottomNavigationAction className={classes.action} key={path} label={label} showLabel={showLabel} icon={<Icon />} />
+            })
+          }
+        </BottomNavigation>
+      </div>
+    }
+  </>
 }
 
 export { AppNavigationBar }

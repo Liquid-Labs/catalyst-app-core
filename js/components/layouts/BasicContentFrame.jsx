@@ -9,7 +9,7 @@ import { useTheme } from '@material-ui/styles'
 const BasicContentFrame = ({children, AppMenuBarProps={}, ...remainder}) => {
   const theme = useTheme()
   const menuHeight = theme.layout.header.variant === 'dense' ? 36 : 64
-  const navHeight = 56
+  const navHeight = theme.layout.navigation.visible ? 56 : 0
   const ctrlsHeight = menuHeight + navHeight
 
   return (<>
