@@ -10,10 +10,14 @@ import classNames from 'classnames'
 
 const style = (theme) => ({
   root : {
+    position: 'fixed',
     width              : '100%',
     bottom             : 0,
     borderTop          : '2px solid',
     borderColor        : theme.palette.primary.main,
+    height: '56px',
+    overflowX: 'hidden',
+    overflowY: 'auto',
     '&$shrinkSome > *' : {
       [theme.breakpoints.down('xs')] : {
         minWidth : '65px',

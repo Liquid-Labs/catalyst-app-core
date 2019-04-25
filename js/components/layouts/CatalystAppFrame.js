@@ -56,7 +56,7 @@ const CatalystAppFrame = withStyles(styles)(({classes, themeRouter, ContentSwitc
                     <div id="appMainFrame" style={{flex : '1 1 auto', display : 'flex', flexDirection : 'column'}}>
                       <ContentSwitch />
                     </div>
-                    <div id="appNavFrame" style={{flex : '0 0 auto'}}>
+                    <div id="appNavFrame" style={{position : 'fixed', width: '100%'}}>
                       <AppNavigationBar />
                     </div>
                   </ReduxProvider>

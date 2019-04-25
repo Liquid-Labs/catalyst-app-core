@@ -25,7 +25,7 @@ import { useTheme } from '@material-ui/styles'
 
 const styles = (theme) => ({
   root : {
-    flexGrow       : 1,
+    height         : theme.layout.header.variant === 'dense' ? '36px' : '64px',
     verticalAlign  : 'middle',
     position       : 'relative',
     zIndex         : theme.zIndex.drawer + 1,
@@ -117,7 +117,7 @@ const AppMenuBar = withStyles(styles, { name : 'AppMenuBar' })(({classes, childr
   const theme = useTheme()
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
-        position="static" style={{flex : '0 0 auto'}}>
+        position="fixed">
       <Toolbar variant={(theme.layout && theme.layout.header.variant) || 'normal'}>
         <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
       </Toolbar>
