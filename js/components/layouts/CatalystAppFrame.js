@@ -42,6 +42,8 @@ const styles = (theme) => ({
 
 const viewportInfoPlugins = [ mainPaddingPlugin, widthPlugin ]
 
+// TODO https://github.com/Liquid-Labs/catalyst-core-ui/issues/7
+// TODO https://github.com/Liquid-Labs/catalyst-core-ui/issues/8
 const CatalystAppFrame = withStyles(styles)(({classes, themeRouter, ContentSwitch, reduxStore}) =>
   <BrowserRouter>
     <ThemeContext themeRouter={themeRouter}>
