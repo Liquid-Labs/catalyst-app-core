@@ -15,7 +15,7 @@ import { Provider as ReduxProvider } from 'react-redux'
 import { AppControlsContext } from './AppControlsContext'
 import { AppNavigationBar } from '../widgets/AppNavigationBar'
 import { AuthenticationManager } from '../utils/AuthenticationManager'
-import { Contextualizer } from '../utils/Contextualizer'
+import { UserContext } from './UserContext'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { Feedback } from '../widgets/Feedback'
 import { BrowserRouter } from 'react-router-dom'
@@ -50,13 +50,13 @@ const AppContext = ({themeRouter, reduxStore, children}) => {
             <CssBaseline />
             <Feedback>
               <AuthenticationManager>
-                <Contextualizer>
+                <UserContext>
                   <AppControlsContext>
                     <ReduxProvider store={reduxStore}>
                      {children}
                     </ReduxProvider>
                   </AppControlsContext>
-                </Contextualizer>
+                </UserContext>
               </AuthenticationManager>
             </Feedback>
           </Typography>

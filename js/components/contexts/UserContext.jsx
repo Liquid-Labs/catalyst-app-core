@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 // TODO: use this to verify that the context selected is valid
 // import { contextConfig } from '@liquid-labs/catalyst-core-api'
 
-import { useAuthenticationStatus } from './AuthenticationManager'
+import { useAuthenticationStatus } from '../utils/AuthenticationManager'
 import { FeedbackContext } from '../widgets/Feedback'
 import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 
@@ -28,7 +28,7 @@ const statusCheck = ({appContext, error}) =>
 
 const checks = [statusCheck]
 
-const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
+const UserContext = ({children, resolveDefaultContext, ...props}) => {
   const [ appContextState, setAppContextState ] = useState(initialAppContextState)
   const { addErrorMessage } = useContext(FeedbackContext)
   const { authUser, claims } = useAuthenticationStatus()
@@ -63,7 +63,7 @@ const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
 
   return (
     <AppContext.Provider value={contextApi}>
-      <Waiter name="Contextualizer"
+      <Waiter name="UserContext"
           checks={checks} checkProps={appContextState} {...props}>
         { typeof children === 'function' ? children(props) : children }
       </Waiter>
@@ -72,10 +72,10 @@ const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  Contextualizer.propTypes = {
+  UserContext.propTypes = {
     children              : PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     resolveDefaultContext : PropTypes.func
   }
 }
 
-export { Contextualizer }
+export { UserContext }
