@@ -43,7 +43,12 @@ const styles = (theme) => ({
   }
 })
 
-const NavigationBar = ({ classes, children, showChildren=true, showContextReset=false, rightChildren, logo, logoTo='/', ...remainder }) => {
+const NavigationBar = ({
+    logo, logoTo='/',
+    children, showChildren=true, rightChildren,
+    showContextReset=false,
+    LeftGridProps, CenterGridProps, RightGridProps,
+    classes, ...remainder }) => {
   const theme = useTheme()
 
   if (!rightChildren && theme?.layout?.header?.appMenu) {
@@ -85,16 +90,18 @@ const NavigationBar = ({ classes, children, showChildren=true, showContextReset=
 
   return (
     <Grid container alignItems="center">
-      <Grid item container xs={2} wrap="nowrap" style={{ alignSelf : 'stretch' }} alignItems="stretch">
+      <Grid item container xs={2} wrap="nowrap"
+          style={{ alignSelf : 'stretch' }}
+          alignItems="stretch" {...LeftGridProps}>
         { logo !== null
           && <Link style={linkStyle} to={logoTo}>{logo}</Link> }
         { showContextReset
           && <ContextReset /> }
       </Grid>
-      <Grid item xs={8}>
-        { showChildren && children }
+      <Grid item xs={8} {...CenterGridProps}>
+        { showChildren && children || theme?.layout?.header?.children }
       </Grid>
-      <Grid item xs={2} className={classes.right}>
+      <Grid item xs={2} className={classes.right} {...RightGridProps}>
         {rightChildren}
       </Grid>
     </Grid>
@@ -113,13 +120,14 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-const AppMenuBar = withStyles(styles, { name : 'AppMenuBar' })(({classes, children, ...remainder}) => {
+const AppMenuBar = withStyles(styles, { name : 'AppMenuBar' })(({
+    NavigationBarProps, ToolbarProps, classes, children, ...props}) => {
   const theme = useTheme()
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}
-        position="fixed">
-      <Toolbar variant={(theme.layout && theme.layout.header.variant) || 'normal'}>
-        <NavigationBar {...remainder} classes={classes}>{children}</NavigationBar>
+        position="fixed" {...props}>
+      <Toolbar variant={(theme.layout && theme.layout.header.variant) || 'normal'} {...ToolbarProps}>
+        <NavigationBar {...NavigationBarProps} classes={classes}>{children}</NavigationBar>
       </Toolbar>
     </AppBar>
   )
