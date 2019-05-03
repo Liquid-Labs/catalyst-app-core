@@ -48,7 +48,7 @@ const NavigationBar = ({
     children, showChildren=true, rightChildren,
     showContextReset=false,
     LeftGridProps, CenterGridProps, RightGridProps,
-    classes, ...remainder }) => {
+    classes, ...props }) => {
   const theme = useTheme()
 
   if (!rightChildren && theme?.layout?.header?.appMenu) {
@@ -89,7 +89,7 @@ const NavigationBar = ({
   }
 
   return (
-    <Grid container alignItems="center">
+    <Grid container alignItems="center" {...props}>
       <Grid item container xs={2} wrap="nowrap"
           style={{ alignSelf : 'stretch' }}
           alignItems="stretch" {...LeftGridProps}>

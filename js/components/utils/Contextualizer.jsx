@@ -14,6 +14,7 @@ const initialAppContextState = {
 }
 
 const AppContext = createContext(initialAppContextState.appContext)
+const useUserContext = () => useContext(AppContext)
 
 const statusCheck = ({appContext, error}) =>
   error !== null
@@ -77,4 +78,4 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-export { Contextualizer, AppContext }
+export { Contextualizer }
