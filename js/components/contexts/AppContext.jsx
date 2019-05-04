@@ -13,7 +13,6 @@ import PropTypes from 'prop-types'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { AppControlsContext } from './AppControlsContext'
-import { AppNavigationBar } from '../widgets/AppNavigationBar'
 import { AuthenticationManager } from '../utils/AuthenticationManager'
 import { UserContext } from './UserContext'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -53,7 +52,7 @@ const AppContext = ({themeRouter, reduxStore, children}) => {
                 <UserContext>
                   <AppControlsContext>
                     <ReduxProvider store={reduxStore}>
-                     {children}
+                      {children}
                     </ReduxProvider>
                   </AppControlsContext>
                 </UserContext>

@@ -19,7 +19,6 @@ import AppBar from '@material-ui/core/AppBar'
 import { ContextReset } from '../widgets/ContextReset'
 import Grid from '@material-ui/core/Grid'
 import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 import { withStyles } from '@material-ui/core/styles'
 import { useTheme } from '@material-ui/styles'
 
@@ -44,11 +43,11 @@ const styles = (theme) => ({
 })
 
 const NavigationBar = ({
-    logo, logoTo='/',
-    children, showChildren=true, rightChildren,
-    showContextReset=false,
-    LeftGridProps, CenterGridProps, RightGridProps,
-    classes, ...props }) => {
+  logo, logoTo='/',
+  children, showChildren=true, rightChildren,
+  showContextReset=false,
+  LeftGridProps, CenterGridProps, RightGridProps,
+  classes, ...props }) => {
   const theme = useTheme()
 
   if (!rightChildren && theme?.layout?.header?.appMenu) {
@@ -110,10 +109,14 @@ const NavigationBar = ({
 
 if (process.env.NODE_ENV !== 'production') {
   NavigationBar.propTypes = {
+    CenterGridProps  : PropTypes.object,
     classes          : PropTypes.object.isRequired,
     children         : PropTypes.node,
+    LeftGridProps    : PropTypes.object,
+    logo             : PropTypes.node,
     logoTo           : PropTypes.string,
     rightChildren    : PropTypes.node,
+    RightGridProps   : PropTypes.object,
     showChildren     : PropTypes.bool,
     showContextReset : PropTypes.bool,
     showLogo         : PropTypes.bool,
@@ -121,7 +124,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const AppMenuBar = withStyles(styles, { name : 'AppMenuBar' })(({
-    NavigationBarProps, ToolbarProps, classes, children, ...props}) => {
+  NavigationBarProps, ToolbarProps, classes, children, ...props}) => {
   const theme = useTheme()
   return (
     <AppBar className={classNames(classes.root, classes.lightNavbar)}

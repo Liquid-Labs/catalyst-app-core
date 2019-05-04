@@ -4,24 +4,22 @@
 * in between.
 */
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import { AppMain } from './AppMain'
 import { AppMenuBar } from '../widgets/AppMenuBar'
 import { AppNavigationBar } from '../widgets/AppNavigationBar'
-// import Grid from '@material-ui/core/Grid'
 
 import { useTheme } from '@material-ui/styles'
-
-import merge from 'lodash.merge'
 
 // TODO https://github.com/Liquid-Labs/catalyst-core-ui/issues/4
 const AppFrame = ({ContentRouter, ...props}) => {
   const theme = useTheme()
   const headerProps = theme?.layout?.header?.props || {}
 
-//<div style={{ minHeight : '100vh' }} {...props}>
+  //<div style={{ minHeight : '100vh' }} {...props}>
   return (
-    <div id="appRootFrame" style={{ minHeight : '100vh', display: 'flex' }} {...props}>
+    <div id="appRootFrame" style={{ minHeight : '100vh', display : 'flex' }} {...props}>
       <AppMain>
         <AppMenuBar {...headerProps} />
         <ContentRouter />
@@ -29,6 +27,12 @@ const AppFrame = ({ContentRouter, ...props}) => {
       <AppNavigationBar />
     </div>
   )
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  AppFrame.propTypes = {
+    ContentRouter : PropTypes.element.isRequired
+  }
 }
 
 export { AppFrame }

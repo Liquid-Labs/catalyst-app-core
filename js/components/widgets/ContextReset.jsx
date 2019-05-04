@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
+import React from 'react'
 
-import { userUserContext } from '../contexts/UserContext'
+import { useUserContext } from '../contexts/UserContext'
 
 import IconButton from '@material-ui/core/IconButton'
 import RestoreIcon from 'mdi-material-ui/Restore'

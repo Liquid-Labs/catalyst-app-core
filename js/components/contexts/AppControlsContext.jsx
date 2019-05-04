@@ -12,8 +12,8 @@ const AppControlsContext = ({children}) => {
   const api = useMemo(() => ({
     setControls : (node) => setControls(node),
     getControls : () => data,
-    setData : (refresh) => setData(refresh),
-    getData : () => data
+    setData     : (refresh) => setData(refresh),
+    getData     : () => data
   }), [ controls, setControls, data, setData ])
 
   return (
