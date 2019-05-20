@@ -31,7 +31,7 @@ const AppFrame = ({ContentRouter, ...props}) => {
 
 if (process.env.NODE_ENV !== 'production') {
   AppFrame.propTypes = {
-    ContentRouter : PropTypes.element.isRequired
+    ContentRouter : PropTypes.func.isRequired
   }
 }
 
