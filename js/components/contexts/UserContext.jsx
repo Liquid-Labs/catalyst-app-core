@@ -13,8 +13,8 @@ const initialAppContextState = {
   error      : null
 }
 
-const AppContext = createContext(initialAppContextState.appContext)
-const useUserContext = () => useContext(AppContext)
+const MyContext = createContext(initialAppContextState.appContext)
+const useUserContext = () => useContext(MyContext)
 
 const statusCheck = ({appContext, error}) =>
   error !== null
@@ -54,7 +54,7 @@ const UserContext = ({children, resolveDefaultContext, ...props}) => {
     }
   }, [appContextState, authUser, claims])
 
-  const contextApi = useMemo(() => ({
+  const contextAPI = useMemo(() => ({
     appContext    : appContextState.appContext,
     resetContext  : () => setAppContextState(initialAppContextState),
     setAppContext : (appContext) =>
@@ -62,12 +62,12 @@ const UserContext = ({children, resolveDefaultContext, ...props}) => {
   }))
 
   return (
-    <AppContext.Provider value={contextApi}>
+    <MyContext.Provider value={contextAPI}>
       <Waiter name="UserContext"
           checks={checks} checkProps={appContextState} {...props}>
         { typeof children === 'function' ? children(props) : children }
       </Waiter>
-    </AppContext.Provider>
+    </MyContext.Provider>
   )
 }
 
