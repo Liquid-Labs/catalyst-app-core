@@ -11,7 +11,6 @@ import classNames from 'classnames'
 
 const style = (theme) => ({
   root : {
-    position           : 'fixed',
     width              : '100%',
     bottom             : 0,
     borderTop          : '2px solid',
@@ -60,7 +59,7 @@ const AppNavigationBar = withRouter(({history, location, onChange, variant, show
 
   return <>
     { theme.layout.navigation.visible
-      && <div id="appNavFrame" style={{position : 'fixed', width : '100%'}}>
+      && <div id="appNavFrame" style={{width : '100%'}}>
         <BottomNavigation value={selection} onChange={onChange}
             className={classNames(classes.root,
               variant === 'small' && classes.shrinkMore,
