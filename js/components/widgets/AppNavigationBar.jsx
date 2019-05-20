@@ -66,7 +66,7 @@ const AppNavigationBar = withRouter(({history, location, onChange, variant, show
               variant === 'small' && classes.shrinkMore,
               variant === 'tiny' && classes.shrinkSome)}>
           {
-            theme.layout.sections.map((sectionDef) => {
+            theme.sections && theme.sections.map((sectionDef) => {
               const { label, path, onClick, Icon } = sectionDef
               return <BottomNavigationAction
                   className={classes.action}
