@@ -72,22 +72,31 @@ const closeAction = (closeMessage) => (key) =>
 const FeedbackProvider = withSnackbar(
   ({autoHideDuration, warningHideFactor, enqueueSnackbar, closeSnackbar, children}) => {
     const action = closeAction(closeSnackbar)
-    const incAction = (persist, options) =>
+    const incAction = (persist, options) => {
+      if (options?.action) return action
+      else {
+        const optPersist = options?.persist
+        if (optPersist) return action
+        else if (optPersist === undefined && persist) return action
+        else return null
+      }
       (options?.action
         || (options?.persist || (options?.persist === undefined && persist)
             && action))
+    }
+
     // 'enqueueSnackbar' changes with ever render. Which means we can't rely on
     // it as an indicator when to recalculate the 'addInfoMessage', etc.
     // Luckily, it appears that we don't have to; even though the function
     // changes, the 'old' ones continue to work.
     const addInfoMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist : false, variant : 'info', autoHideDuration, action: incAction(false, options) || null },
+        { persist : false, variant : 'info', autoHideDuration, action: incAction(false, options) },
         options)),
     [ /* enqueueSnackbar */ ])
     const addConfirmMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist : false, variant : 'success', autoHideDuration, action: incAction(false, options) || null },
+        { persist : false, variant : 'success', autoHideDuration, action: incAction(false, options) },
         options)),
     [ /* enqueueSnackbar */ ])
     const addWarningMessage = useCallback((message, options) =>
@@ -95,12 +104,12 @@ const FeedbackProvider = withSnackbar(
         { persist          : false,
           variant          : 'warning',
           autoHideDuration : autoHideDuration * warningHideFactor,
-          action           : incAction(false, options) || null },
+          action           : incAction(false, options) },
         options)),
     [ /* enqueueSnackbar */ ])
     const addErrorMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist : true, variant : 'error', action: incAction(true, options) || null },
+        { persist : true, variant : 'error', action: incAction(true, options) },
         options)),
     [ /* enqueueSnackbar */ ])
     const closeMessage = useCallback((key) => closeSnackbar(key), [])
