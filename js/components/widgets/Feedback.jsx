@@ -10,7 +10,7 @@ import { SnackbarProvider, withSnackbar } from 'notistack'
 import { TinyIconButton } from '@liquid-labs/mui-extensions'
 import WarningIcon from '@material-ui/icons/Warning'
 
-import { useTheme } from '@material-ui/styles'
+import { useTheme, makeStyles } from '@material-ui/styles'
 
 import { withStyles } from '@material-ui/core/styles'
 
@@ -38,6 +38,11 @@ const styles = theme => ({
     [theme.breakpoints.up('xl')] : {
       maxWidth : '60vw'
     },
+  },
+
+  snackItemInfo : {
+    backgroundColor : theme.palette.info.main,
+    color           : theme.palette.info.contrast,
   }
 })
 
@@ -45,32 +50,66 @@ const FeedbackContext = createContext()
 
 const useFeedbackAPI = () => useContext(FeedbackContext)
 
+const useDismissStyles = makeStyles(dismissStyles)
+
+const DismissButton = ({messageKey, closeMessage}) => {
+  const classes = useDismissStyles()
+  return (
+    <TinyIconButton
+        aria-label="Close"
+        color="inherit"
+        className={classes.close}
+        onClick={() => closeMessage(messageKey) }
+    >
+      <CloseIcon />
+    </TinyIconButton>
+  )
+}
+
+const closeAction = (closeMessage) => (key) =>
+  <DismissButton messageKey={key} closeMessage={closeMessage} />
+
 const FeedbackProvider = withSnackbar(
   ({autoHideDuration, warningHideFactor, enqueueSnackbar, closeSnackbar, children}) => {
+    const action = closeAction(closeSnackbar)
+    const incAction = (persist, options) => {
+      if (options?.action) return action
+      else {
+        const optPersist = options?.persist
+        if (optPersist) return action
+        else if (optPersist === undefined && persist) return action
+        else return null
+      }
+      (options?.action
+        || (options?.persist || (options?.persist === undefined && persist)
+            && action))
+    }
+
     // 'enqueueSnackbar' changes with ever render. Which means we can't rely on
     // it as an indicator when to recalculate the 'addInfoMessage', etc.
     // Luckily, it appears that we don't have to; even though the function
     // changes, the 'old' ones continue to work.
     const addInfoMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist : false, variant : 'info', autoHideDuration : autoHideDuration },
+        { persist : false, variant : 'info', autoHideDuration, action: incAction(false, options) },
         options)),
     [ /* enqueueSnackbar */ ])
     const addConfirmMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist : false, variant : 'success', autoHideDuration : autoHideDuration },
+        { persist : false, variant : 'success', autoHideDuration, action: incAction(false, options) },
         options)),
     [ /* enqueueSnackbar */ ])
     const addWarningMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
         { persist          : false,
           variant          : 'warning',
-          autoHideDuration : autoHideDuration * warningHideFactor },
+          autoHideDuration : autoHideDuration * warningHideFactor,
+          action           : incAction(false, options) },
         options)),
     [ /* enqueueSnackbar */ ])
     const addErrorMessage = useCallback((message, options) =>
       enqueueSnackbar(message, Object.assign(
-        { persist : true, variant : 'error' },
+        { persist : true, variant : 'error', action: incAction(true, options) },
         options)),
     [ /* enqueueSnackbar */ ])
     const closeMessage = useCallback((key) => closeSnackbar(key), [])
@@ -113,19 +152,6 @@ const defaultSnackAnchor = {
   horizontal : 'center',
 }
 
-const DismissButton = withStyles(dismissStyles, { name : 'DismissButton' })(
-  ({classes}) =>
-    <TinyIconButton
-        aria-label="Close"
-        color="inherit"
-        className={classes.close}
-    >
-      <CloseIcon />
-    </TinyIconButton>
-)
-
-const snackbarActions = [ <DismissButton key="dismissButton" /> ]
-
 const iconStyle = {
   marginRight : '0.25em',
   height      : '0.8em'
@@ -147,10 +173,12 @@ const Feedback = withStyles(styles, { name : 'Feedback' })(({
   children, classes, ...props}) => {
   return (
     <SnackbarProvider
-        action={snackbarActions}
         anchorOrigin={anchorOrigin}
         iconVariant={iconVariant}
-        ContentProps={{ classes : { root : classes.snackItemRoot } }}
+        ContentProps={{ classes : {
+          root : classes.snackItemRoot,
+        }}}
+        classes={{ variantInfo : classes.snackItemInfo }}
         {...props}>
       <FeedbackProvider autoHideDuration={autoHideDuration}
           warningHideFactor={warningHideFactor}>

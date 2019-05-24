@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 // TODO: use this to verify that the context selected is valid
 // import { contextConfig } from '@liquid-labs/catalyst-core-api'
 
-import { useAuthenticationStatus } from './AuthenticationManager'
+import { useAuthenticationStatus } from '../utils/AuthenticationManager'
 import { FeedbackContext } from '../widgets/Feedback'
 import { Waiter, waiterStatus } from '@liquid-labs/react-waiter'
 
@@ -13,7 +13,8 @@ const initialAppContextState = {
   error      : null
 }
 
-const AppContext = createContext(initialAppContextState.appContext)
+const MyContext = createContext(initialAppContextState.appContext)
+const useUserContext = () => useContext(MyContext)
 
 const statusCheck = ({appContext, error}) =>
   error !== null
@@ -27,7 +28,7 @@ const statusCheck = ({appContext, error}) =>
 
 const checks = [statusCheck]
 
-const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
+const UserContext = ({children, resolveDefaultContext, ...props}) => {
   const [ appContextState, setAppContextState ] = useState(initialAppContextState)
   const { addErrorMessage } = useContext(FeedbackContext)
   const { authUser, claims } = useAuthenticationStatus()
@@ -53,7 +54,7 @@ const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
     }
   }, [appContextState, authUser, claims])
 
-  const contextApi = useMemo(() => ({
+  const contextAPI = useMemo(() => ({
     appContext    : appContextState.appContext,
     resetContext  : () => setAppContextState(initialAppContextState),
     setAppContext : (appContext) =>
@@ -61,20 +62,20 @@ const Contextualizer = ({children, resolveDefaultContext, ...props}) => {
   }))
 
   return (
-    <AppContext.Provider value={contextApi}>
-      <Waiter name="Contextualizer"
+    <MyContext.Provider value={contextAPI}>
+      <Waiter name="UserContext"
           checks={checks} checkProps={appContextState} {...props}>
         { typeof children === 'function' ? children(props) : children }
       </Waiter>
-    </AppContext.Provider>
+    </MyContext.Provider>
   )
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  Contextualizer.propTypes = {
+  UserContext.propTypes = {
     children              : PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
     resolveDefaultContext : PropTypes.func
   }
 }
 
-export { Contextualizer, AppContext }
+export { UserContext, useUserContext }
